@@ -1,45 +1,398 @@
 {
   "as_of": "2026-05-01",
-  "concentration_pct_top": 0.15,
-  "portfolio_volatility": 0.05691276474955907,
-  "portfolio_drawdown": -0.015674776741051742,
-  "cash_pct": 0.7,
+  "concentration_pct_top": 0.1,
+  "portfolio_volatility": 0.09419982617454893,
+  "portfolio_drawdown": -0.010083683899315887,
+  "cash_pct": 0.6,
   "flags": [],
   "per_ticker": [
     {
+      "ticker": "ALL",
+      "approved": true,
+      "suggested_weight_pct": 0.1,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SYK",
+      "approved": true,
+      "suggested_weight_pct": 0.1,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TRMB",
+      "approved": true,
+      "suggested_weight_pct": 0.1,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BLDR",
+      "approved": true,
+      "suggested_weight_pct": 0.1,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PTC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NSC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ACN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ZBH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FSLR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PXD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
       "ticker": "CRWD",
-      "approved": true,
-      "suggested_weight_pct": 0.15,
-      "flags": [],
-      "notes": []
-    },
-    {
-      "ticker": "META",
-      "approved": true,
-      "suggested_weight_pct": 0.15,
-      "flags": [
-        "position_cap"
-      ],
-      "notes": [
-        "Trimmed from 15.0% to single-name cap 15%"
-      ]
-    },
-    {
-      "ticker": "NVDA",
       "approved": false,
       "suggested_weight_pct": 0.0,
       "flags": [],
       "notes": []
     },
     {
-      "ticker": "AMD",
+      "ticker": "TYL",
       "approved": false,
       "suggested_weight_pct": 0.0,
       "flags": [],
       "notes": []
     },
     {
-      "ticker": "PLTR",
+      "ticker": "ABT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "INTU",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CVS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NTAP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CRM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FICO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EPAM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ON",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GEN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HSY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TER",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ETN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FFIV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ANET",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TFC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DLTR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CMG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KEYS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "STX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SMCI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DGX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CDW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PAYX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RTX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ZBRA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MRK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CTAS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WDAY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MSCI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MET",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UHS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NXPI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LIN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MSI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "L",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FOXA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CFG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LYV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WDC",
       "approved": false,
       "suggested_weight_pct": 0.0,
       "flags": [],
@@ -53,7 +406,2791 @@
       "notes": []
     },
     {
-      "ticker": "SNOW",
+      "ticker": "CBRE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "OKE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EMN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GOOGL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SNA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ITW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MMM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BRK.B",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PPG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NKE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VRSN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DAY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CSCO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MRNA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PYPL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VLO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "INTC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 49% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "PARA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ODFL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HAS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LYB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CNC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UAL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ENPH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CHTR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ED",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CPT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "JNPR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NVDA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PNW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DAL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "V",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AVY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CMS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AON",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GOOG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AIG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "APA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GPC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LDOS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MCO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DXCM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WBD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -25% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "LNC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CDNS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RJF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FTV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "USB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SPGI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MPWR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "COF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BLK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TGT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AES",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BKR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GPN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 51% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "BWA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "DIS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ANSS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BEN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PRU",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FDS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FANG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DFS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CLX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MU",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PANW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "D",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VTR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ACGL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ORCL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UNH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AXP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DLR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RHI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HAL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "APH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "O",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AEP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ABBV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VTRS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NVR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VMC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "COR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ADI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -24% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "NDAQ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ALK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "OGN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ECL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WRB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KMB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "JBL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UBER",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MCK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DRI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EOG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ALB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -23% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "MMC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IDXX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TXN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FIS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LRCX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HLT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DECK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BXP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SNPS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DPZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "T",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GILD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BDX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HES",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LVS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DVN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RSG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ISRG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "JPM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ADP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KMI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AKAM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -25% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "EXPD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MAA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IQV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FRT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ERIE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ROP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ATO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "URI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "INVH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NCLH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ABNB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ULTA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ICE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "C",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "JNJ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PEP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DELL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PLD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CAG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ROST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PKG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TROW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -24% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "GEHC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NFLX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TJX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PNR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -26% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "RVTY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "INCY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NTRS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HPE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CVX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMAT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TMO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 47% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "UNP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BAX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PODD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "STT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BSX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CCI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IPG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VRT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EMR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UNM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 46% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "PLTR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -21% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "ESS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PEG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TRV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HOLX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "J",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WMT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VICI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AVGO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MTCH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -35% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "STZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EXC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SYF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "MDLZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -21% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "FITB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FTNT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BIO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WFC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "APD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WYNN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WEC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MTD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DOC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TMUS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "REGN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PSX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CME",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PAYC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ETSY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BIIB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "WM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "XEL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RCL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TPR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "A",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "F",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WAB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FOX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -23% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "APO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MNST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -27% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "EG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "STE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AIZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SBUX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CMCSA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NUE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ARE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AZO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ZTS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "OTIS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "REG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "COST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DHR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NOW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GIS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TTWO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PGR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KDP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LHX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LUV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SHW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MOS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IBM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -25% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "PWR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ROK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KMX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -23% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "PHM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FAST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BMY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMCR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WELL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PFE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CTSH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -23% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "MAT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CINF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SWKS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LNT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GDDY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "META",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CPRT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ELV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HPQ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TECH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AWK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KKR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CAT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -30% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "AAPL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "APTV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WMB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -27% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "MCHP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HBAN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CCL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "K",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MOH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ADBE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HWM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DVA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VRSK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CHD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EXR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LOW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility",
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Vol 49% > 45%; trimmed by 0.0%",
+        "Recent drawdown -30% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "WBA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MPC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RPM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TRGP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KHC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -26% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "KIM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -27% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "CARR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -29% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "DHI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HCA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PPL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MCD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MRO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CAH",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HIG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -23% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "LLY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EQIX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AFL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "OMC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "XYL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FCX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HSIC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 45% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "LMT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PCAR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EBAY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MLM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MDT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TXT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NEM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TSCO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -30% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "QCOM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IFF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BRO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AXON",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TDG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -31% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "MAR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BFB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KLAC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LEN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LII",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BAC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "JKHY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MAS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CRL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WTW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CSX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NWS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CF",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -30% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "IVZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -21% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "GLW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "high_volatility"
+      ],
+      "notes": [
+        "Vol 45% > 45%; trimmed by 0.0%"
+      ]
+    },
+    {
+      "ticker": "EVRG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RMD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AME",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HII",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FDX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BALL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "LULU",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NOC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMGN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ORLY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KEY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UDR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PSA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EXPE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "OXY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ADM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "GD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MKC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BBY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NWSA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PCG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "IRM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VZ",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CMI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NRG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "WAT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ES",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "COP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SCHW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CTRA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "RL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VRTX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MGM",
       "approved": false,
       "suggested_weight_pct": 0.0,
       "flags": [],
@@ -67,11 +3204,365 @@
       "notes": []
     },
     {
+      "ticker": "STLD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CHRW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DOV",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PNC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "VST",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "QRVO",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "XOM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NEE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SYY",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -30% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "YUM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "FMC",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DUK",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AVB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CPB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -24% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "SRE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -21% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "GWW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DOW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CSGP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CBOE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AEE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PFG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SLB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HON",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EFX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "BKNG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "ALGN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MTB",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "UPS",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "KR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HRL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
       "ticker": "TSLA",
       "approved": false,
       "suggested_weight_pct": 0.0,
       "flags": [],
       "notes": []
+    },
+    {
+      "ticker": "IEX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "HUM",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AAL",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "NI",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "DTE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EIX",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SPG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "ALLE",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CEG",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "EQT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "CNP",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -24% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "TSN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "ETR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -22% exceeds warning (20%); proceed with caution"
+      ]
+    },
+    {
+      "ticker": "EQR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [
+        "deep_drawdown"
+      ],
+      "notes": [
+        "Recent drawdown -21% exceeds warning (20%); proceed with caution"
+      ]
     }
   ]
 }

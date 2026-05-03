@@ -44,8 +44,17 @@ python -m multi_agent_investment_research_engine.main`}
           <h1 className="text-2xl font-semibold">Portfolio dashboard</h1>
           <p className="text-sm text-slate-400 mt-1">
             As of <span className="text-slate-200">{dash.as_of}</span> · Universe{" "}
-            <span className="text-slate-200">{universe.universe.join(", ")}</span> · Benchmark{" "}
-            <span className="text-slate-200">{universe.benchmark}</span>
+            <span className="text-slate-200">
+              {universe.universe.toUpperCase()}
+              {universe.size > 0 ? ` (${universe.size} names)` : ""}
+            </span>{" "}
+            · Benchmark <span className="text-slate-200">{universe.benchmark}</span>
+            {universe.funnel_top_n != null && universe.size > universe.funnel_top_n && (
+              <>
+                {" · Reasoning slice "}
+                <span className="text-slate-200">top {universe.funnel_top_n}</span>
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -116,6 +125,8 @@ python -m multi_agent_investment_research_engine.main`}
             <thead className="text-left text-slate-400 text-xs uppercase tracking-wide">
               <tr>
                 <th className="px-2 py-2">Ticker</th>
+                <th className="px-2 py-2 hidden md:table-cell">Company</th>
+                <th className="px-2 py-2 hidden md:table-cell">Sector</th>
                 <th className="px-2 py-2">Rating</th>
                 <th className="px-2 py-2">Signal</th>
                 <th className="px-2 py-2 hidden md:table-cell">Market</th>
@@ -127,7 +138,7 @@ python -m multi_agent_investment_research_engine.main`}
               </tr>
             </thead>
             <tbody>
-              {dash.top_picks.map((row) => (
+              {dash.top_picks.map((row: any) => (
                 <tr
                   key={row.ticker}
                   className="border-t border-ink-600 hover:bg-ink-700/40"
@@ -139,6 +150,12 @@ python -m multi_agent_investment_research_engine.main`}
                     >
                       {row.ticker}
                     </Link>
+                  </td>
+                  <td className="px-2 py-2 hidden md:table-cell text-slate-300 max-w-[16rem] truncate">
+                    {row.company_name ?? "—"}
+                  </td>
+                  <td className="px-2 py-2 hidden md:table-cell text-slate-400 text-xs">
+                    {row.sector ?? "—"}
                   </td>
                   <td className="px-2 py-2">
                     <RatingBadge rating={row.rating} />

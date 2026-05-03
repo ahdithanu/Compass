@@ -167,11 +167,63 @@ not company boilerplate.
 
 ## Universe
 
-Default universe: **NVDA, MSFT, AMZN, META, TSLA, AMD, PLTR, CRWD, SNOW**.
+Default universe: **the S&P 500** (~484 constituents in
+`data/sp500_constituents.csv`, organized by GICS sector).
 Benchmark: **SPY**.
 
-The universe and benchmark are configured in `config.py` and can be edited
-without touching agent code.
+The list is a hand-curated snapshot bundled with the repo so the demo
+runs without making a network call. Replace it with a live fetch
+(iShares IVV holdings CSV, Wikipedia, FMP) by editing
+`data/universe.py:_LIVE_FETCHER` - the loader's contract is just a
+DataFrame with `ticker`, `company_name`, `sector`, `sub_industry`.
+
+The original 9-name tech demo is still available as
+`config.DEMO_CONFIG`:
+
+```python
+from multi_agent_investment_research_engine.config import DEMO_CONFIG
+from multi_agent_investment_research_engine.main import run
+
+run(DEMO_CONFIG)   # NVDA, MSFT, AMZN, META, TSLA, AMD, PLTR, CRWD, SNOW
+```
+
+### Two-stage funnel
+
+At SP500 scale the cost equation flips: it is cheap to score 500 names
+on the four quant pillars, but expensive (latency + tokens) to retrieve
+evidence and write a thesis for each. So the engine runs as a funnel:
+
+1. **Stage 1 — quantitative pipeline runs on the entire universe.**
+   Every ticker gets a Market / News / Fundamentals / Alt-data pillar
+   score, a composite signal score (0-100), a rating, and a row in
+   `company_signal_scores.csv` and `company_rankings.json`.
+2. **Stage 2 — LangChain reasoning runs on the top _N_ only.**
+   `config.FunnelSettings.top_n_for_reasoning` (default `25`) chooses
+   how many names the ResearchRetrieval / SignalReasoning / Thesis /
+   OutboundAngle agents narrate. By default we also include any name
+   that cleared the BUY threshold even if it sits outside the top _N_.
+   Set `top_n_for_reasoning=None` to narrate the whole universe.
+
+Tickers outside the slice still appear in the memo (compact
+"watchlist tail" table) and the rankings UI (with a "tail only"
+filter), so nothing is hidden — there's just no thesis written for
+them this cycle.
+
+### Pluggable data providers
+
+Quant agents consume `MarketDataProvider` and `FundamentalsProvider`
+abstractions instead of touching yfinance / CSVs directly. Bundled
+implementations:
+
+* `YFinanceMarketProvider` - batch yfinance pulls (chunks of 50 to
+  stay under URL-length limits at SP500 scale) with a deterministic
+  synthetic price-panel fallback when egress is blocked.
+* `YFinanceFundamentalsProvider` - per-ticker `Ticker.info` with a
+  mock-CSV fallback.
+* `MockFundamentalsProvider` - pure CSV reader, used in tests.
+
+Polygon / Alpaca / FMP / EDGAR are a "write a new provider" job; the
+agents do not change.
 
 ---
 

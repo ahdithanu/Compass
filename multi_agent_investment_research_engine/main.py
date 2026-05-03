@@ -40,6 +40,7 @@ from .agents import (
 from .agents.models import Rating
 from .config import Config, DEFAULT_CONFIG
 from .data.mock_data import COMPANY_PROFILES, ensure_mock_data
+from .data.universe import load_constituents, select_tickers
 from .llm import ResearchWorkflow
 
 
@@ -177,19 +178,49 @@ def _build_score_history(
     )
 
 
+def _resolve_universe(cfg: Config) -> tuple[list[str], pd.DataFrame]:
+    """Apply the UniverseSettings filters and return (tickers, constituents).
+
+    `constituents` is the raw DataFrame from the loader (indexed by ticker)
+    so callers can pull sector / company-name metadata downstream.
+    """
+    constituents = load_constituents(
+        cfg.data_dir, source="local", universe_csv=cfg.universe.csv
+    )
+    tickers = select_tickers(
+        constituents,
+        tickers=cfg.universe.tickers,
+        sectors=cfg.universe.sectors,
+        limit=cfg.universe.limit,
+    )
+    if not tickers:
+        raise RuntimeError(
+            f"Universe filters produced an empty list "
+            f"(name={cfg.universe.name!r}, sectors={cfg.universe.sectors})."
+        )
+    return tickers, constituents
+
+
 def run(cfg: Optional[Config] = None) -> dict:
     cfg = cfg or DEFAULT_CONFIG
     np.random.seed(cfg.random_seed)
 
+    tickers, constituents = _resolve_universe(cfg)
+    sector_lookup = constituents["sector"].to_dict()
+    name_lookup = constituents["company_name"].to_dict()
+
     print("=" * 72)
-    print(f"Multi-agent investment research engine — universe: {', '.join(cfg.universe)}")
+    print(
+        f"Multi-agent investment research engine — universe={cfg.universe.name!r} "
+        f"({len(tickers)} tickers); funnel top_n={cfg.funnel.top_n_for_reasoning}"
+    )
     print("=" * 72)
 
-    paths = ensure_mock_data(cfg.data_dir, list(cfg.universe), seed=cfg.random_seed)
+    paths = ensure_mock_data(cfg.data_dir, tickers, seed=cfg.random_seed)
 
     # 1-4. Quantitative agents.
     market_agent = MarketAgent(cfg.market, benchmark=cfg.benchmark)
-    market_out = market_agent.run(cfg.universe)
+    market_out = market_agent.run(tickers)
     market_features: pd.DataFrame = market_out["features"]
     price_panel: pd.DataFrame = market_out["panel"]
     market_panels: dict[str, pd.DataFrame] = market_out["per_ticker"]
@@ -198,27 +229,41 @@ def run(cfg: Optional[Config] = None) -> dict:
     )
 
     news_features = NewsAgent(csv_path=paths["news"]).run(
-        cfg.universe, as_of=price_panel.index[-1]
+        tickers, as_of=price_panel.index[-1]
     )["features"]
     fund_features = FundamentalsAgent(mock_csv=paths["fund"], prefer_live=True).run(
-        cfg.universe
+        tickers
     )["features"]
     alt_features = AlternativeDataAgent(csv_path=paths["alt"]).run(
-        cfg.universe, as_of=price_panel.index[-1]
+        tickers, as_of=price_panel.index[-1]
     )["features"]
 
-    # 5. Compose feature table + ratings.
+    # 5. Compose feature table + ratings + sector tag.
     feature_table = _build_feature_table(
         market_features, news_features, fund_features, alt_features, cfg.weights
     )
     feature_table["rating"] = feature_table["signal_score"].apply(lambda v: _rating(v, cfg))
+    feature_table["sector"] = feature_table.index.map(lambda t: sector_lookup.get(t))
+    feature_table["company_name"] = feature_table.index.map(lambda t: name_lookup.get(t, t))
     feature_table = feature_table.sort_values("signal_score", ascending=False)
-    print("\nComposite ranking:")
-    print(
-        feature_table[["signal_score", "rating", "market_score",
-                       "news_score", "fundamental_score", "alt_score"]]
-        .round(2).to_string()
-    )
+
+    # Compact print for big universes.
+    if len(feature_table) <= 20:
+        print("\nComposite ranking:")
+        print(
+            feature_table[["signal_score", "rating", "market_score",
+                           "news_score", "fundamental_score", "alt_score"]]
+            .round(2).to_string()
+        )
+    else:
+        print(
+            f"\nComposite ranking: {len(feature_table)} names. "
+            f"Top 5: "
+            + ", ".join(
+                f"{t}({feature_table.loc[t, 'signal_score']:.0f}/{feature_table.loc[t, 'rating']})"
+                for t in feature_table.head(5).index
+            )
+        )
 
     # 6-7. Portfolio proposal + risk review.
     portfolio_agent = PortfolioAgent(cfg.portfolio, cfg.risk, cfg.ratings)
@@ -249,12 +294,32 @@ def run(cfg: Optional[Config] = None) -> dict:
         benchmark=benchmark_series,
     )
 
-    # 9-11. LangChain workflow: ingest -> retrieve -> reason -> thesis -> memo -> outbound.
+    # 9-11. LangChain workflow.
+    # Two-stage funnel: only the top-N + (optionally) all BUY-rated names get
+    # the expensive retrieve / reason / thesis / outbound hops.
+    if cfg.funnel.top_n_for_reasoning is None:
+        reason_on = list(feature_table.index)
+    else:
+        head = feature_table.head(cfg.funnel.top_n_for_reasoning).index.tolist()
+        if cfg.funnel.include_all_buy_rated:
+            buys = feature_table[feature_table["rating"] == Rating.BUY.value].index.tolist()
+            reason_on = list(dict.fromkeys(head + buys))
+        else:
+            reason_on = head
+
+    print(
+        f"\nReasoning slice: {len(reason_on)} of {len(tickers)} names "
+        f"will be retrieved + reasoned + narrated."
+    )
+
     workflow = ResearchWorkflow(chroma_dir=cfg.chroma_dir)
-    print(f"\nLLM provider: {workflow.provider.chat_model_name} "
+    print(f"LLM provider: {workflow.provider.chat_model_name} "
           f"(embeddings: {workflow.provider.embedding_name}, "
           f"offline={workflow.provider.is_offline})")
-    workflow.ingest(cfg.data_dir, universe=cfg.universe)
+    # Only ingest the reasoning slice into Chroma. Rest of the universe
+    # never gets retrieved against, so embedding the whole 484 set would
+    # be wasted compute (and at 500 names with hosted embeddings, $$).
+    workflow.ingest(cfg.data_dir, universe=reason_on)
 
     snapshot = {
         "cash_pct": risk_report.cash_pct,
@@ -262,18 +327,22 @@ def run(cfg: Optional[Config] = None) -> dict:
         "portfolio_volatility": risk_report.portfolio_volatility,
         "flags": list(risk_report.flags),
     }
-    company_names = {tk: COMPANY_PROFILES.get(tk, {}).get("company_name", tk)
-                     for tk in cfg.universe}
+    company_names = {
+        tk: name_lookup.get(tk, COMPANY_PROFILES.get(tk, {}).get("company_name", tk))
+        for tk in tickers
+    }
 
     workflow_out = workflow.run(
-        universe=cfg.universe,
+        universe=tickers,
         feature_table=feature_table,
         risk_reviews=[r.model_dump() for r in risk_report.per_ticker],
         allocations=risk_adjusted_weights.to_dict(),
         portfolio_snapshot=snapshot,
         as_of=price_panel.index[-1].date(),
         company_names=company_names,
+        sectors=sector_lookup,
         evidence_k=cfg.evidence_k,
+        reason_on=reason_on,
     )
 
     # 12. Reporter.

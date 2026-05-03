@@ -110,20 +110,92 @@ def health() -> dict:
 @app.get("/api/universe")
 def universe() -> dict:
     cfg: Config = DEFAULT_CONFIG
+    # Read the universe size + sector list off the rankings file so the
+    # frontend can build a filter dropdown without re-running the pipeline.
+    sectors: list[str] = []
+    n = 0
+    rankings_path = _output_dir() / "company_rankings.json"
+    if rankings_path.exists():
+        try:
+            rankings = json.loads(rankings_path.read_text())
+            n = len(rankings)
+            sectors = sorted(
+                {r.get("sector") for r in rankings if r.get("sector")}
+            )
+        except json.JSONDecodeError:
+            pass
     return {
-        "universe": list(cfg.universe),
+        "universe": cfg.universe.name,
+        "size": n,
+        "sectors": sectors,
         "benchmark": cfg.benchmark,
         "weights": cfg.weights.as_dict(),
         "thresholds": {"buy": cfg.ratings.buy, "hold": cfg.ratings.hold},
+        "funnel_top_n": cfg.funnel.top_n_for_reasoning,
         "starting_capital": cfg.portfolio.starting_capital,
     }
 
 
 @app.get("/api/rankings")
-def rankings() -> list[dict]:
+def rankings(
+    sector: Optional[str] = None,
+    rating: Optional[str] = None,
+    in_slice: Optional[bool] = None,
+    q: Optional[str] = None,
+    limit: int = 100,
+    offset: int = 0,
+) -> dict:
+    """Paginated, filterable ranking view.
+
+    Joins `company_signal_scores.csv` (numeric features) with
+    `company_rankings.json` (sector + thesis snippet) and applies optional
+    filters. Designed for the rankings page in the UI.
+    """
     df = _read_scores().reset_index()
-    # Replace NaN with None for clean JSON.
-    return json.loads(df.to_json(orient="records"))
+    rankings_path = _output_dir() / "company_rankings.json"
+    if rankings_path.exists():
+        rrows = json.loads(rankings_path.read_text())
+        meta = pd.DataFrame(rrows).set_index("ticker")
+        join_cols = [
+            c
+            for c in [
+                "rank",
+                "company_name",
+                "sector",
+                "qualitative_score",
+                "headline",
+                "investment_thesis",
+                "conviction",
+                "in_reasoning_slice",
+            ]
+            if c in meta.columns
+        ]
+        df = df.merge(meta[join_cols], left_on="ticker", right_index=True, how="left")
+        df = df.sort_values("rank", na_position="last")
+    else:
+        df["rank"] = range(1, len(df) + 1)
+
+    if sector:
+        df = df[df["sector"] == sector] if "sector" in df.columns else df.iloc[:0]
+    if rating:
+        df = df[df["rating"] == rating.upper()]
+    if in_slice is not None and "in_reasoning_slice" in df.columns:
+        df = df[df["in_reasoning_slice"] == in_slice]
+    if q:
+        ql = q.lower()
+        mask = df["ticker"].str.lower().str.contains(ql, na=False)
+        if "company_name" in df.columns:
+            mask = mask | df["company_name"].fillna("").str.lower().str.contains(ql)
+        df = df[mask]
+
+    total = int(len(df))
+    page = df.iloc[offset : offset + limit]
+    return {
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "rows": json.loads(page.to_json(orient="records")),
+    }
 
 
 @app.get("/api/ticker/{symbol}")
@@ -213,6 +285,18 @@ def dashboard() -> dict:
     df = _read_scores().reset_index()
     perf = _read_json(_output_dir() / "performance_summary.json")
     risk = _read_json(_output_dir() / "risk_report.json")
+
+    # Enrich the top picks with sector + company name from the rankings file.
+    rankings_path = _output_dir() / "company_rankings.json"
+    if rankings_path.exists():
+        rdf = pd.DataFrame(json.loads(rankings_path.read_text()))
+        if not rdf.empty:
+            keep_cols = [
+                c
+                for c in ["ticker", "company_name", "sector", "rank", "conviction"]
+                if c in rdf.columns
+            ]
+            df = df.merge(rdf[keep_cols], on="ticker", how="left")
 
     bt = _read_backtest()
     pv = bt["portfolio_value"]

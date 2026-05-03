@@ -1,10 +1,485 @@
 ticker,company_name,description
-NVDA,NVIDIA Corporation,"Designs GPUs and accelerated-computing platforms. Dominant supplier of training silicon for AI infrastructure; expanding into networking (InfiniBand / Spectrum-X) and software (CUDA, NIM, Omniverse)."
-MSFT,Microsoft Corporation,"Cloud (Azure), productivity (M365 / Copilot), and Windows. Largest commercial AI distribution channel via Azure OpenAI and Copilot integration across the enterprise SKU stack."
-AMZN,"Amazon.com, Inc.","Online retail, AWS cloud, advertising, and Prime media. Investing heavily in AI infrastructure (Trainium / Inferentia, Bedrock) and logistics automation."
+CHTR,"Charter Communications, Inc.","Charter Communications, Inc. - Cable & Satellite company in the Communication Services sector."
+CMCSA,Comcast Corporation,Comcast Corporation - Cable & Satellite company in the Communication Services sector.
+DIS,The Walt Disney Company,The Walt Disney Company - Movies & Entertainment company in the Communication Services sector.
+EA,Electronic Arts Inc.,Electronic Arts Inc. - Interactive Home Entertainment company in the Communication Services sector.
+FOX,Fox Corporation (Class B),Fox Corporation (Class B) - Broadcasting company in the Communication Services sector.
+FOXA,Fox Corporation (Class A),Fox Corporation (Class A) - Broadcasting company in the Communication Services sector.
+GOOG,Alphabet Inc. (Class C),Alphabet Inc. (Class C) - Interactive Media & Services company in the Communication Services sector.
+GOOGL,Alphabet Inc. (Class A),Alphabet Inc. (Class A) - Interactive Media & Services company in the Communication Services sector.
+IPG,The Interpublic Group of Companies,The Interpublic Group of Companies - Advertising company in the Communication Services sector.
+LYV,"Live Nation Entertainment, Inc.","Live Nation Entertainment, Inc. - Movies & Entertainment company in the Communication Services sector."
 META,"Meta Platforms, Inc.","Family of apps (Facebook, Instagram, WhatsApp, Threads), Reality Labs, and an open-weights AI strategy (Llama). Revenue is concentrated in performance advertising."
+MTCH,"Match Group, Inc.","Match Group, Inc. - Interactive Media & Services company in the Communication Services sector."
+NFLX,"Netflix, Inc.","Netflix, Inc. - Movies & Entertainment company in the Communication Services sector."
+NWS,News Corporation (Class B),News Corporation (Class B) - Publishing company in the Communication Services sector.
+NWSA,News Corporation (Class A),News Corporation (Class A) - Publishing company in the Communication Services sector.
+OMC,Omnicom Group Inc.,Omnicom Group Inc. - Advertising company in the Communication Services sector.
+PARA,Paramount Global,Paramount Global - Movies & Entertainment company in the Communication Services sector.
+T,AT&T Inc.,AT&T Inc. - Integrated Telecommunication Services company in the Communication Services sector.
+TMUS,"T-Mobile US, Inc.","T-Mobile US, Inc. - Wireless Telecommunication Services company in the Communication Services sector."
+TTWO,Take-Two Interactive Software,Take-Two Interactive Software - Interactive Home Entertainment company in the Communication Services sector.
+VZ,Verizon Communications Inc.,Verizon Communications Inc. - Integrated Telecommunication Services company in the Communication Services sector.
+WBD,"Warner Bros. Discovery, Inc.","Warner Bros. Discovery, Inc. - Movies & Entertainment company in the Communication Services sector."
+ABNB,"Airbnb, Inc.","Airbnb, Inc. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+AMZN,"Amazon.com, Inc.","Online retail, AWS cloud, advertising, and Prime media. Investing heavily in AI infrastructure (Trainium / Inferentia, Bedrock) and logistics automation."
+APTV,Aptiv PLC,Aptiv PLC - Automotive Parts & Equipment company in the Consumer Discretionary sector.
+AZO,"AutoZone, Inc.","AutoZone, Inc. - Automotive Retail company in the Consumer Discretionary sector."
+BBY,"Best Buy Co., Inc.","Best Buy Co., Inc. - Computer & Electronics Retail company in the Consumer Discretionary sector."
+BKNG,Booking Holdings Inc.,"Booking Holdings Inc. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+BWA,BorgWarner Inc.,BorgWarner Inc. - Automotive Parts & Equipment company in the Consumer Discretionary sector.
+CCL,Carnival Corporation,"Carnival Corporation - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+CMG,"Chipotle Mexican Grill, Inc.","Chipotle Mexican Grill, Inc. - Restaurants company in the Consumer Discretionary sector."
+DECK,Deckers Outdoor Corporation,Deckers Outdoor Corporation - Footwear company in the Consumer Discretionary sector.
+DHI,"D.R. Horton, Inc.","D.R. Horton, Inc. - Homebuilding company in the Consumer Discretionary sector."
+DPZ,"Domino's Pizza, Inc.","Domino's Pizza, Inc. - Restaurants company in the Consumer Discretionary sector."
+DRI,"Darden Restaurants, Inc.","Darden Restaurants, Inc. - Restaurants company in the Consumer Discretionary sector."
+EBAY,eBay Inc.,eBay Inc. - Broadline Retail company in the Consumer Discretionary sector.
+ETSY,"Etsy, Inc.","Etsy, Inc. - Broadline Retail company in the Consumer Discretionary sector."
+EXPE,"Expedia Group, Inc.","Expedia Group, Inc. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+F,Ford Motor Company,Ford Motor Company - Automobile Manufacturers company in the Consumer Discretionary sector.
+GM,General Motors Company,General Motors Company - Automobile Manufacturers company in the Consumer Discretionary sector.
+GPC,Genuine Parts Company,Genuine Parts Company - Distributors company in the Consumer Discretionary sector.
+HAS,"Hasbro, Inc.","Hasbro, Inc. - Leisure Products company in the Consumer Discretionary sector."
+HD,"The Home Depot, Inc.","The Home Depot, Inc. - Home Improvement Retail company in the Consumer Discretionary sector."
+HLT,Hilton Worldwide Holdings Inc.,"Hilton Worldwide Holdings Inc. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+KMX,"CarMax, Inc.","CarMax, Inc. - Automotive Retail company in the Consumer Discretionary sector."
+LEN,Lennar Corporation,Lennar Corporation - Homebuilding company in the Consumer Discretionary sector.
+LOW,"Lowe's Companies, Inc.","Lowe's Companies, Inc. - Home Improvement Retail company in the Consumer Discretionary sector."
+LULU,lululemon athletica inc.,"lululemon athletica inc. - Apparel, Accessories & Luxury Goods company in the Consumer Discretionary sector."
+LVS,Las Vegas Sands Corp.,Las Vegas Sands Corp. - Casinos & Gaming company in the Consumer Discretionary sector.
+MAR,"Marriott International, Inc.","Marriott International, Inc. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+MAT,"Mattel, Inc.","Mattel, Inc. - Leisure Products company in the Consumer Discretionary sector."
+MCD,McDonald's Corporation,McDonald's Corporation - Restaurants company in the Consumer Discretionary sector.
+MGM,MGM Resorts International,MGM Resorts International - Casinos & Gaming company in the Consumer Discretionary sector.
+NCLH,Norwegian Cruise Line Holdings,"Norwegian Cruise Line Holdings - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+NKE,"NIKE, Inc.","NIKE, Inc. - Apparel, Accessories & Luxury Goods company in the Consumer Discretionary sector."
+NVR,"NVR, Inc.","NVR, Inc. - Homebuilding company in the Consumer Discretionary sector."
+ORLY,"O'Reilly Automotive, Inc.","O'Reilly Automotive, Inc. - Automotive Retail company in the Consumer Discretionary sector."
+PHM,"PulteGroup, Inc.","PulteGroup, Inc. - Homebuilding company in the Consumer Discretionary sector."
+RCL,Royal Caribbean Cruises Ltd.,"Royal Caribbean Cruises Ltd. - Hotels, Resorts & Cruise Lines company in the Consumer Discretionary sector."
+RL,Ralph Lauren Corporation,"Ralph Lauren Corporation - Apparel, Accessories & Luxury Goods company in the Consumer Discretionary sector."
+ROST,"Ross Stores, Inc.","Ross Stores, Inc. - Apparel Retail company in the Consumer Discretionary sector."
+SBUX,Starbucks Corporation,Starbucks Corporation - Restaurants company in the Consumer Discretionary sector.
+TJX,"The TJX Companies, Inc.","The TJX Companies, Inc. - Apparel Retail company in the Consumer Discretionary sector."
+TPR,"Tapestry, Inc.","Tapestry, Inc. - Apparel, Accessories & Luxury Goods company in the Consumer Discretionary sector."
+TSCO,Tractor Supply Company,Tractor Supply Company - Other Specialty Retail company in the Consumer Discretionary sector.
 TSLA,"Tesla, Inc.","Electric vehicles, energy storage, and FSD / Optimus AI. Margin profile tied tightly to factory utilization and average selling price."
+ULTA,"Ulta Beauty, Inc.","Ulta Beauty, Inc. - Other Specialty Retail company in the Consumer Discretionary sector."
+WYNN,"Wynn Resorts, Limited","Wynn Resorts, Limited - Casinos & Gaming company in the Consumer Discretionary sector."
+YUM,"Yum! Brands, Inc.","Yum! Brands, Inc. - Restaurants company in the Consumer Discretionary sector."
+ADM,Archer-Daniels-Midland Company,Archer-Daniels-Midland Company - Agricultural Products & Services company in the Consumer Staples sector.
+BFB,Brown-Forman Corporation,Brown-Forman Corporation - Distillers & Vintners company in the Consumer Staples sector.
+BG,Bunge Global SA,Bunge Global SA - Agricultural Products & Services company in the Consumer Staples sector.
+CAG,"Conagra Brands, Inc.","Conagra Brands, Inc. - Packaged Foods & Meats company in the Consumer Staples sector."
+CHD,"Church & Dwight Co., Inc.","Church & Dwight Co., Inc. - Household Products company in the Consumer Staples sector."
+CL,Colgate-Palmolive Company,Colgate-Palmolive Company - Personal Care Products company in the Consumer Staples sector.
+CLX,The Clorox Company,The Clorox Company - Household Products company in the Consumer Staples sector.
+COST,Costco Wholesale Corporation,Costco Wholesale Corporation - Consumer Staples Merchandise Retail company in the Consumer Staples sector.
+CPB,The Campbell's Company,The Campbell's Company - Packaged Foods & Meats company in the Consumer Staples sector.
+DG,Dollar General Corporation,Dollar General Corporation - Consumer Staples Merchandise Retail company in the Consumer Staples sector.
+DLTR,"Dollar Tree, Inc.","Dollar Tree, Inc. - Consumer Staples Merchandise Retail company in the Consumer Staples sector."
+EL,The Estee Lauder Companies Inc.,The Estee Lauder Companies Inc. - Personal Care Products company in the Consumer Staples sector.
+GIS,"General Mills, Inc.","General Mills, Inc. - Packaged Foods & Meats company in the Consumer Staples sector."
+HRL,Hormel Foods Corporation,Hormel Foods Corporation - Packaged Foods & Meats company in the Consumer Staples sector.
+HSY,The Hershey Company,The Hershey Company - Packaged Foods & Meats company in the Consumer Staples sector.
+K,Kellanova,Kellanova - Packaged Foods & Meats company in the Consumer Staples sector.
+KDP,Keurig Dr Pepper Inc.,Keurig Dr Pepper Inc. - Soft Drinks & Non-alcoholic Beverages company in the Consumer Staples sector.
+KHC,The Kraft Heinz Company,The Kraft Heinz Company - Packaged Foods & Meats company in the Consumer Staples sector.
+KMB,Kimberly-Clark Corporation,Kimberly-Clark Corporation - Household Products company in the Consumer Staples sector.
+KO,The Coca-Cola Company,The Coca-Cola Company - Soft Drinks & Non-alcoholic Beverages company in the Consumer Staples sector.
+KR,The Kroger Co.,The Kroger Co. - Food Retail company in the Consumer Staples sector.
+LW,"Lamb Weston Holdings, Inc.","Lamb Weston Holdings, Inc. - Packaged Foods & Meats company in the Consumer Staples sector."
+MDLZ,"Mondelez International, Inc.","Mondelez International, Inc. - Packaged Foods & Meats company in the Consumer Staples sector."
+MKC,"McCormick & Company, Incorporated","McCormick & Company, Incorporated - Packaged Foods & Meats company in the Consumer Staples sector."
+MNST,Monster Beverage Corporation,Monster Beverage Corporation - Soft Drinks & Non-alcoholic Beverages company in the Consumer Staples sector.
+MO,"Altria Group, Inc.","Altria Group, Inc. - Tobacco company in the Consumer Staples sector."
+PEP,"PepsiCo, Inc.","PepsiCo, Inc. - Soft Drinks & Non-alcoholic Beverages company in the Consumer Staples sector."
+PG,The Procter & Gamble Company,The Procter & Gamble Company - Personal Care Products company in the Consumer Staples sector.
+PM,Philip Morris International,Philip Morris International - Tobacco company in the Consumer Staples sector.
+STZ,"Constellation Brands, Inc.","Constellation Brands, Inc. - Distillers & Vintners company in the Consumer Staples sector."
+SYY,Sysco Corporation,Sysco Corporation - Food Distributors company in the Consumer Staples sector.
+TGT,Target Corporation,Target Corporation - Consumer Staples Merchandise Retail company in the Consumer Staples sector.
+TSN,"Tyson Foods, Inc.","Tyson Foods, Inc. - Packaged Foods & Meats company in the Consumer Staples sector."
+WBA,"Walgreens Boots Alliance, Inc.","Walgreens Boots Alliance, Inc. - Drug Retail company in the Consumer Staples sector."
+WMT,Walmart Inc.,Walmart Inc. - Consumer Staples Merchandise Retail company in the Consumer Staples sector.
+APA,APA Corporation,APA Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+BKR,Baker Hughes Company,Baker Hughes Company - Oil & Gas Equipment & Services company in the Energy sector.
+COP,ConocoPhillips,ConocoPhillips - Oil & Gas Exploration & Production company in the Energy sector.
+CTRA,Coterra Energy Inc.,Coterra Energy Inc. - Oil & Gas Exploration & Production company in the Energy sector.
+CVX,Chevron Corporation,Chevron Corporation - Integrated Oil & Gas company in the Energy sector.
+DVN,Devon Energy Corporation,Devon Energy Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+EOG,"EOG Resources, Inc.","EOG Resources, Inc. - Oil & Gas Exploration & Production company in the Energy sector."
+EQT,EQT Corporation,EQT Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+FANG,"Diamondback Energy, Inc.","Diamondback Energy, Inc. - Oil & Gas Exploration & Production company in the Energy sector."
+HAL,Halliburton Company,Halliburton Company - Oil & Gas Equipment & Services company in the Energy sector.
+HES,Hess Corporation,Hess Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+KMI,"Kinder Morgan, Inc.","Kinder Morgan, Inc. - Oil & Gas Storage & Transportation company in the Energy sector."
+MPC,Marathon Petroleum Corporation,Marathon Petroleum Corporation - Oil & Gas Refining & Marketing company in the Energy sector.
+MRO,Marathon Oil Corporation,Marathon Oil Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+OKE,"ONEOK, Inc.","ONEOK, Inc. - Oil & Gas Storage & Transportation company in the Energy sector."
+OXY,Occidental Petroleum Corporation,Occidental Petroleum Corporation - Oil & Gas Exploration & Production company in the Energy sector.
+PSX,Phillips 66,Phillips 66 - Oil & Gas Refining & Marketing company in the Energy sector.
+PXD,Pioneer Natural Resources Company,Pioneer Natural Resources Company - Oil & Gas Exploration & Production company in the Energy sector.
+SLB,SLB,SLB - Oil & Gas Equipment & Services company in the Energy sector.
+TRGP,Targa Resources Corp.,Targa Resources Corp. - Oil & Gas Storage & Transportation company in the Energy sector.
+VLO,Valero Energy Corporation,Valero Energy Corporation - Oil & Gas Refining & Marketing company in the Energy sector.
+WMB,"The Williams Companies, Inc.","The Williams Companies, Inc. - Oil & Gas Storage & Transportation company in the Energy sector."
+XOM,Exxon Mobil Corporation,Exxon Mobil Corporation - Integrated Oil & Gas company in the Energy sector.
+ACGL,Arch Capital Group Ltd.,Arch Capital Group Ltd. - Property & Casualty Insurance company in the Financials sector.
+AFL,Aflac Incorporated,Aflac Incorporated - Life & Health Insurance company in the Financials sector.
+AIG,"American International Group, Inc.","American International Group, Inc. - Multi-line Insurance company in the Financials sector."
+AIZ,"Assurant, Inc.","Assurant, Inc. - Multi-line Insurance company in the Financials sector."
+ALL,The Allstate Corporation,The Allstate Corporation - Property & Casualty Insurance company in the Financials sector.
+AMP,"Ameriprise Financial, Inc.","Ameriprise Financial, Inc. - Asset Management & Custody Banks company in the Financials sector."
+AON,Aon plc,Aon plc - Insurance Brokers company in the Financials sector.
+APO,"Apollo Global Management, Inc.","Apollo Global Management, Inc. - Asset Management & Custody Banks company in the Financials sector."
+AXP,American Express Company,American Express Company - Consumer Finance company in the Financials sector.
+BAC,Bank of America Corporation,Bank of America Corporation - Diversified Banks company in the Financials sector.
+BEN,"Franklin Resources, Inc.","Franklin Resources, Inc. - Asset Management & Custody Banks company in the Financials sector."
+BK,The Bank of New York Mellon Corp.,The Bank of New York Mellon Corp. - Asset Management & Custody Banks company in the Financials sector.
+BLK,"BlackRock, Inc.","BlackRock, Inc. - Asset Management & Custody Banks company in the Financials sector."
+BRK.B,Berkshire Hathaway Inc.,Berkshire Hathaway Inc. - Multi-Sector Holdings company in the Financials sector.
+BRO,"Brown & Brown, Inc.","Brown & Brown, Inc. - Insurance Brokers company in the Financials sector."
+BX,Blackstone Inc.,Blackstone Inc. - Asset Management & Custody Banks company in the Financials sector.
+C,Citigroup Inc.,Citigroup Inc. - Diversified Banks company in the Financials sector.
+CB,Chubb Limited,Chubb Limited - Property & Casualty Insurance company in the Financials sector.
+CBOE,"Cboe Global Markets, Inc.","Cboe Global Markets, Inc. - Financial Exchanges & Data company in the Financials sector."
+CFG,"Citizens Financial Group, Inc.","Citizens Financial Group, Inc. - Regional Banks company in the Financials sector."
+CINF,Cincinnati Financial Corporation,Cincinnati Financial Corporation - Property & Casualty Insurance company in the Financials sector.
+CME,CME Group Inc.,CME Group Inc. - Financial Exchanges & Data company in the Financials sector.
+COF,Capital One Financial Corporation,Capital One Financial Corporation - Consumer Finance company in the Financials sector.
+DFS,Discover Financial Services,Discover Financial Services - Consumer Finance company in the Financials sector.
+EG,"Everest Group, Ltd.","Everest Group, Ltd. - Reinsurance company in the Financials sector."
+ERIE,Erie Indemnity Company,Erie Indemnity Company - Insurance Brokers company in the Financials sector.
+FDS,FactSet Research Systems Inc.,FactSet Research Systems Inc. - Financial Exchanges & Data company in the Financials sector.
+FITB,Fifth Third Bancorp,Fifth Third Bancorp - Regional Banks company in the Financials sector.
+GPN,Global Payments Inc.,Global Payments Inc. - Transaction & Payment Processing company in the Financials sector.
+GS,"The Goldman Sachs Group, Inc.","The Goldman Sachs Group, Inc. - Investment Banking & Brokerage company in the Financials sector."
+HBAN,Huntington Bancshares Incorporated,Huntington Bancshares Incorporated - Regional Banks company in the Financials sector.
+HIG,The Hartford Financial Services Group,The Hartford Financial Services Group - Property & Casualty Insurance company in the Financials sector.
+ICE,"Intercontinental Exchange, Inc.","Intercontinental Exchange, Inc. - Financial Exchanges & Data company in the Financials sector."
+IVZ,Invesco Ltd.,Invesco Ltd. - Asset Management & Custody Banks company in the Financials sector.
+JKHY,"Jack Henry & Associates, Inc.","Jack Henry & Associates, Inc. - Transaction & Payment Processing company in the Financials sector."
+JPM,JPMorgan Chase & Co.,JPMorgan Chase & Co. - Diversified Banks company in the Financials sector.
+KEY,KeyCorp,KeyCorp - Regional Banks company in the Financials sector.
+KKR,KKR & Co. Inc.,KKR & Co. Inc. - Asset Management & Custody Banks company in the Financials sector.
+L,Loews Corporation,Loews Corporation - Multi-line Insurance company in the Financials sector.
+LNC,Lincoln National Corporation,Lincoln National Corporation - Life & Health Insurance company in the Financials sector.
+MA,Mastercard Incorporated,Mastercard Incorporated - Transaction & Payment Processing company in the Financials sector.
+MCO,Moody's Corporation,Moody's Corporation - Financial Exchanges & Data company in the Financials sector.
+MET,"MetLife, Inc.","MetLife, Inc. - Life & Health Insurance company in the Financials sector."
+MMC,"Marsh & McLennan Companies, Inc.","Marsh & McLennan Companies, Inc. - Insurance Brokers company in the Financials sector."
+MS,Morgan Stanley,Morgan Stanley - Investment Banking & Brokerage company in the Financials sector.
+MSCI,MSCI Inc.,MSCI Inc. - Financial Exchanges & Data company in the Financials sector.
+MTB,M&T Bank Corporation,M&T Bank Corporation - Regional Banks company in the Financials sector.
+NDAQ,"Nasdaq, Inc.","Nasdaq, Inc. - Financial Exchanges & Data company in the Financials sector."
+NTRS,Northern Trust Corporation,Northern Trust Corporation - Asset Management & Custody Banks company in the Financials sector.
+PFG,"Principal Financial Group, Inc.","Principal Financial Group, Inc. - Life & Health Insurance company in the Financials sector."
+PGR,The Progressive Corporation,The Progressive Corporation - Property & Casualty Insurance company in the Financials sector.
+PNC,The PNC Financial Services Group,The PNC Financial Services Group - Diversified Banks company in the Financials sector.
+PRU,"Prudential Financial, Inc.","Prudential Financial, Inc. - Life & Health Insurance company in the Financials sector."
+PYPL,"PayPal Holdings, Inc.","PayPal Holdings, Inc. - Transaction & Payment Processing company in the Financials sector."
+RF,Regions Financial Corporation,Regions Financial Corporation - Regional Banks company in the Financials sector.
+RJF,"Raymond James Financial, Inc.","Raymond James Financial, Inc. - Investment Banking & Brokerage company in the Financials sector."
+SCHW,The Charles Schwab Corporation,The Charles Schwab Corporation - Investment Banking & Brokerage company in the Financials sector.
+SPGI,S&P Global Inc.,S&P Global Inc. - Financial Exchanges & Data company in the Financials sector.
+STT,State Street Corporation,State Street Corporation - Asset Management & Custody Banks company in the Financials sector.
+SYF,Synchrony Financial,Synchrony Financial - Consumer Finance company in the Financials sector.
+TFC,Truist Financial Corporation,Truist Financial Corporation - Diversified Banks company in the Financials sector.
+TROW,"T. Rowe Price Group, Inc.","T. Rowe Price Group, Inc. - Asset Management & Custody Banks company in the Financials sector."
+TRV,"The Travelers Companies, Inc.","The Travelers Companies, Inc. - Property & Casualty Insurance company in the Financials sector."
+UNM,Unum Group,Unum Group - Life & Health Insurance company in the Financials sector.
+USB,U.S. Bancorp,U.S. Bancorp - Diversified Banks company in the Financials sector.
+V,Visa Inc.,Visa Inc. - Transaction & Payment Processing company in the Financials sector.
+WFC,Wells Fargo & Company,Wells Fargo & Company - Diversified Banks company in the Financials sector.
+WRB,W. R. Berkley Corporation,W. R. Berkley Corporation - Property & Casualty Insurance company in the Financials sector.
+WTW,Willis Towers Watson Public Limited,Willis Towers Watson Public Limited - Insurance Brokers company in the Financials sector.
+A,"Agilent Technologies, Inc.","Agilent Technologies, Inc. - Life Sciences Tools & Services company in the Health Care sector."
+ABBV,AbbVie Inc.,AbbVie Inc. - Biotechnology company in the Health Care sector.
+ABT,Abbott Laboratories,Abbott Laboratories - Health Care Equipment company in the Health Care sector.
+ALGN,"Align Technology, Inc.","Align Technology, Inc. - Health Care Supplies company in the Health Care sector."
+AMGN,Amgen Inc.,Amgen Inc. - Biotechnology company in the Health Care sector.
+BAX,Baxter International Inc.,Baxter International Inc. - Health Care Equipment company in the Health Care sector.
+BDX,"Becton, Dickinson and Company","Becton, Dickinson and Company - Health Care Equipment company in the Health Care sector."
+BIIB,Biogen Inc.,Biogen Inc. - Biotechnology company in the Health Care sector.
+BIO,"Bio-Rad Laboratories, Inc.","Bio-Rad Laboratories, Inc. - Life Sciences Tools & Services company in the Health Care sector."
+BMY,Bristol-Myers Squibb Company,Bristol-Myers Squibb Company - Pharmaceuticals company in the Health Care sector.
+BSX,Boston Scientific Corporation,Boston Scientific Corporation - Health Care Equipment company in the Health Care sector.
+CAH,"Cardinal Health, Inc.","Cardinal Health, Inc. - Health Care Distributors company in the Health Care sector."
+CI,The Cigna Group,The Cigna Group - Health Care Services company in the Health Care sector.
+CNC,Centene Corporation,Centene Corporation - Managed Health Care company in the Health Care sector.
+COR,"Cencora, Inc.","Cencora, Inc. - Health Care Distributors company in the Health Care sector."
+CRL,Charles River Laboratories International,Charles River Laboratories International - Life Sciences Tools & Services company in the Health Care sector.
+CVS,CVS Health Corporation,CVS Health Corporation - Health Care Services company in the Health Care sector.
+DGX,Quest Diagnostics Incorporated,Quest Diagnostics Incorporated - Health Care Services company in the Health Care sector.
+DHR,Danaher Corporation,Danaher Corporation - Life Sciences Tools & Services company in the Health Care sector.
+DVA,DaVita Inc.,DaVita Inc. - Health Care Services company in the Health Care sector.
+DXCM,"DexCom, Inc.","DexCom, Inc. - Health Care Equipment company in the Health Care sector."
+ELV,"Elevance Health, Inc.","Elevance Health, Inc. - Managed Health Care company in the Health Care sector."
+EW,Edwards Lifesciences Corporation,Edwards Lifesciences Corporation - Health Care Equipment company in the Health Care sector.
+GEHC,GE HealthCare Technologies Inc.,GE HealthCare Technologies Inc. - Health Care Equipment company in the Health Care sector.
+GILD,"Gilead Sciences, Inc.","Gilead Sciences, Inc. - Biotechnology company in the Health Care sector."
+HCA,"HCA Healthcare, Inc.","HCA Healthcare, Inc. - Health Care Facilities company in the Health Care sector."
+HOLX,"Hologic, Inc.","Hologic, Inc. - Health Care Equipment company in the Health Care sector."
+HSIC,"Henry Schein, Inc.","Henry Schein, Inc. - Health Care Distributors company in the Health Care sector."
+HUM,Humana Inc.,Humana Inc. - Managed Health Care company in the Health Care sector.
+IDXX,"IDEXX Laboratories, Inc.","IDEXX Laboratories, Inc. - Health Care Equipment company in the Health Care sector."
+INCY,Incyte Corporation,Incyte Corporation - Biotechnology company in the Health Care sector.
+IQV,IQVIA Holdings Inc.,IQVIA Holdings Inc. - Life Sciences Tools & Services company in the Health Care sector.
+ISRG,"Intuitive Surgical, Inc.","Intuitive Surgical, Inc. - Health Care Equipment company in the Health Care sector."
+JNJ,Johnson & Johnson,Johnson & Johnson - Pharmaceuticals company in the Health Care sector.
+LH,Labcorp Holdings Inc.,Labcorp Holdings Inc. - Health Care Services company in the Health Care sector.
+LLY,Eli Lilly and Company,Eli Lilly and Company - Pharmaceuticals company in the Health Care sector.
+MCK,McKesson Corporation,McKesson Corporation - Health Care Distributors company in the Health Care sector.
+MDT,Medtronic plc,Medtronic plc - Health Care Equipment company in the Health Care sector.
+MOH,"Molina Healthcare, Inc.","Molina Healthcare, Inc. - Managed Health Care company in the Health Care sector."
+MRK,"Merck & Co., Inc.","Merck & Co., Inc. - Pharmaceuticals company in the Health Care sector."
+MRNA,"Moderna, Inc.","Moderna, Inc. - Biotechnology company in the Health Care sector."
+MTD,Mettler-Toledo International Inc.,Mettler-Toledo International Inc. - Life Sciences Tools & Services company in the Health Care sector.
+OGN,Organon & Co.,Organon & Co. - Pharmaceuticals company in the Health Care sector.
+PFE,Pfizer Inc.,Pfizer Inc. - Pharmaceuticals company in the Health Care sector.
+PODD,Insulet Corporation,Insulet Corporation - Health Care Equipment company in the Health Care sector.
+REGN,"Regeneron Pharmaceuticals, Inc.","Regeneron Pharmaceuticals, Inc. - Biotechnology company in the Health Care sector."
+RMD,ResMed Inc.,ResMed Inc. - Health Care Equipment company in the Health Care sector.
+RVTY,"Revvity, Inc.","Revvity, Inc. - Life Sciences Tools & Services company in the Health Care sector."
+STE,STERIS plc,STERIS plc - Health Care Equipment company in the Health Care sector.
+SYK,Stryker Corporation,Stryker Corporation - Health Care Equipment company in the Health Care sector.
+TECH,Bio-Techne Corporation,Bio-Techne Corporation - Life Sciences Tools & Services company in the Health Care sector.
+TMO,Thermo Fisher Scientific Inc.,Thermo Fisher Scientific Inc. - Life Sciences Tools & Services company in the Health Care sector.
+UHS,"Universal Health Services, Inc.","Universal Health Services, Inc. - Health Care Facilities company in the Health Care sector."
+UNH,UnitedHealth Group Incorporated,UnitedHealth Group Incorporated - Managed Health Care company in the Health Care sector.
+VRTX,Vertex Pharmaceuticals Incorporated,Vertex Pharmaceuticals Incorporated - Biotechnology company in the Health Care sector.
+VTRS,Viatris Inc.,Viatris Inc. - Pharmaceuticals company in the Health Care sector.
+WAT,Waters Corporation,Waters Corporation - Life Sciences Tools & Services company in the Health Care sector.
+WST,"West Pharmaceutical Services, Inc.","West Pharmaceutical Services, Inc. - Health Care Supplies company in the Health Care sector."
+ZBH,"Zimmer Biomet Holdings, Inc.","Zimmer Biomet Holdings, Inc. - Health Care Equipment company in the Health Care sector."
+ZTS,Zoetis Inc.,Zoetis Inc. - Pharmaceuticals company in the Health Care sector.
+AAL,American Airlines Group Inc.,American Airlines Group Inc. - Passenger Airlines company in the Industrials sector.
+ALK,"Alaska Air Group, Inc.","Alaska Air Group, Inc. - Passenger Airlines company in the Industrials sector."
+ALLE,Allegion plc,Allegion plc - Building Products company in the Industrials sector.
+AME,"AMETEK, Inc.","AMETEK, Inc. - Electrical Components & Equipment company in the Industrials sector."
+AXON,"Axon Enterprise, Inc.","Axon Enterprise, Inc. - Aerospace & Defense company in the Industrials sector."
+BA,The Boeing Company,The Boeing Company - Aerospace & Defense company in the Industrials sector.
+BLDR,"Builders FirstSource, Inc.","Builders FirstSource, Inc. - Building Products company in the Industrials sector."
+BR,Broadridge Financial Solutions,Broadridge Financial Solutions - Data Processing & Outsourced Services company in the Industrials sector.
+CARR,Carrier Global Corporation,Carrier Global Corporation - Building Products company in the Industrials sector.
+CAT,Caterpillar Inc.,Caterpillar Inc. - Construction Machinery & Heavy Trucks company in the Industrials sector.
+CHRW,"C.H. Robinson Worldwide, Inc.","C.H. Robinson Worldwide, Inc. - Air Freight & Logistics company in the Industrials sector."
+CMI,Cummins Inc.,Cummins Inc. - Construction Machinery & Heavy Trucks company in the Industrials sector.
+CPRT,"Copart, Inc.","Copart, Inc. - Diversified Support Services company in the Industrials sector."
+CSX,CSX Corporation,CSX Corporation - Rail Transportation company in the Industrials sector.
+CTAS,Cintas Corporation,Cintas Corporation - Diversified Support Services company in the Industrials sector.
+DAL,"Delta Air Lines, Inc.","Delta Air Lines, Inc. - Passenger Airlines company in the Industrials sector."
+DAY,"Dayforce, Inc.","Dayforce, Inc. - Human Resource & Employment Services company in the Industrials sector."
+DE,Deere & Company,Deere & Company - Agricultural & Farm Machinery company in the Industrials sector.
+DOV,Dover Corporation,Dover Corporation - Industrial Machinery company in the Industrials sector.
+EFX,Equifax Inc.,Equifax Inc. - Research & Consulting Services company in the Industrials sector.
+EMR,Emerson Electric Co.,Emerson Electric Co. - Electrical Components & Equipment company in the Industrials sector.
+ETN,Eaton Corporation plc,Eaton Corporation plc - Electrical Components & Equipment company in the Industrials sector.
+EXPD,Expeditors International of WA,Expeditors International of WA - Air Freight & Logistics company in the Industrials sector.
+FAST,Fastenal Company,Fastenal Company - Trading Companies & Distributors company in the Industrials sector.
+FDX,FedEx Corporation,FedEx Corporation - Air Freight & Logistics company in the Industrials sector.
+FTV,Fortive Corporation,Fortive Corporation - Industrial Machinery company in the Industrials sector.
+GD,General Dynamics Corporation,General Dynamics Corporation - Aerospace & Defense company in the Industrials sector.
+GE,GE Aerospace,GE Aerospace - Aerospace & Defense company in the Industrials sector.
+GWW,"W.W. Grainger, Inc.","W.W. Grainger, Inc. - Trading Companies & Distributors company in the Industrials sector."
+HII,"Huntington Ingalls Industries, Inc.","Huntington Ingalls Industries, Inc. - Aerospace & Defense company in the Industrials sector."
+HON,Honeywell International Inc.,Honeywell International Inc. - Industrial Conglomerates company in the Industrials sector.
+HWM,Howmet Aerospace Inc.,Howmet Aerospace Inc. - Aerospace & Defense company in the Industrials sector.
+IEX,IDEX Corporation,IDEX Corporation - Industrial Machinery company in the Industrials sector.
+IR,Ingersoll Rand Inc.,Ingersoll Rand Inc. - Industrial Machinery company in the Industrials sector.
+ITW,Illinois Tool Works Inc.,Illinois Tool Works Inc. - Industrial Machinery company in the Industrials sector.
+J,Jacobs Solutions Inc.,Jacobs Solutions Inc. - Construction & Engineering company in the Industrials sector.
+LHX,"L3Harris Technologies, Inc.","L3Harris Technologies, Inc. - Aerospace & Defense company in the Industrials sector."
+LII,Lennox International Inc.,Lennox International Inc. - Building Products company in the Industrials sector.
+LMT,Lockheed Martin Corporation,Lockheed Martin Corporation - Aerospace & Defense company in the Industrials sector.
+LUV,Southwest Airlines Co.,Southwest Airlines Co. - Passenger Airlines company in the Industrials sector.
+MAS,Masco Corporation,Masco Corporation - Building Products company in the Industrials sector.
+MMM,3M Company,3M Company - Industrial Conglomerates company in the Industrials sector.
+NOC,Northrop Grumman Corporation,Northrop Grumman Corporation - Aerospace & Defense company in the Industrials sector.
+NSC,Norfolk Southern Corporation,Norfolk Southern Corporation - Rail Transportation company in the Industrials sector.
+ODFL,"Old Dominion Freight Line, Inc.","Old Dominion Freight Line, Inc. - Cargo Ground Transportation company in the Industrials sector."
+OTIS,Otis Worldwide Corporation,Otis Worldwide Corporation - Building Products company in the Industrials sector.
+PCAR,PACCAR Inc,PACCAR Inc - Construction Machinery & Heavy Trucks company in the Industrials sector.
+PH,Parker-Hannifin Corporation,Parker-Hannifin Corporation - Industrial Machinery company in the Industrials sector.
+PNR,Pentair plc,Pentair plc - Industrial Machinery company in the Industrials sector.
+PWR,"Quanta Services, Inc.","Quanta Services, Inc. - Construction & Engineering company in the Industrials sector."
+RHI,Robert Half Inc.,Robert Half Inc. - Human Resource & Employment Services company in the Industrials sector.
+ROK,"Rockwell Automation, Inc.","Rockwell Automation, Inc. - Electrical Components & Equipment company in the Industrials sector."
+RPM,RPM International Inc.,RPM International Inc. - Specialty Chemicals company in the Industrials sector.
+RSG,"Republic Services, Inc.","Republic Services, Inc. - Environmental & Facilities Services company in the Industrials sector."
+RTX,RTX Corporation,RTX Corporation - Aerospace & Defense company in the Industrials sector.
+SNA,Snap-on Incorporated,Snap-on Incorporated - Industrial Machinery company in the Industrials sector.
+TDG,TransDigm Group Incorporated,TransDigm Group Incorporated - Aerospace & Defense company in the Industrials sector.
+TXT,Textron Inc.,Textron Inc. - Aerospace & Defense company in the Industrials sector.
+UAL,"United Airlines Holdings, Inc.","United Airlines Holdings, Inc. - Passenger Airlines company in the Industrials sector."
+UBER,"Uber Technologies, Inc.","Uber Technologies, Inc. - Passenger Ground Transportation company in the Industrials sector."
+UNP,Union Pacific Corporation,Union Pacific Corporation - Rail Transportation company in the Industrials sector.
+UPS,"United Parcel Service, Inc.","United Parcel Service, Inc. - Air Freight & Logistics company in the Industrials sector."
+URI,"United Rentals, Inc.","United Rentals, Inc. - Trading Companies & Distributors company in the Industrials sector."
+VRT,Vertiv Holdings Co,Vertiv Holdings Co - Electrical Components & Equipment company in the Industrials sector.
+WAB,Westinghouse Air Brake Technologies,Westinghouse Air Brake Technologies - Construction Machinery & Heavy Trucks company in the Industrials sector.
+WM,"Waste Management, Inc.","Waste Management, Inc. - Environmental & Facilities Services company in the Industrials sector."
+XYL,Xylem Inc.,Xylem Inc. - Industrial Machinery company in the Industrials sector.
+AAPL,Apple Inc.,"Apple Inc. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+ACN,Accenture plc,Accenture plc - IT Consulting & Other Services company in the Information Technology sector.
+ADBE,Adobe Inc.,Adobe Inc. - Application Software company in the Information Technology sector.
+ADI,"Analog Devices, Inc.","Analog Devices, Inc. - Semiconductors company in the Information Technology sector."
+ADP,"Automatic Data Processing, Inc.","Automatic Data Processing, Inc. - Application Software company in the Information Technology sector."
+AKAM,"Akamai Technologies, Inc.","Akamai Technologies, Inc. - Internet Services & Infrastructure company in the Information Technology sector."
+AMAT,"Applied Materials, Inc.","Applied Materials, Inc. - Semiconductor Materials & Equipment company in the Information Technology sector."
 AMD,"Advanced Micro Devices, Inc.",CPUs (Ryzen / EPYC) and AI accelerators (MI300 / MI325). Primary credible alternative to NVIDIA in data-center AI training and inference.
-PLTR,Palantir Technologies,Foundry + AIP platforms for ontology-driven enterprise AI; concentrated US government and defense exposure plus a growing commercial book.
+ANET,"Arista Networks, Inc.","Arista Networks, Inc. - Communications Equipment company in the Information Technology sector."
+ANSS,"ANSYS, Inc.","ANSYS, Inc. - Application Software company in the Information Technology sector."
+APH,Amphenol Corporation,Amphenol Corporation - Electronic Components company in the Information Technology sector.
+AVGO,Broadcom Inc.,Broadcom Inc. - Semiconductors company in the Information Technology sector.
+CDNS,"Cadence Design Systems, Inc.","Cadence Design Systems, Inc. - Application Software company in the Information Technology sector."
+CDW,CDW Corporation,CDW Corporation - Technology Distributors company in the Information Technology sector.
+CRM,"Salesforce, Inc.","Salesforce, Inc. - Application Software company in the Information Technology sector."
 CRWD,CrowdStrike Holdings,"Cloud-native endpoint security (Falcon platform). Land-and-expand model with rising attach rate of identity, cloud, and log-management modules."
-SNOW,Snowflake Inc.,"Cloud data platform with a consumption pricing model. Shifting from analytics warehouse positioning toward an AI data-platform message (Cortex, Snowpark)."
+CSCO,"Cisco Systems, Inc.","Cisco Systems, Inc. - Communications Equipment company in the Information Technology sector."
+CTSH,Cognizant Technology Solutions Corp.,Cognizant Technology Solutions Corp. - IT Consulting & Other Services company in the Information Technology sector.
+DELL,Dell Technologies Inc.,"Dell Technologies Inc. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+ENPH,"Enphase Energy, Inc.","Enphase Energy, Inc. - Semiconductors company in the Information Technology sector."
+EPAM,"EPAM Systems, Inc.","EPAM Systems, Inc. - IT Consulting & Other Services company in the Information Technology sector."
+FFIV,"F5, Inc.","F5, Inc. - Communications Equipment company in the Information Technology sector."
+FI,"Fiserv, Inc.","Fiserv, Inc. - Application Software company in the Information Technology sector."
+FICO,Fair Isaac Corporation,Fair Isaac Corporation - Application Software company in the Information Technology sector.
+FIS,"Fidelity National Info Services, Inc.","Fidelity National Info Services, Inc. - Application Software company in the Information Technology sector."
+FSLR,"First Solar, Inc.","First Solar, Inc. - Semiconductors company in the Information Technology sector."
+FTNT,"Fortinet, Inc.","Fortinet, Inc. - Systems Software company in the Information Technology sector."
+GDDY,GoDaddy Inc.,GoDaddy Inc. - Internet Services & Infrastructure company in the Information Technology sector.
+GEN,Gen Digital Inc.,Gen Digital Inc. - Systems Software company in the Information Technology sector.
+GLW,Corning Incorporated,Corning Incorporated - Electronic Components company in the Information Technology sector.
+HPE,Hewlett Packard Enterprise Co.,"Hewlett Packard Enterprise Co. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+HPQ,HP Inc.,"HP Inc. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+IBM,International Business Machines Corp.,International Business Machines Corp. - IT Consulting & Other Services company in the Information Technology sector.
+INTC,Intel Corporation,Intel Corporation - Semiconductors company in the Information Technology sector.
+INTU,Intuit Inc.,Intuit Inc. - Application Software company in the Information Technology sector.
+IT,"Gartner, Inc.","Gartner, Inc. - IT Consulting & Other Services company in the Information Technology sector."
+JBL,Jabil Inc.,Jabil Inc. - Electronic Manufacturing Services company in the Information Technology sector.
+JNPR,"Juniper Networks, Inc.","Juniper Networks, Inc. - Communications Equipment company in the Information Technology sector."
+KEYS,"Keysight Technologies, Inc.","Keysight Technologies, Inc. - Electronic Equipment & Instruments company in the Information Technology sector."
+KLAC,KLA Corporation,KLA Corporation - Semiconductor Materials & Equipment company in the Information Technology sector.
+LDOS,"Leidos Holdings, Inc.","Leidos Holdings, Inc. - IT Consulting & Other Services company in the Information Technology sector."
+LRCX,Lam Research Corporation,Lam Research Corporation - Semiconductor Materials & Equipment company in the Information Technology sector.
+MCHP,Microchip Technology Incorporated,Microchip Technology Incorporated - Semiconductors company in the Information Technology sector.
+MPWR,"Monolithic Power Systems, Inc.","Monolithic Power Systems, Inc. - Semiconductors company in the Information Technology sector."
+MSFT,Microsoft Corporation,"Cloud (Azure), productivity (M365 / Copilot), and Windows. Largest commercial AI distribution channel via Azure OpenAI and Copilot integration across the enterprise SKU stack."
+MSI,"Motorola Solutions, Inc.","Motorola Solutions, Inc. - Communications Equipment company in the Information Technology sector."
+MU,"Micron Technology, Inc.","Micron Technology, Inc. - Semiconductors company in the Information Technology sector."
+NOW,"ServiceNow, Inc.","ServiceNow, Inc. - Application Software company in the Information Technology sector."
+NTAP,"NetApp, Inc.","NetApp, Inc. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+NVDA,NVIDIA Corporation,"Designs GPUs and accelerated-computing platforms. Dominant supplier of training silicon for AI infrastructure; expanding into networking (InfiniBand / Spectrum-X) and software (CUDA, NIM, Omniverse)."
+NXPI,NXP Semiconductors N.V.,NXP Semiconductors N.V. - Semiconductors company in the Information Technology sector.
+ON,ON Semiconductor Corporation,ON Semiconductor Corporation - Semiconductors company in the Information Technology sector.
+ORCL,Oracle Corporation,Oracle Corporation - Application Software company in the Information Technology sector.
+PANW,"Palo Alto Networks, Inc.","Palo Alto Networks, Inc. - Systems Software company in the Information Technology sector."
+PAYC,"Paycom Software, Inc.","Paycom Software, Inc. - Application Software company in the Information Technology sector."
+PAYX,"Paychex, Inc.","Paychex, Inc. - Application Software company in the Information Technology sector."
+PLTR,Palantir Technologies,Foundry + AIP platforms for ontology-driven enterprise AI; concentrated US government and defense exposure plus a growing commercial book.
+PTC,PTC Inc.,PTC Inc. - Application Software company in the Information Technology sector.
+QCOM,QUALCOMM Incorporated,QUALCOMM Incorporated - Semiconductors company in the Information Technology sector.
+QRVO,"Qorvo, Inc.","Qorvo, Inc. - Semiconductors company in the Information Technology sector."
+ROP,"Roper Technologies, Inc.","Roper Technologies, Inc. - Application Software company in the Information Technology sector."
+SMCI,"Super Micro Computer, Inc.","Super Micro Computer, Inc. - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+SNPS,"Synopsys, Inc.","Synopsys, Inc. - Application Software company in the Information Technology sector."
+STX,Seagate Technology Holdings plc,"Seagate Technology Holdings plc - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+SWKS,"Skyworks Solutions, Inc.","Skyworks Solutions, Inc. - Semiconductors company in the Information Technology sector."
+TER,"Teradyne, Inc.","Teradyne, Inc. - Semiconductor Materials & Equipment company in the Information Technology sector."
+TRMB,Trimble Inc.,Trimble Inc. - Electronic Equipment & Instruments company in the Information Technology sector.
+TXN,Texas Instruments Incorporated,Texas Instruments Incorporated - Semiconductors company in the Information Technology sector.
+TYL,"Tyler Technologies, Inc.","Tyler Technologies, Inc. - Application Software company in the Information Technology sector."
+VRSK,"Verisk Analytics, Inc.","Verisk Analytics, Inc. - Application Software company in the Information Technology sector."
+VRSN,"VeriSign, Inc.","VeriSign, Inc. - Internet Services & Infrastructure company in the Information Technology sector."
+WDAY,"Workday, Inc.","Workday, Inc. - Application Software company in the Information Technology sector."
+WDC,Western Digital Corporation,"Western Digital Corporation - Technology Hardware, Storage & Peripherals company in the Information Technology sector."
+ZBRA,Zebra Technologies Corp.,Zebra Technologies Corp. - Electronic Equipment & Instruments company in the Information Technology sector.
+ALB,Albemarle Corporation,Albemarle Corporation - Specialty Chemicals company in the Materials sector.
+AMCR,Amcor plc,Amcor plc - Paper & Plastic Packaging company in the Materials sector.
+APD,"Air Products and Chemicals, Inc.","Air Products and Chemicals, Inc. - Industrial Gases company in the Materials sector."
+AVY,Avery Dennison Corporation,Avery Dennison Corporation - Paper & Plastic Packaging company in the Materials sector.
+BALL,Ball Corporation,Ball Corporation - Metal & Glass Containers company in the Materials sector.
+CE,Celanese Corporation,Celanese Corporation - Specialty Chemicals company in the Materials sector.
+CF,"CF Industries Holdings, Inc.","CF Industries Holdings, Inc. - Fertilizers & Agricultural Chemicals company in the Materials sector."
+DD,"DuPont de Nemours, Inc.","DuPont de Nemours, Inc. - Specialty Chemicals company in the Materials sector."
+DOW,Dow Inc.,Dow Inc. - Commodity Chemicals company in the Materials sector.
+ECL,Ecolab Inc.,Ecolab Inc. - Specialty Chemicals company in the Materials sector.
+EMN,Eastman Chemical Company,Eastman Chemical Company - Specialty Chemicals company in the Materials sector.
+FCX,Freeport-McMoRan Inc.,Freeport-McMoRan Inc. - Copper company in the Materials sector.
+FMC,FMC Corporation,FMC Corporation - Fertilizers & Agricultural Chemicals company in the Materials sector.
+IFF,International Flavors & Fragrances,International Flavors & Fragrances - Specialty Chemicals company in the Materials sector.
+IP,International Paper Company,International Paper Company - Paper & Plastic Packaging company in the Materials sector.
+LIN,Linde plc,Linde plc - Industrial Gases company in the Materials sector.
+LYB,LyondellBasell Industries N.V.,LyondellBasell Industries N.V. - Commodity Chemicals company in the Materials sector.
+MLM,"Martin Marietta Materials, Inc.","Martin Marietta Materials, Inc. - Construction Materials company in the Materials sector."
+MOS,The Mosaic Company,The Mosaic Company - Fertilizers & Agricultural Chemicals company in the Materials sector.
+NEM,Newmont Corporation,Newmont Corporation - Gold company in the Materials sector.
+NUE,Nucor Corporation,Nucor Corporation - Steel company in the Materials sector.
+PKG,Packaging Corporation of America,Packaging Corporation of America - Paper & Plastic Packaging company in the Materials sector.
+PPG,"PPG Industries, Inc.","PPG Industries, Inc. - Specialty Chemicals company in the Materials sector."
+SHW,The Sherwin-Williams Company,The Sherwin-Williams Company - Specialty Chemicals company in the Materials sector.
+STLD,"Steel Dynamics, Inc.","Steel Dynamics, Inc. - Steel company in the Materials sector."
+VMC,Vulcan Materials Company,Vulcan Materials Company - Construction Materials company in the Materials sector.
+AMT,American Tower Corporation,American Tower Corporation - Telecom Tower REITs company in the Real Estate sector.
+ARE,"Alexandria Real Estate Equities, Inc.","Alexandria Real Estate Equities, Inc. - Office REITs company in the Real Estate sector."
+AVB,"AvalonBay Communities, Inc.","AvalonBay Communities, Inc. - Multi-Family Residential REITs company in the Real Estate sector."
+BXP,"BXP, Inc.","BXP, Inc. - Office REITs company in the Real Estate sector."
+CBRE,"CBRE Group, Inc.","CBRE Group, Inc. - Real Estate Services company in the Real Estate sector."
+CCI,Crown Castle Inc.,Crown Castle Inc. - Telecom Tower REITs company in the Real Estate sector.
+CPT,Camden Property Trust,Camden Property Trust - Multi-Family Residential REITs company in the Real Estate sector.
+CSGP,"CoStar Group, Inc.","CoStar Group, Inc. - Real Estate Services company in the Real Estate sector."
+DLR,"Digital Realty Trust, Inc.","Digital Realty Trust, Inc. - Data Center REITs company in the Real Estate sector."
+DOC,"Healthpeak Properties, Inc.","Healthpeak Properties, Inc. - Health Care REITs company in the Real Estate sector."
+EQIX,"Equinix, Inc.","Equinix, Inc. - Data Center REITs company in the Real Estate sector."
+EQR,Equity Residential,Equity Residential - Multi-Family Residential REITs company in the Real Estate sector.
+ESS,"Essex Property Trust, Inc.","Essex Property Trust, Inc. - Multi-Family Residential REITs company in the Real Estate sector."
+EXR,Extra Space Storage Inc.,Extra Space Storage Inc. - Self-Storage REITs company in the Real Estate sector.
+FRT,Federal Realty Investment Trust,Federal Realty Investment Trust - Retail REITs company in the Real Estate sector.
+HST,"Host Hotels & Resorts, Inc.","Host Hotels & Resorts, Inc. - Hotel & Resort REITs company in the Real Estate sector."
+INVH,Invitation Homes Inc.,Invitation Homes Inc. - Single-Family Residential REITs company in the Real Estate sector.
+IRM,Iron Mountain Incorporated,Iron Mountain Incorporated - Other Specialized REITs company in the Real Estate sector.
+KIM,Kimco Realty Corporation,Kimco Realty Corporation - Retail REITs company in the Real Estate sector.
+MAA,Mid-America Apartment Communities,Mid-America Apartment Communities - Multi-Family Residential REITs company in the Real Estate sector.
+O,Realty Income Corporation,Realty Income Corporation - Other Specialized REITs company in the Real Estate sector.
+PLD,"Prologis, Inc.","Prologis, Inc. - Industrial REITs company in the Real Estate sector."
+PSA,Public Storage,Public Storage - Self-Storage REITs company in the Real Estate sector.
+REG,Regency Centers Corporation,Regency Centers Corporation - Retail REITs company in the Real Estate sector.
+SPG,"Simon Property Group, Inc.","Simon Property Group, Inc. - Retail REITs company in the Real Estate sector."
+UDR,"UDR, Inc.","UDR, Inc. - Multi-Family Residential REITs company in the Real Estate sector."
+VICI,VICI Properties Inc.,VICI Properties Inc. - Other Specialized REITs company in the Real Estate sector.
+VTR,"Ventas, Inc.","Ventas, Inc. - Health Care REITs company in the Real Estate sector."
+WELL,Welltower Inc.,Welltower Inc. - Health Care REITs company in the Real Estate sector.
+WY,Weyerhaeuser Company,Weyerhaeuser Company - Timber REITs company in the Real Estate sector.
+AEE,Ameren Corporation,Ameren Corporation - Multi-Utilities company in the Utilities sector.
+AEP,"American Electric Power Company, Inc.","American Electric Power Company, Inc. - Electric Utilities company in the Utilities sector."
+AES,The AES Corporation,The AES Corporation - Independent Power Producers company in the Utilities sector.
+ATO,Atmos Energy Corporation,Atmos Energy Corporation - Gas Utilities company in the Utilities sector.
+AWK,"American Water Works Company, Inc.","American Water Works Company, Inc. - Water Utilities company in the Utilities sector."
+CEG,Constellation Energy Corporation,Constellation Energy Corporation - Independent Power Producers company in the Utilities sector.
+CMS,CMS Energy Corporation,CMS Energy Corporation - Multi-Utilities company in the Utilities sector.
+CNP,"CenterPoint Energy, Inc.","CenterPoint Energy, Inc. - Multi-Utilities company in the Utilities sector."
+D,"Dominion Energy, Inc.","Dominion Energy, Inc. - Multi-Utilities company in the Utilities sector."
+DTE,DTE Energy Company,DTE Energy Company - Multi-Utilities company in the Utilities sector.
+DUK,Duke Energy Corporation,Duke Energy Corporation - Electric Utilities company in the Utilities sector.
+ED,"Consolidated Edison, Inc.","Consolidated Edison, Inc. - Multi-Utilities company in the Utilities sector."
+EIX,Edison International,Edison International - Electric Utilities company in the Utilities sector.
+ES,Eversource Energy,Eversource Energy - Electric Utilities company in the Utilities sector.
+ETR,Entergy Corporation,Entergy Corporation - Electric Utilities company in the Utilities sector.
+EVRG,"Evergy, Inc.","Evergy, Inc. - Electric Utilities company in the Utilities sector."
+EXC,Exelon Corporation,Exelon Corporation - Electric Utilities company in the Utilities sector.
+FE,FirstEnergy Corp.,FirstEnergy Corp. - Electric Utilities company in the Utilities sector.
+LNT,Alliant Energy Corporation,Alliant Energy Corporation - Electric Utilities company in the Utilities sector.
+NEE,"NextEra Energy, Inc.","NextEra Energy, Inc. - Electric Utilities company in the Utilities sector."
+NI,NiSource Inc.,NiSource Inc. - Multi-Utilities company in the Utilities sector.
+NRG,"NRG Energy, Inc.","NRG Energy, Inc. - Independent Power Producers company in the Utilities sector."
+PCG,PG&E Corporation,PG&E Corporation - Electric Utilities company in the Utilities sector.
+PEG,Public Service Enterprise Group,Public Service Enterprise Group - Multi-Utilities company in the Utilities sector.
+PNW,Pinnacle West Capital Corporation,Pinnacle West Capital Corporation - Electric Utilities company in the Utilities sector.
+PPL,PPL Corporation,PPL Corporation - Electric Utilities company in the Utilities sector.
+SO,The Southern Company,The Southern Company - Electric Utilities company in the Utilities sector.
+SRE,Sempra,Sempra - Multi-Utilities company in the Utilities sector.
+VST,Vistra Corp.,Vistra Corp. - Independent Power Producers company in the Utilities sector.
+WEC,"WEC Energy Group, Inc.","WEC Energy Group, Inc. - Multi-Utilities company in the Utilities sector."
+XEL,Xcel Energy Inc.,Xcel Energy Inc. - Multi-Utilities company in the Utilities sector.

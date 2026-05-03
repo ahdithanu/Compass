@@ -104,12 +104,15 @@ class ReportingAgent(BaseAgent):
                 {
                     "rank": r.rank,
                     "ticker": r.ticker,
+                    "company_name": r.company_name,
+                    "sector": r.sector,
                     "rating": r.rating,
                     "signal_score": r.signal_score,
                     "qualitative_score": r.qualitative_score,
                     "headline": r.headline,
                     "investment_thesis": t.investment_thesis if t else "",
                     "conviction": t.conviction if t else None,
+                    "in_reasoning_slice": r.in_reasoning_slice,
                 }
             )
         path.write_text(json.dumps(rows, indent=2, default=str))
@@ -155,8 +158,15 @@ class ReportingAgent(BaseAgent):
         memo,                               # InvestmentMemo (llm.schemas)
         risk_report: PortfolioRiskReport,
         backtest_summary: dict,
+        full_rankings: list | None = None,  # complete CompanyRanking list
     ) -> Path:
-        """Render an InvestmentMemo to weekly_investment_memo.md."""
+        """Render an InvestmentMemo to weekly_investment_memo.md.
+
+        `memo.entries` only carries the names that were inside the
+        reasoning slice (i.e. got a thesis). `full_rankings` (optional)
+        provides the rest of the universe so we can render a compact
+        tail table when running over an SP500-sized universe.
+        """
         path = self.output_dir / "weekly_investment_memo.md"
         bench = backtest_summary.get("benchmark_return_pct")
         bench_str = (
@@ -186,7 +196,19 @@ class ReportingAgent(BaseAgent):
             f.write(f"- Max drawdown: **{backtest_summary.get('max_drawdown_pct', 0):.1f}%**  \n")
             f.write(f"- Sharpe-like: **{backtest_summary.get('sharpe_like', 0):.2f}**\n\n")
 
-            f.write("## Full Ranking\n\n")
+            slice_size = len(memo.entries)
+            section_header = (
+                "## Reasoning Slice"
+                if full_rankings and len(full_rankings) > slice_size
+                else "## Full Ranking"
+            )
+            f.write(f"{section_header}\n\n")
+            if full_rankings and len(full_rankings) > slice_size:
+                f.write(
+                    f"_LangChain agents wrote a thesis + outbound angle for the "
+                    f"top **{slice_size}** of {len(full_rankings)} names this "
+                    f"cycle. The tail appears in the compact table below._\n\n"
+                )
             for e in memo.entries:
                 f.write(
                     f"### {e.rank}. {e.ticker} — {e.rating} (score {e.signal_score:.0f}/100)\n\n"
@@ -202,6 +224,34 @@ class ReportingAgent(BaseAgent):
                     for n in e.risk_notes:
                         f.write(f"- {n}\n")
                     f.write("\n")
+
+            # Compact tail of names that were ranked but not narrated.
+            if full_rankings:
+                tail = [r for r in full_rankings if not r.in_reasoning_slice]
+                if tail:
+                    f.write(f"## Watchlist tail ({len(tail)} names)\n\n")
+                    f.write(
+                        "These names ranked outside the reasoning slice this "
+                        "cycle. Quant pillar scores still apply; they will be "
+                        "reasoned over if they break into the top slice next "
+                        "cycle.\n\n"
+                    )
+                    f.write("| Rank | Ticker | Sector | Rating | Score |\n")
+                    f.write("|---:|:---|:---|:---|---:|\n")
+                    # Cap to 60 rows so the memo stays readable.
+                    for r in tail[:60]:
+                        sector = r.sector or "—"
+                        f.write(
+                            f"| {r.rank} | {r.ticker} | {sector} | "
+                            f"{r.rating} | {r.signal_score:.0f} |\n"
+                        )
+                    if len(tail) > 60:
+                        f.write(
+                            f"\n_Plus {len(tail) - 60} more in "
+                            "`outputs/company_rankings.json`._\n\n"
+                        )
+                    else:
+                        f.write("\n")
 
             f.write("## How to read this memo\n\n")
             f.write(memo.closing_note + "\n")
@@ -251,12 +301,18 @@ class ReportingAgent(BaseAgent):
     ) -> list[Path]:
         out: list[Path] = []
 
-        # 1. Per-pillar score bars.
-        fig, ax = plt.subplots(figsize=(10, 5))
+        # 1. Per-pillar score bars - cap to top-25 for readability at SP500 scale.
         cols = ["market_score", "news_score", "fundamental_score", "alt_score"]
-        pillars = feature_table[cols].sort_values(by="market_score", ascending=False)
+        pillars = feature_table.sort_values(
+            "signal_score" if "signal_score" in feature_table.columns else "market_score",
+            ascending=False,
+        )[cols].head(25)
+        fig, ax = plt.subplots(figsize=(11, 5))
         pillars.plot(kind="bar", stacked=False, ax=ax)
-        ax.set_title("Per-pillar signal scores by ticker")
+        title_suffix = (
+            f" (top 25 of {len(feature_table)})" if len(feature_table) > 25 else ""
+        )
+        ax.set_title(f"Per-pillar signal scores by ticker{title_suffix}")
         ax.set_ylabel("Score (0-1)")
         ax.set_ylim(0, 1)
         ax.set_xlabel("")
@@ -267,20 +323,45 @@ class ReportingAgent(BaseAgent):
         plt.close(fig)
         out.append(p)
 
-        # 2. Composite score ranking.
-        fig, ax = plt.subplots(figsize=(10, 4))
+        # 2. Composite score ranking - top 30, the rest summarized.
         ranked = feature_table["signal_score"].sort_values(ascending=False)
-        ax.bar(ranked.index, ranked.values)
+        head = ranked.head(30)
+        fig, ax = plt.subplots(figsize=(12, 4))
+        ax.bar(head.index, head.values)
         ax.axhline(70, linestyle="--", linewidth=1, label="BUY threshold")
         ax.axhline(50, linestyle=":", linewidth=1, label="HOLD threshold")
-        ax.set_title("Composite signal score (0-100)")
+        ax.set_title(
+            f"Composite signal score (0-100){title_suffix.replace('25', '30')}"
+        )
         ax.set_ylabel("Signal score")
+        ax.tick_params(axis="x", rotation=75, labelsize=8)
         ax.legend(loc="upper right", fontsize=8)
         fig.tight_layout()
         p = self.charts_dir / "composite_signal_scores.png"
         fig.savefig(p, dpi=120)
         plt.close(fig)
         out.append(p)
+
+        # 2b. Sector heat-map: median signal score per sector (only when we
+        # have sector metadata on the feature table).
+        if "sector" in feature_table.columns and feature_table["sector"].notna().any():
+            sector_med = (
+                feature_table.dropna(subset=["sector"])
+                .groupby("sector")["signal_score"]
+                .median()
+                .sort_values(ascending=False)
+            )
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.barh(sector_med.index[::-1], sector_med.values[::-1])
+            ax.axvline(70, linestyle="--", linewidth=1)
+            ax.axvline(50, linestyle=":", linewidth=1)
+            ax.set_title("Median composite signal score by sector")
+            ax.set_xlabel("Signal score (median)")
+            fig.tight_layout()
+            p = self.charts_dir / "signal_score_by_sector.png"
+            fig.savefig(p, dpi=120)
+            plt.close(fig)
+            out.append(p)
 
         # 3. Equity curve vs benchmark.
         fig, ax = plt.subplots(figsize=(10, 5))
@@ -329,7 +410,10 @@ class ReportingAgent(BaseAgent):
             kwargs["equity_df"], kwargs["summary"], kwargs["trades_df"]
         )
         out["memo"] = self.write_memo(
-            kwargs["memo"], kwargs["risk_report"], kwargs["summary"]
+            kwargs["memo"],
+            kwargs["risk_report"],
+            kwargs["summary"],
+            full_rankings=kwargs.get("rankings"),
         )
         out["outbound"] = self.write_outbound_angles(
             kwargs["outbound_angles"], kwargs["rankings"]

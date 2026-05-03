@@ -63,7 +63,7 @@ export default async function TickerPage({
         <Stat label="Rel. strength" value={fmtFrac(s.rel_strength)} />
       </div>
 
-      {ranking && (
+      {ranking && ranking.investment_thesis ? (
         <Card
           title="Investment thesis"
           subtitle={`LangChain ThesisAgent · qualitative ${(ranking.qualitative_score * 100).toFixed(0)}/100 · ${ranking.conviction ?? "—"} conviction`}
@@ -77,7 +77,16 @@ export default async function TickerPage({
             </p>
           )}
         </Card>
-      )}
+      ) : ranking ? (
+        <Card title="Reasoning slice">
+          <p className="text-sm text-slate-300">
+            {ranking.ticker} ranked{" "}
+            <span className="font-mono">#{ranking.rank}</span> on quant score
+            but fell outside this cycle's reasoning slice, so no thesis was
+            written. The pillar scores above still apply.
+          </p>
+        </Card>
+      ) : null}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="Per-pillar score">

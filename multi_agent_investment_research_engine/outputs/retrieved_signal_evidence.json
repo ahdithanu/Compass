@@ -1,557 +1,1549 @@
 {
-  "CRWD": [
+  "ALL": [
     {
-      "text": "[NEWS][analyst] CRWD (2024-12-10): Analysts upgrade CRWD on AI demand",
-      "ticker": "CRWD",
+      "text": "[NEWS][regulatory] ALL (2025-09-05): Slowdown concerns weigh on ALL",
+      "ticker": "ALL",
       "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2024-12-10",
+      "signal_type": "news::regulatory",
+      "date": "2025-09-05",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][color] CRWD (2025-01-07): CRWD margins expand on operating leverage",
-      "ticker": "CRWD",
+      "text": "[NEWS][earnings] ALL (2025-11-03): Regulator opens investigation into ALL",
+      "ticker": "ALL",
       "company_name": null,
-      "signal_type": "news::color",
+      "signal_type": "news::earnings",
+      "date": "2025-11-03",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] ALL (2024-12-11): Analyst downgrades ALL citing valuation concerns",
+      "ticker": "ALL",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2024-12-11",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] ALL (2025-01-07): ALL margins expand on operating leverage",
+      "ticker": "ALL",
+      "company_name": null,
+      "signal_type": "news::guidance",
       "date": "2025-01-07",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][analyst] CRWD (2025-01-30): CRWD faces lawsuit over data breach",
-      "ticker": "CRWD",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-01-30",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][partnership] CRWD (2025-09-03): CRWD misses revenue estimates, shares drop",
-      "ticker": "CRWD",
-      "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2025-09-03",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][guidance] CRWD (2025-11-06): CRWD faces lawsuit over data breach",
-      "ticker": "CRWD",
-      "company_name": null,
-      "signal_type": "news::guidance",
-      "date": "2025-11-06",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] CRWD (2026-01-30): CRWD faces lawsuit over data breach",
-      "ticker": "CRWD",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2026-01-30",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    }
-  ],
-  "META": [
-    {
-      "text": "[NEWS][color] META (2025-01-21): META announces upcoming earnings date",
-      "ticker": "META",
+      "text": "[NEWS][color] ALL (2025-07-25): Outage at ALL sparks reliability questions",
+      "ticker": "ALL",
       "company_name": null,
       "signal_type": "news::color",
-      "date": "2025-01-21",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][partnership] META (2025-11-06): META issues weak forward guidance",
-      "ticker": "META",
-      "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2025-11-06",
+      "date": "2025-07-25",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][partnership] META (2025-12-02): META announces record buyback program",
-      "ticker": "META",
+      "text": "[NEWS][regulatory] ALL (2026-01-29): ALL signals breakthrough in enterprise segment",
+      "ticker": "ALL",
       "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2025-12-02",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][partnership] META (2024-12-20): META CEO speaks at industry conference",
-      "ticker": "META",
-      "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2024-12-20",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][macro] META (2025-07-29): META signals breakthrough in enterprise segment",
-      "ticker": "META",
-      "company_name": null,
-      "signal_type": "news::macro",
-      "date": "2025-07-29",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][macro] META (2026-03-20): Analysts upgrade META on AI demand",
-      "ticker": "META",
-      "company_name": null,
-      "signal_type": "news::macro",
-      "date": "2026-03-20",
+      "signal_type": "news::regulatory",
+      "date": "2026-01-29",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     }
   ],
-  "NVDA": [
+  "SYK": [
     {
-      "text": "[NEWS][regulatory] NVDA (2025-01-29): Regulator opens investigation into NVDA",
-      "ticker": "NVDA",
+      "text": "[NEWS][earnings] SYK (2025-12-12): Analyst downgrades SYK citing valuation concerns",
+      "ticker": "SYK",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-12-12",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] SYK (2025-02-27): SYK signals breakthrough in enterprise segment",
+      "ticker": "SYK",
       "company_name": null,
       "signal_type": "news::regulatory",
-      "date": "2025-01-29",
+      "date": "2025-02-27",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][earnings] NVDA (2026-01-21): NVDA announces record buyback program",
-      "ticker": "NVDA",
+      "text": "[NEWS][earnings] SYK (2025-05-28): SYK faces lawsuit over data breach",
+      "ticker": "SYK",
       "company_name": null,
       "signal_type": "news::earnings",
-      "date": "2026-01-21",
+      "date": "2025-05-28",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][partnership] NVDA (2025-03-13): NVDA announces record buyback program",
-      "ticker": "NVDA",
+      "text": "[NEWS][partnership] SYK (2025-08-15): Analysts upgrade SYK on AI demand",
+      "ticker": "SYK",
       "company_name": null,
       "signal_type": "news::partnership",
-      "date": "2025-03-13",
+      "date": "2025-08-15",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][earnings] NVDA (2025-07-02): Analysts upgrade NVDA on AI demand",
-      "ticker": "NVDA",
+      "text": "[NEWS][analyst] SYK (2025-10-03): Outage at SYK sparks reliability questions",
+      "ticker": "SYK",
       "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-07-02",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] NVDA (2025-10-03): NVDA margins expand on operating leverage",
-      "ticker": "NVDA",
-      "company_name": null,
-      "signal_type": "news::earnings",
+      "signal_type": "news::analyst",
       "date": "2025-10-03",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][analyst] NVDA (2025-11-24): Analysts upgrade NVDA on AI demand",
-      "ticker": "NVDA",
+      "text": "[NEWS][earnings] SYK (2025-09-11): Analysts mixed on SYK ahead of print",
+      "ticker": "SYK",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-09-11",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    }
+  ],
+  "TRMB": [
+    {
+      "text": "[NEWS][regulatory] TRMB (2025-06-04): TRMB announces upcoming earnings date",
+      "ticker": "TRMB",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-06-04",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] TRMB (2025-07-23): TRMB announces record buyback program",
+      "ticker": "TRMB",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-07-23",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] TRMB (2025-11-24): TRMB announces upcoming earnings date",
+      "ticker": "TRMB",
       "company_name": null,
       "signal_type": "news::analyst",
       "date": "2025-11-24",
       "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    }
-  ],
-  "AMD": [
-    {
-      "text": "[NEWS][guidance] AMD (2025-04-02): AMD announces record buyback program",
-      "ticker": "AMD",
-      "company_name": null,
-      "signal_type": "news::guidance",
-      "date": "2025-04-02",
-      "source": "mock_news",
-      "confidence_score": 0.7,
+      "confidence_score": 0.5,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][guidance] AMD (2025-06-20): AMD announces record buyback program",
-      "ticker": "AMD",
+      "text": "[NEWS][guidance] TRMB (2025-11-28): TRMB announces upcoming earnings date",
+      "ticker": "TRMB",
       "company_name": null,
       "signal_type": "news::guidance",
-      "date": "2025-06-20",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][partnership] AMD (2025-10-02): AMD announces upcoming earnings date",
-      "ticker": "AMD",
-      "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2025-10-02",
+      "date": "2025-11-28",
       "source": "mock_news",
       "confidence_score": 0.5,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][regulatory] AMD (2025-12-02): Analyst downgrades AMD citing valuation concerns",
-      "ticker": "AMD",
+      "text": "[NEWS][macro] TRMB (2026-04-24): TRMB announces record buyback program",
+      "ticker": "TRMB",
       "company_name": null,
-      "signal_type": "news::regulatory",
-      "date": "2025-12-02",
+      "signal_type": "news::macro",
+      "date": "2026-04-24",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][color] AMD (2025-03-05): AMD margins expand on operating leverage",
-      "ticker": "AMD",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-03-05",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][guidance] AMD (2025-07-18): AMD faces lawsuit over data breach",
-      "ticker": "AMD",
+      "text": "[NEWS][guidance] TRMB (2025-10-28): TRMB margins expand on operating leverage",
+      "ticker": "TRMB",
       "company_name": null,
       "signal_type": "news::guidance",
-      "date": "2025-07-18",
+      "date": "2025-10-28",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     }
   ],
-  "PLTR": [
+  "BLDR": [
     {
-      "text": "[NEWS][guidance] PLTR (2025-01-09): PLTR announces record buyback program",
-      "ticker": "PLTR",
-      "company_name": null,
-      "signal_type": "news::guidance",
-      "date": "2025-01-09",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] PLTR (2025-07-17): PLTR announces record buyback program",
-      "ticker": "PLTR",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-07-17",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][analyst] PLTR (2025-09-16): PLTR announces upcoming earnings date",
-      "ticker": "PLTR",
+      "text": "[NEWS][analyst] BLDR (2025-02-11): BLDR announces record buyback program",
+      "ticker": "BLDR",
       "company_name": null,
       "signal_type": "news::analyst",
-      "date": "2025-09-16",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] PLTR (2025-11-27): PLTR announces record buyback program",
-      "ticker": "PLTR",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-11-27",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] PLTR (2025-12-10): PLTR issues weak forward guidance",
-      "ticker": "PLTR",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-12-10",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][analyst] PLTR (2025-12-22): PLTR CEO speaks at industry conference",
-      "ticker": "PLTR",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-12-22",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    }
-  ],
-  "MSFT": [
-    {
-      "text": "[NEWS][regulatory] MSFT (2026-04-09): Slowdown concerns weigh on MSFT",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::regulatory",
-      "date": "2026-04-09",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][analyst] MSFT (2025-06-25): MSFT delays product launch, cuts outlook",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-06-25",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] MSFT (2025-09-05): MSFT CEO speaks at industry conference",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-09-05",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] MSFT (2025-09-16): MSFT signals breakthrough in enterprise segment",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-09-16",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] MSFT (2025-10-03): MSFT margins expand on operating leverage",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-10-03",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][regulatory] MSFT (2026-01-22): MSFT delays product launch, cuts outlook",
-      "ticker": "MSFT",
-      "company_name": null,
-      "signal_type": "news::regulatory",
-      "date": "2026-01-22",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    }
-  ],
-  "SNOW": [
-    {
-      "text": "[NEWS][color] SNOW (2025-09-02): Slowdown concerns weigh on SNOW",
-      "ticker": "SNOW",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-09-02",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] SNOW (2025-01-31): Outage at SNOW sparks reliability questions",
-      "ticker": "SNOW",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-01-31",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] SNOW (2025-03-12): Analyst downgrades SNOW citing valuation concerns",
-      "ticker": "SNOW",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2025-03-12",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] SNOW (2026-04-27): Hiring surge at SNOW suggests aggressive expansion",
-      "ticker": "SNOW",
-      "company_name": null,
-      "signal_type": "news::color",
-      "date": "2026-04-27",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][color] SNOW (2025-02-11): Strong product launch from SNOW drives bullish reaction",
-      "ticker": "SNOW",
-      "company_name": null,
-      "signal_type": "news::color",
       "date": "2025-02-11",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][earnings] SNOW (2025-11-20): SNOW announces record buyback program",
-      "ticker": "SNOW",
+      "text": "[NEWS][earnings] BLDR (2025-09-26): Slowdown concerns weigh on BLDR",
+      "ticker": "BLDR",
       "company_name": null,
       "signal_type": "news::earnings",
-      "date": "2025-11-20",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    }
-  ],
-  "AMZN": [
-    {
-      "text": "[NEWS][analyst] AMZN (2025-04-25): Slowdown concerns weigh on AMZN",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-04-25",
+      "date": "2025-09-26",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][product_launch] AMZN (2024-12-27): AMZN announces upcoming earnings date",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::product_launch",
-      "date": "2024-12-27",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][partnership] AMZN (2025-03-26): AMZN delays product launch, cuts outlook",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::partnership",
-      "date": "2025-03-26",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][product_launch] AMZN (2025-06-16): AMZN issues weak forward guidance",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::product_launch",
-      "date": "2025-06-16",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][analyst] AMZN (2025-07-18): Analysts upgrade AMZN on AI demand",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-07-18",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][earnings] AMZN (2025-08-14): AMZN announces upcoming earnings date",
-      "ticker": "AMZN",
-      "company_name": null,
-      "signal_type": "news::earnings",
-      "date": "2025-08-14",
-      "source": "mock_news",
-      "confidence_score": 0.5,
-      "similarity": 0.0
-    }
-  ],
-  "TSLA": [
-    {
-      "text": "[NEWS][analyst] TSLA (2025-01-22): TSLA faces lawsuit over data breach",
-      "ticker": "TSLA",
-      "company_name": null,
-      "signal_type": "news::analyst",
-      "date": "2025-01-22",
-      "source": "mock_news",
-      "confidence_score": 0.7,
-      "similarity": 0.0
-    },
-    {
-      "text": "[NEWS][regulatory] TSLA (2026-01-08): TSLA misses revenue estimates, shares drop",
-      "ticker": "TSLA",
+      "text": "[NEWS][regulatory] BLDR (2026-01-20): Regulator opens investigation into BLDR",
+      "ticker": "BLDR",
       "company_name": null,
       "signal_type": "news::regulatory",
-      "date": "2026-01-08",
+      "date": "2026-01-20",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][product_launch] TSLA (2025-05-01): TSLA issues weak forward guidance",
-      "ticker": "TSLA",
+      "text": "[NEWS][guidance] BLDR (2025-05-14): BLDR CEO speaks at industry conference",
+      "ticker": "BLDR",
       "company_name": null,
-      "signal_type": "news::product_launch",
-      "date": "2025-05-01",
+      "signal_type": "news::guidance",
+      "date": "2025-05-14",
       "source": "mock_news",
-      "confidence_score": 0.7,
+      "confidence_score": 0.5,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][earnings] TSLA (2025-01-17): Strong product launch from TSLA drives bullish reaction",
-      "ticker": "TSLA",
+      "text": "[NEWS][earnings] BLDR (2025-08-07): Analysts upgrade BLDR on AI demand",
+      "ticker": "BLDR",
       "company_name": null,
       "signal_type": "news::earnings",
-      "date": "2025-01-17",
+      "date": "2025-08-07",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0
     },
     {
-      "text": "[ALT][funding_announcement] TSLA (2026-01-29): TSLA-related ecosystem startup announces funding round (strength=0.65)",
-      "ticker": "TSLA",
+      "text": "[NEWS][analyst] BLDR (2025-08-25): Outage at BLDR sparks reliability questions",
+      "ticker": "BLDR",
       "company_name": null,
-      "signal_type": "funding_announcement",
-      "date": "2026-01-29",
-      "source": "mock_alt_data",
-      "confidence_score": 0.65,
+      "signal_type": "news::analyst",
+      "date": "2025-08-25",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "PTC": [
+    {
+      "text": "[PROFILE] PTC (PTC Inc.): PTC Inc. - Application Software company in the Information Technology sector.",
+      "ticker": "PTC",
+      "company_name": "PTC Inc.",
+      "signal_type": "company_description",
+      "date": "2026-05-03",
+      "source": "mock_company_descriptions",
+      "confidence_score": 0.9,
       "similarity": 0.0
     },
     {
-      "text": "[NEWS][analyst] TSLA (2026-03-31): TSLA issues weak forward guidance",
-      "ticker": "TSLA",
+      "text": "[NEWS][partnership] PTC (2025-12-26): Slowdown concerns weigh on PTC",
+      "ticker": "PTC",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-12-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] PTC (2026-01-13): PTC issues weak forward guidance",
+      "ticker": "PTC",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2026-01-13",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] PTC (2025-04-17): Analyst downgrades PTC citing valuation concerns",
+      "ticker": "PTC",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-04-17",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] PTC (2025-09-01): Analysts upgrade PTC on AI demand",
+      "ticker": "PTC",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-09-01",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] PTC (2026-02-12): Analysts upgrade PTC on AI demand",
+      "ticker": "PTC",
       "company_name": null,
       "signal_type": "news::analyst",
-      "date": "2026-03-31",
+      "date": "2026-02-12",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "NSC": [
+    {
+      "text": "[NEWS][earnings] NSC (2025-05-07): NSC announces record buyback program",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-05-07",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] NSC (2025-09-22): NSC issues weak forward guidance",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-09-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] NSC (2026-01-27): NSC announces record buyback program",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2026-01-27",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] NSC (2025-03-11): NSC signals breakthrough in enterprise segment",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-03-11",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] NSC (2025-05-16): NSC margins expand on operating leverage",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-05-16",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] NSC (2025-08-13): Analysts upgrade NSC on AI demand",
+      "ticker": "NSC",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-08-13",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "ACN": [
+    {
+      "text": "[NEWS][color] ACN (2025-02-20): ACN issues weak forward guidance",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-02-20",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] ACN (2025-10-03): Regulator opens investigation into ACN",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-10-03",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] ACN (2025-10-15): ACN announces upcoming earnings date",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-10-15",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] ACN (2025-01-21): ACN announces upcoming earnings date",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-01-21",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] ACN (2025-05-09): ACN CEO speaks at industry conference",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-05-09",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] ACN (2025-08-26): ACN signals breakthrough in enterprise segment",
+      "ticker": "ACN",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-08-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "ZBH": [
+    {
+      "text": "[ALT][infrastructure_expansion] ZBH (2025-12-08): ZBH expands data-center / supply footprint (strength=0.57)",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "infrastructure_expansion",
+      "date": "2025-12-08",
+      "source": "mock_alt_data",
+      "confidence_score": 0.57,
+      "similarity": 0.0
+    },
+    {
+      "text": "[ALT][infrastructure_expansion] ZBH (2026-01-20): ZBH expands data-center / supply footprint (strength=0.73)",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "infrastructure_expansion",
+      "date": "2026-01-20",
+      "source": "mock_alt_data",
+      "confidence_score": 0.73,
+      "similarity": 0.0
+    },
+    {
+      "text": "[ALT][infrastructure_expansion] ZBH (2026-01-26): ZBH expands data-center / supply footprint (strength=0.72)",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "infrastructure_expansion",
+      "date": "2026-01-26",
+      "source": "mock_alt_data",
+      "confidence_score": 0.72,
+      "similarity": 0.0
+    },
+    {
+      "text": "[ALT][infrastructure_expansion] ZBH (2026-04-23): ZBH expands data-center / supply footprint (strength=0.73)",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "infrastructure_expansion",
+      "date": "2026-04-23",
+      "source": "mock_alt_data",
+      "confidence_score": 0.73,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] ZBH (2025-05-28): Regulator opens investigation into ZBH",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-05-28",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] ZBH (2025-10-31): Regulator opens investigation into ZBH",
+      "ticker": "ZBH",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-10-31",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "FSLR": [
+    {
+      "text": "[NEWS][color] FSLR (2025-09-17): FSLR announces record buyback program",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-09-17",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] FSLR (2025-10-28): FSLR announces record buyback program",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-10-28",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] FSLR (2026-04-21): FSLR announces record buyback program",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-04-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][macro] FSLR (2025-11-06): Analysts upgrade FSLR on AI demand",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::macro",
+      "date": "2025-11-06",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][product_launch] FSLR (2026-01-23): FSLR announces record buyback program",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::product_launch",
+      "date": "2026-01-23",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][product_launch] FSLR (2026-03-02): Slowdown concerns weigh on FSLR",
+      "ticker": "FSLR",
+      "company_name": null,
+      "signal_type": "news::product_launch",
+      "date": "2026-03-02",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "PXD": [
+    {
+      "text": "[NEWS][analyst] PXD (2025-09-02): Slowdown concerns weigh on PXD",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-09-02",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] PXD (2025-11-04): PXD announces record buyback program",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-11-04",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] PXD (2024-12-26): Regulator opens investigation into PXD",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2024-12-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] PXD (2026-02-18): PXD announces record buyback program",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2026-02-18",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] PXD (2025-01-21): PXD CEO speaks at industry conference",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-01-21",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] PXD (2025-07-04): PXD faces lawsuit over data breach",
+      "ticker": "PXD",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-07-04",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "CRWD": [
+    {
+      "text": "[NEWS][color] CRWD (2024-12-25): Slowdown concerns weigh on CRWD",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2024-12-25",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] CRWD (2025-01-09): CRWD announces upcoming earnings date",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-01-09",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CRWD (2025-05-22): CRWD announces record buyback program",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-05-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CRWD (2025-02-19): CRWD misses revenue estimates, shares drop",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-02-19",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] CRWD (2025-10-23): Analysts upgrade CRWD on AI demand",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-10-23",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CRWD (2026-04-09): CRWD CEO speaks at industry conference",
+      "ticker": "CRWD",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-04-09",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    }
+  ],
+  "TYL": [
+    {
+      "text": "[NEWS][guidance] TYL (2026-01-14): TYL announces upcoming earnings date",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2026-01-14",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] TYL (2025-03-13): TYL margins expand on operating leverage",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-03-13",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] TYL (2025-04-16): Outage at TYL sparks reliability questions",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-04-16",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] TYL (2025-07-14): Analysts upgrade TYL on AI demand",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-07-14",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] TYL (2025-08-18): Analysts upgrade TYL on AI demand",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-08-18",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] TYL (2026-01-26): TYL CEO speaks at industry conference",
+      "ticker": "TYL",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-01-26",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    }
+  ],
+  "ABT": [
+    {
+      "text": "[NEWS][regulatory] ABT (2025-03-07): ABT announces upcoming earnings date",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-03-07",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] ABT (2025-09-15): ABT issues weak forward guidance",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-09-15",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] ABT (2025-06-18): Analysts upgrade ABT on AI demand",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-06-18",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] ABT (2025-08-25): Outage at ABT sparks reliability questions",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-08-25",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] ABT (2025-08-28): ABT delays product launch, cuts outlook",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-08-28",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] ABT (2025-09-10): Analysts mixed on ABT ahead of print",
+      "ticker": "ABT",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-09-10",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    }
+  ],
+  "BK": [
+    {
+      "text": "[NEWS][color] BK (2025-01-16): BK announces upcoming earnings date",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-01-16",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] BK (2025-07-11): BK announces upcoming earnings date",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-07-11",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] BK (2025-07-24): Regulator opens investigation into BK",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-07-24",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] BK (2025-10-03): Slowdown concerns weigh on BK",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-10-03",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] BK (2025-12-01): BK issues weak forward guidance",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-12-01",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] BK (2025-12-09): Outage at BK sparks reliability questions",
+      "ticker": "BK",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-12-09",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "GM": [
+    {
+      "text": "[NEWS][analyst] GM (2025-02-26): Strong product launch from GM drives bullish reaction",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-02-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] GM (2026-04-09): Strong product launch from GM drives bullish reaction",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-04-09",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] GM (2025-03-04): Slowdown concerns weigh on GM",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-03-04",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] GM (2025-04-24): Regulator opens investigation into GM",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-04-24",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] GM (2025-05-29): Slowdown concerns weigh on GM",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-05-29",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] GM (2025-09-01): Slowdown concerns weigh on GM",
+      "ticker": "GM",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-09-01",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "INTU": [
+    {
+      "text": "[NEWS][analyst] INTU (2025-02-20): INTU announces upcoming earnings date",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-02-20",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] INTU (2025-10-08): Regulator opens investigation into INTU",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-10-08",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] INTU (2025-11-27): INTU announces upcoming earnings date",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-11-27",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] INTU (2025-08-28): Analyst downgrades INTU citing valuation concerns",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-08-28",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] INTU (2025-02-11): INTU misses revenue estimates, shares drop",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-02-11",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] INTU (2025-12-31): Analysts upgrade INTU on AI demand",
+      "ticker": "INTU",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-12-31",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "CVS": [
+    {
+      "text": "[NEWS][regulatory] CVS (2025-01-24): CVS issues weak forward guidance",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-01-24",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CVS (2026-04-10): Slowdown concerns weigh on CVS",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-04-10",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] CVS (2025-02-27): CVS announces upcoming earnings date",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-02-27",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] CVS (2026-04-22): CVS announces record buyback program",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2026-04-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] CVS (2024-12-19): CVS margins expand on operating leverage",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2024-12-19",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CVS (2025-06-11): CVS faces lawsuit over data breach",
+      "ticker": "CVS",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-06-11",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "NTAP": [
+    {
+      "text": "[NEWS][color] NTAP (2024-12-26): NTAP announces record buyback program",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2024-12-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] NTAP (2025-05-16): NTAP announces record buyback program",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-05-16",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] NTAP (2025-06-19): NTAP announces record buyback program",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-06-19",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] NTAP (2025-01-06): Analysts upgrade NTAP on AI demand",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-01-06",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][macro] NTAP (2025-05-13): NTAP delays product launch, cuts outlook",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::macro",
+      "date": "2025-05-13",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] NTAP (2026-02-05): Analysts upgrade NTAP on AI demand",
+      "ticker": "NTAP",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-02-05",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "CRM": [
+    {
+      "text": "[NEWS][regulatory] CRM (2025-09-18): Analysts mixed on CRM ahead of print",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-09-18",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] CRM (2025-04-24): CRM announces upcoming earnings date",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-04-24",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] CRM (2025-04-23): Analyst downgrades CRM citing valuation concerns",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-04-23",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] CRM (2025-04-21): CRM margins expand on operating leverage",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-04-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] CRM (2026-02-17): CRM CEO speaks at industry conference",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2026-02-17",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] CRM (2026-04-17): CRM signals breakthrough in enterprise segment",
+      "ticker": "CRM",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2026-04-17",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "FICO": [
+    {
+      "text": "[NEWS][regulatory] FICO (2025-07-25): FICO announces upcoming earnings date",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-07-25",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] FICO (2025-10-15): FICO announces upcoming earnings date",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-10-15",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] FICO (2025-10-21): FICO announces record buyback program",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-10-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] FICO (2026-02-17): FICO announces upcoming earnings date",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2026-02-17",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] FICO (2025-06-25): FICO faces lawsuit over data breach",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-06-25",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] FICO (2026-03-16): FICO signals breakthrough in enterprise segment",
+      "ticker": "FICO",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2026-03-16",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "WST": [
+    {
+      "text": "[NEWS][color] WST (2025-05-16): Regulator opens investigation into WST",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-05-16",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] WST (2025-06-09): Slowdown concerns weigh on WST",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-06-09",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] WST (2025-09-19): WST announces upcoming earnings date",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-09-19",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] WST (2025-11-10): WST announces upcoming earnings date",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-11-10",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] WST (2025-03-21): Regulator opens investigation into WST",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-03-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] WST (2025-08-22): WST announces record buyback program",
+      "ticker": "WST",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-08-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "EPAM": [
+    {
+      "text": "[PROFILE] EPAM (EPAM Systems, Inc.): EPAM Systems, Inc. - IT Consulting & Other Services company in the Information Technology sector.",
+      "ticker": "EPAM",
+      "company_name": "EPAM Systems, Inc.",
+      "signal_type": "company_description",
+      "date": "2026-05-03",
+      "source": "mock_company_descriptions",
+      "confidence_score": 0.9,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] EPAM (2025-01-23): EPAM announces record buyback program",
+      "ticker": "EPAM",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-01-23",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] EPAM (2025-04-24): EPAM margins expand on operating leverage",
+      "ticker": "EPAM",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-04-24",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] EPAM (2025-12-22): EPAM delays product launch, cuts outlook",
+      "ticker": "EPAM",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-12-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] EPAM (2025-11-06): EPAM delays product launch, cuts outlook",
+      "ticker": "EPAM",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-11-06",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] EPAM (2026-03-18): EPAM signals breakthrough in enterprise segment",
+      "ticker": "EPAM",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-03-18",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "ON": [
+    {
+      "text": "[NEWS][regulatory] ON (2025-02-21): Slowdown concerns weigh on ON",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-02-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] ON (2025-09-15): Slowdown concerns weigh on ON",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-09-15",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] ON (2025-04-21): Analysts upgrade ON on AI demand",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-04-21",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] ON (2025-07-29): Analysts upgrade ON on AI demand",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-07-29",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][macro] ON (2025-11-13): Analysts upgrade ON on AI demand",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::macro",
+      "date": "2025-11-13",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] ON (2026-02-27): Analysts upgrade ON on AI demand",
+      "ticker": "ON",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2026-02-27",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "GEN": [
+    {
+      "text": "[PROFILE] GEN (Gen Digital Inc.): Gen Digital Inc. - Systems Software company in the Information Technology sector.",
+      "ticker": "GEN",
+      "company_name": "Gen Digital Inc.",
+      "signal_type": "company_description",
+      "date": "2026-05-03",
+      "source": "mock_company_descriptions",
+      "confidence_score": 0.9,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] GEN (2025-05-19): GEN announces record buyback program",
+      "ticker": "GEN",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-05-19",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][analyst] GEN (2025-09-03): GEN announces upcoming earnings date",
+      "ticker": "GEN",
+      "company_name": null,
+      "signal_type": "news::analyst",
+      "date": "2025-09-03",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][partnership] GEN (2025-04-11): Analysts upgrade GEN on AI demand",
+      "ticker": "GEN",
+      "company_name": null,
+      "signal_type": "news::partnership",
+      "date": "2025-04-11",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] GEN (2025-12-09): GEN CEO speaks at industry conference",
+      "ticker": "GEN",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2025-12-09",
+      "source": "mock_news",
+      "confidence_score": 0.5,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][color] GEN (2025-08-22): Outage at GEN sparks reliability questions",
+      "ticker": "GEN",
+      "company_name": null,
+      "signal_type": "news::color",
+      "date": "2025-08-22",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    }
+  ],
+  "HSY": [
+    {
+      "text": "[NEWS][earnings] HSY (2024-12-24): Regulator opens investigation into HSY",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2024-12-24",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][earnings] HSY (2025-11-28): Slowdown concerns weigh on HSY",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::earnings",
+      "date": "2025-11-28",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][regulatory] HSY (2026-03-26): HSY issues weak forward guidance",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::regulatory",
+      "date": "2026-03-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] HSY (2025-06-04): Analysts upgrade HSY on AI demand",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-06-04",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][macro] HSY (2025-06-26): HSY misses revenue estimates, shares drop",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::macro",
+      "date": "2025-06-26",
+      "source": "mock_news",
+      "confidence_score": 0.7,
+      "similarity": 0.0
+    },
+    {
+      "text": "[NEWS][guidance] HSY (2025-08-14): Outage at HSY sparks reliability questions",
+      "ticker": "HSY",
+      "company_name": null,
+      "signal_type": "news::guidance",
+      "date": "2025-08-14",
       "source": "mock_news",
       "confidence_score": 0.7,
       "similarity": 0.0

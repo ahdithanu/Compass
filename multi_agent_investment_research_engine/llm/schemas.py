@@ -47,7 +47,14 @@ class SignalInsight(BaseModel):
 
 
 class CompanyRanking(BaseModel):
-    """One row in the ranked list."""
+    """One row in the ranked list.
+
+    `qualitative_score`, `headline`, and `in_reasoning_slice` only carry
+    meaningful values for tickers that fell inside the LangChain reasoning
+    funnel (top-N by signal score). Tickers outside the funnel get a
+    placeholder qualitative_score equal to the quantitative pillar mean
+    and a generic headline so the UI can still render every row.
+    """
 
     rank: int
     ticker: str
@@ -55,6 +62,9 @@ class CompanyRanking(BaseModel):
     rating: Literal["BUY", "HOLD", "AVOID"]
     qualitative_score: float = Field(..., ge=0.0, le=1.0)
     headline: str
+    sector: Optional[str] = None
+    company_name: Optional[str] = None
+    in_reasoning_slice: bool = True
 
 
 class InvestmentThesis(BaseModel):

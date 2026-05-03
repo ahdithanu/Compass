@@ -274,9 +274,13 @@ def _syn_memo(payload: dict) -> dict:
 
     entries = []
     top_buy = None
+    # Only build full memo entries for rows with a thesis (i.e. inside the
+    # reasoning slice). The reporter renders the rest as a compact tail.
     for row in rankings:
         tk = row["ticker"]
-        thesis = theses.get(tk, {})
+        if tk not in theses:
+            continue
+        thesis = theses[tk]
         rating = row["rating"]
         score = row["signal_score"]
         weight = float(weights.get(tk, 0.0))

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository layout
 
-This repo contains one project: `multi_agent_investment_research_engine/` — a Python multi-agent research system that turns market / news / fundamentals / alternative-data signals into explainable investment memos, risk reviews, company rankings, and a paper-trading backtest. A FastAPI service (`api/`) and a Next.js 14 dashboard (`web/`) sit on top of the same outputs.
+This repo contains one project: `multi_agent_investment_research_engine/` — a Python multi-agent research system that scores the S&P 500 (~484 names from `data/sp500_constituents.csv`) on Market / News / Fundamentals / Alt-data pillars, then runs a LangChain reasoning + retrieval layer on a configurable top-N slice to produce explainable investment memos, outbound angles, risk reviews, and a paper-trading backtest. A FastAPI service (`api/`) and a Next.js 14 dashboard (`web/`) sit on top of the same outputs.
 
 It is **simulation only**: no brokerage integration, no live orders, no profit claims. Keep it that way.
 
@@ -39,23 +39,35 @@ npm run dev
 
 ## Architecture
 
-Two layers, executed in order. The whole thing is a deterministic ordered DAG — no message bus, no async loop. `main.py` orchestrates the agents in this order:
+Three things, executed in order. The whole thing is a deterministic ordered DAG — no message bus, no async loop.
 
-**Quantitative pipeline (`agents/`)**
+**Universe + providers (data layer)**
 
-1. **MarketAgent** (`agents/market_agent.py`) — yfinance OHLCV → momentum / volatility / drawdown / relative strength → `market_score` per ticker. Falls back to a deterministic synthetic price panel when yfinance is unreachable; the fallback is logged as a warning.
+* `data/universe.py` loads the constituent list from `data/sp500_constituents.csv` (or a swappable live fetcher). The default Config selects the full SPX; tests / demos can pass `UniverseSettings(tickers=..., sectors=..., limit=...)`.
+* `providers/` defines `MarketDataProvider` and `FundamentalsProvider` interfaces. The quant agents talk to these abstractions instead of yfinance / CSVs. Bundled providers:
+  * `YFinanceMarketProvider` - batches the universe into chunks of 50 tickers; falls back to a synthetic price panel when egress is blocked.
+  * `YFinanceFundamentalsProvider` - per-ticker `Ticker.info` with a mock-CSV fallback.
+  * `MockFundamentalsProvider` - CSV-only, used in tests.
+
+`main.py` orchestrates the agents in this order:
+
+**Quantitative pipeline (`agents/`) — runs on the entire universe**
+
+1. **MarketAgent** (`agents/market_agent.py`) — consumes a `MarketDataProvider`, computes momentum / volatility / drawdown / relative strength → `market_score` per ticker.
 2. **NewsAgent** (`agents/news_agent.py`) — reads `data/mock_news_events.csv`, scores each headline with a small finance lexicon, weights by event-type impact, decays by recency → `news_score`.
-3. **FundamentalsAgent** (`agents/fundamentals_agent.py`) — yfinance `Ticker.info`, falls back to `data/mock_fundamentals.csv` when fetch fails or returns mostly nulls. Produces growth / profitability / valuation sub-scores → `fundamental_score`.
+3. **FundamentalsAgent** (`agents/fundamentals_agent.py`) — consumes a `FundamentalsProvider`. Produces growth / profitability / valuation sub-scores → `fundamental_score`.
 4. **AlternativeDataAgent** (`agents/alternative_data_agent.py`) — reads `data/mock_alternative_data.csv` (hiring, product launches, permits, app reviews, web traffic), exponential decay + cross-sectional normalization → `alt_score`.
 5. `main._build_feature_table` blends the four pillar scores into `signal_score` (0–100) using weights in `config.SignalWeights`, and assigns ratings (BUY/HOLD/AVOID) per `config.RatingThresholds`.
 6. **PortfolioAgent.propose_weights** — distributes capital across BUY-rated names by relative score, pre-applies single-name + equity caps.
 7. **RiskAgent** (`agents/risk_agent.py`) — final caps + volatility trim + drawdown flags; emits a `PortfolioRiskReport`.
 8. **PortfolioAgent.backtest** — weekly rebalance paper-trading sim across the full price history, recomputes pillar scores at each rebalance date.
 
-**LangChain reasoning + retrieval layer (`llm/`)**
+**LangChain reasoning + retrieval layer (`llm/`) — runs only on the top-N reasoning slice**
 
-9. **`ResearchWorkflow.ingest`** — embeds news, alt-data, fundamentals, and `mock_company_descriptions.csv` into a Chroma vector store at `data/chroma/` via `langchain_chroma.Chroma`. Idempotent (delete-then-add by id).
-10. For each ticker (in score-ranked order):
+The two-stage funnel is controlled by `config.FunnelSettings.top_n_for_reasoning` (default 25). Tickers outside the slice still appear in `company_signal_scores.csv` and `company_rankings.json` but with no thesis / outbound angle. The memo's "Watchlist tail" table lists them; the rankings UI exposes an "in slice / tail / all" filter. Set `top_n_for_reasoning=None` to narrate the whole universe.
+
+9. **`ResearchWorkflow.ingest`** — embeds news, alt-data, fundamentals, and `mock_company_descriptions.csv` for the reasoning-slice tickers into a Chroma vector store at `data/chroma/` via `langchain_chroma.Chroma`. Idempotent (delete-then-add by id). Names outside the slice are not embedded — wasted compute / token cost at SP500 scale.
+10. For each ticker in the reasoning slice (in score-ranked order):
     - **ResearchRetrievalAgent** (`llm/research_retrieval_agent.py`) — vector-search Chroma for top-k evidence; metadata-filterable by ticker + `doc_kind` (news / alt_data / fundamentals / description).
     - **SignalReasoningAgent** (`llm/signal_reasoning_agent.py`) — LangChain `ChatPromptTemplate | chat_model | PydanticOutputParser(SignalInsight)`. Reads retrieved evidence + pillar scores, emits a `SignalInsight`.
     - **ThesisAgent** (`llm/thesis_agent.py`) — emits a structured `InvestmentThesis` (bull/bear/risks/conviction, plus `evidence_refs`).
@@ -107,6 +119,6 @@ If yfinance is blocked, both `MarketAgent` and `FundamentalsAgent` fall back to 
 
 ### Web stack
 
-- `api/main.py` — FastAPI service. GET endpoints (`/api/dashboard`, `/api/rankings`, `/api/rankings_full`, `/api/ticker/{symbol}`, `/api/evidence/{symbol}`, `/api/memo`, `/api/outbound`, `/api/risk`, `/api/backtest`) read from `outputs/` so navigation is fast. `POST /api/run` triggers a synchronous pipeline rebuild and is guarded by a thread lock. CORS is open to `:3000` only.
-- `web/` — Next.js 14 App Router with TypeScript + Tailwind + Recharts + react-markdown. Server components fetch from the FastAPI URL; client components hit `/api/*` on the same origin via the rewrite in `web/next.config.js` (configurable with the `API_URL` env var for production).
+- `api/main.py` — FastAPI service. `GET /api/rankings` accepts `sector`, `rating`, `in_slice`, `q`, `limit`, `offset` query params and returns a paginated `{total, offset, limit, rows}` envelope (so the SP500 page table is usable). `GET /api/universe` exposes the universe size, sector list, and funnel `top_n` so the UI can build filters. Other endpoints (`/api/dashboard`, `/api/ticker/{symbol}`, `/api/evidence/{symbol}`, `/api/memo`, `/api/outbound`, `/api/risk`, `/api/backtest`, `/api/rankings_full`) read from `outputs/`. `POST /api/run` triggers a synchronous pipeline rebuild under a thread lock. CORS is open to `:3000` only.
+- `web/` — Next.js 14 App Router with TypeScript + Tailwind + Recharts + react-markdown. The rankings page uses URL search params for filter state (sector dropdown, rating filter, in-slice toggle, search box, pagination), so deep links survive reloads. Server components fetch from the FastAPI URL; client components hit `/api/*` on the same origin via the rewrite in `web/next.config.js` (`API_URL` env var for production).
 - The frontend is decorative: every fact it shows is in `outputs/`. Don't duplicate logic into TS — keep new analytics in the Python agents and surface them through one API field.

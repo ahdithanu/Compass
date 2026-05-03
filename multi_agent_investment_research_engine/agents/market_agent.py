@@ -7,30 +7,23 @@ The market score blends four sub-features:
 * Relative Str. - cumulative return vs benchmark (SPY) over the window
 
 Each sub-feature is min-max scaled cross-sectionally across the universe
-when possible (so we are comparing companies to their peers, not absolute
-levels in a vacuum). The final score is in [0, 1].
+so we are comparing companies to their peers, not absolute levels.
 
-If yfinance is unreachable (offline sandbox, CI without egress), the agent
-falls back to a deterministic synthetic price panel so the pipeline still
-runs end-to-end. Synthetic mode is logged loudly so consumers know the
-output is not market-truth.
+The agent does not fetch data itself - it consumes a `MarketDataProvider`
+(default: yfinance with synthetic fallback). Swap in a Polygon or Alpaca
+provider without touching this code.
 """
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Iterable, Optional
 
 import numpy as np
 import pandas as pd
 
-try:
-    import yfinance as yf
-    _HAS_YFINANCE = True
-except Exception:    # pragma: no cover - import-time only
-    _HAS_YFINANCE = False
-
 from .base_agent import BaseAgent
 from ..config import MarketSettings
+from ..providers import MarketDataProvider, YFinanceMarketProvider
 
 
 def _min_max(s: pd.Series) -> pd.Series:
@@ -45,123 +38,51 @@ def _min_max(s: pd.Series) -> pd.Series:
 class MarketAgent(BaseAgent):
     name = "MarketAgent"
     description = (
-        "Fetches price history and computes momentum, volatility, drawdown, "
-        "and relative strength versus a benchmark for each ticker."
+        "Reads close-price history from a MarketDataProvider and computes "
+        "momentum, volatility, drawdown, and relative strength vs. a "
+        "benchmark for each ticker."
     )
 
     def __init__(
         self,
         settings: MarketSettings,
         benchmark: str = "SPY",
+        provider: Optional[MarketDataProvider] = None,
         verbose: bool = True,
     ) -> None:
         super().__init__(verbose=verbose)
         self.settings = settings
         self.benchmark = benchmark.upper()
-
-    def _download(self, tickers: list[str]) -> tuple[pd.DataFrame, bool]:
-        """Return (raw_yf_frame, synthetic_flag)."""
-        if _HAS_YFINANCE:
-            self.log(
-                f"Fetching {len(tickers)} tickers via yfinance "
-                f"(period={self.settings.period}, interval={self.settings.interval})"
-            )
-            try:
-                raw = yf.download(
-                    tickers=tickers,
-                    period=self.settings.period,
-                    interval=self.settings.interval,
-                    auto_adjust=True,
-                    group_by="ticker",
-                    progress=False,
-                    threads=True,
-                )
-                if raw is not None and not raw.empty:
-                    # Validate at least one ticker has Close prices.
-                    flat = self._close_panel(raw, tickers)
-                    if not flat.empty and flat.dropna(how="all").shape[0] > 0:
-                        return raw, False
-            except Exception as exc:    # noqa: BLE001
-                self.log(f"yfinance error: {exc!s}")
-        # Fallback: synthetic, deterministic price panel.
-        self.logger.warn(
-            "yfinance unavailable / blocked - generating synthetic price panel "
-            "for offline run."
-        )
-        return self._synthetic_panel(tickers), True
-
-    def _synthetic_panel(self, tickers: list[str]) -> pd.DataFrame:
-        """Deterministic correlated random walks across the universe.
-
-        Designed to look like the input shape yfinance would return when
-        called with `group_by='ticker'`: a MultiIndex (ticker, OHLCV) on
-        columns. We populate only Close to keep the rest of the pipeline
-        simple - downstream code only reads `Close`.
-        """
-        idx = pd.bdate_range(
-            end=pd.Timestamp.utcnow().normalize(), periods=252
-        )
-        days = len(idx)
-        rng = np.random.default_rng(seed=42)
-
-        # Per-ticker starting price + drift gives the panel some character.
-        seeds = {
-            "SPY": (510.0, 0.00040, 0.012),
-            "NVDA": (480.0, 0.00170, 0.035),
-            "MSFT": (415.0, 0.00065, 0.018),
-            "AMZN": (175.0, 0.00060, 0.022),
-            "META": (475.0, 0.00075, 0.028),
-            "TSLA": (240.0, 0.00010, 0.040),
-            "AMD": (160.0, 0.00080, 0.038),
-            "PLTR": (24.0, 0.00150, 0.045),
-            "CRWD": (310.0, 0.00100, 0.030),
-            "SNOW": (180.0, 0.00040, 0.035),
-        }
-        # Common market factor so relative-strength is meaningful.
-        market_shocks = rng.normal(0.0003, 0.010, days)
-        out = {}
-        for t in tickers:
-            start, drift, vol = seeds.get(t, (100.0, 0.0005, 0.025))
-            idio = rng.normal(0, vol, days)
-            # 60% market beta + 40% idiosyncratic.
-            rets = drift + 0.6 * market_shocks + 0.4 * idio
-            prices = start * np.cumprod(1 + rets)
-            out[t] = prices
-        df = pd.DataFrame(out, index=idx)
-        df.index.name = "Date"
-        # Mimic yfinance's grouped-by-ticker MultiIndex shape.
-        cols = pd.MultiIndex.from_product([df.columns, ["Close"]])
-        wide = pd.DataFrame(index=df.index, columns=cols, dtype=float)
-        for t in df.columns:
-            wide[(t, "Close")] = df[t]
-        return wide
-
-    @staticmethod
-    def _close_panel(raw: pd.DataFrame, tickers: list[str]) -> pd.DataFrame:
-        """Extract Close prices for each ticker into a wide DataFrame."""
-        if isinstance(raw.columns, pd.MultiIndex):
-            closes = {}
-            for t in tickers:
-                if t in raw.columns.get_level_values(0):
-                    closes[t] = raw[t]["Close"]
-            df = pd.DataFrame(closes)
-        else:
-            # Single-ticker download
-            df = raw[["Close"]].rename(columns={"Close": tickers[0]})
-        df.index = pd.to_datetime(df.index).tz_localize(None)
-        df.index.name = "date"
-        return df.dropna(how="all")
+        self.provider = provider or YFinanceMarketProvider(verbose=verbose)
+        self.synthetic = False
 
     def run(self, tickers: Iterable[str]) -> dict[str, pd.DataFrame | pd.Series]:
         tickers = [t.upper() for t in tickers]
         all_tickers = sorted(set(tickers + [self.benchmark]))
-        raw, synthetic = self._download(all_tickers)
-        closes = self._close_panel(raw, all_tickers)
-        self.synthetic = synthetic
+        self.log(
+            f"Fetching {len(all_tickers)} tickers via "
+            f"{self.provider.name} (period={self.settings.period}, "
+            f"interval={self.settings.interval})"
+        )
+        panel = self.provider.get_prices(
+            tickers=all_tickers,
+            period=self.settings.period,
+            interval=self.settings.interval,
+        )
+        self.synthetic = panel.is_synthetic
+        if panel.is_synthetic:
+            self.logger.warn(
+                f"MarketDataProvider {self.provider.name} returned a synthetic "
+                "panel - downstream features are not market-truth."
+            )
+
+        closes = panel.closes.copy()
+        if closes.empty:
+            raise RuntimeError("MarketDataProvider returned an empty panel.")
 
         if self.benchmark not in closes.columns:
             raise RuntimeError(
-                f"Benchmark {self.benchmark} missing from yfinance response."
+                f"Benchmark {self.benchmark} missing from price panel."
             )
 
         s = self.settings
@@ -171,14 +92,15 @@ class MarketAgent(BaseAgent):
         bench = closes[self.benchmark]
         bench_ret_window = bench.pct_change(s.rel_strength_window)
 
+        skipped = 0
         for t in tickers:
             if t not in closes.columns:
-                self.log(f"  skipping {t}: no price data returned")
+                skipped += 1
                 continue
 
             px = closes[t].dropna()
             if len(px) < max(s.long_ma, s.drawdown_window) + 5:
-                self.log(f"  skipping {t}: insufficient history ({len(px)} rows)")
+                skipped += 1
                 continue
 
             df = pd.DataFrame({"close": px})
@@ -192,7 +114,7 @@ class MarketAgent(BaseAgent):
                 * np.sqrt(252)
             )
             roll_max = df["close"].rolling(s.drawdown_window).max()
-            df["drawdown"] = df["close"] / roll_max - 1.0   # <= 0
+            df["drawdown"] = df["close"] / roll_max - 1.0
             ret_window = df["close"].pct_change(s.rel_strength_window)
             df["rel_strength"] = ret_window - bench_ret_window.reindex(df.index)
             df["ticker"] = t
@@ -202,38 +124,58 @@ class MarketAgent(BaseAgent):
             latest_features.append(
                 {
                     "ticker": t,
-                    "ma_gap": float(last["ma_gap"]) if pd.notna(last["ma_gap"]) else 0.0,
-                    "momentum": float(last["momentum"]) if pd.notna(last["momentum"]) else 0.0,
-                    "drawdown": float(last["drawdown"]) if pd.notna(last["drawdown"]) else 0.0,
-                    "rel_strength": float(last["rel_strength"]) if pd.notna(last["rel_strength"]) else 0.0,
-                    "volatility": float(last["volatility"]) if pd.notna(last["volatility"]) else 0.0,
+                    "ma_gap": _f(last["ma_gap"]),
+                    "momentum": _f(last["momentum"]),
+                    "drawdown": _f(last["drawdown"]),
+                    "rel_strength": _f(last["rel_strength"]),
+                    "volatility": _f(last["volatility"]),
                     "close": float(last["close"]),
                 }
             )
 
+        if skipped:
+            self.log(
+                f"  skipped {skipped} ticker(s) for missing data / insufficient history"
+            )
+
         feat = pd.DataFrame(latest_features).set_index("ticker")
+        if feat.empty:
+            raise RuntimeError(
+                "MarketAgent produced no features - panel was empty for every ticker."
+            )
 
-        # Cross-sectional min-max so we are scoring companies vs. peers.
-        # Drawdown: less negative (closer to 0) is better, so feed it raw.
-        comp_trend = _min_max(feat["ma_gap"])
-        comp_mom = _min_max(feat["momentum"])
-        comp_dd = _min_max(feat["drawdown"])  # already-non-positive
-        comp_rs = _min_max(feat["rel_strength"])
-
+        # Cross-sectional rank into [0, 1]. Drawdown: less negative is better,
+        # which is what the raw value already captures (closer to 0).
         feat["market_score"] = (
-            0.30 * comp_trend
-            + 0.30 * comp_mom
-            + 0.20 * comp_dd
-            + 0.20 * comp_rs
+            0.30 * _min_max(feat["ma_gap"])
+            + 0.30 * _min_max(feat["momentum"])
+            + 0.20 * _min_max(feat["drawdown"])
+            + 0.20 * _min_max(feat["rel_strength"])
         ).clip(0.0, 1.0)
 
-        self.log(
-            "Market scores: "
-            + ", ".join(f"{t}={v:.2f}" for t, v in feat["market_score"].items())
-        )
+        if len(feat) <= 12:
+            self.log(
+                "Market scores: "
+                + ", ".join(f"{t}={v:.2f}" for t, v in feat["market_score"].items())
+            )
+        else:
+            top = feat["market_score"].sort_values(ascending=False).head(5)
+            bot = feat["market_score"].sort_values(ascending=True).head(3)
+            self.log(
+                "Market scores (top 5 / bottom 3 of "
+                f"{len(feat)}): "
+                + ", ".join(f"{t}={v:.2f}" for t, v in top.items())
+                + " | "
+                + ", ".join(f"{t}={v:.2f}" for t, v in bot.items())
+            )
 
         return {
-            "panel": closes,            # wide close-price panel (incl. benchmark)
-            "per_ticker": per_ticker,   # dict[ticker -> per-day feature df]
-            "features": feat,           # latest cross-section, indexed by ticker
+            "panel": closes,
+            "per_ticker": per_ticker,
+            "features": feat,
+            "is_synthetic": panel.is_synthetic,
         }
+
+
+def _f(v) -> float:
+    return float(v) if pd.notna(v) else 0.0

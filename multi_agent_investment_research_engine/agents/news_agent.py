@@ -154,8 +154,15 @@ class NewsAgent(BaseAgent):
             )
 
         feat = pd.DataFrame(per_ticker_rows).set_index("ticker")
-        self.log(
-            "News scores: "
-            + ", ".join(f"{t}={v:.2f}" for t, v in feat["news_score"].items())
-        )
+        if len(feat) <= 12:
+            self.log(
+                "News scores: "
+                + ", ".join(f"{t}={v:.2f}" for t, v in feat["news_score"].items())
+            )
+        else:
+            top = feat["news_score"].sort_values(ascending=False).head(5)
+            self.log(
+                f"News scores (top 5 of {len(feat)}): "
+                + ", ".join(f"{t}={v:.2f}" for t, v in top.items())
+            )
         return {"events": df, "features": feat}

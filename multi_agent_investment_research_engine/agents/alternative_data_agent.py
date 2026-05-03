@@ -101,9 +101,16 @@ class AlternativeDataAgent(BaseAgent):
         if s.max() > s.min():
             feat["alt_score"] = ((s - s.min()) / (s.max() - s.min())).clip(0.0, 1.0)
 
-        self.log(
-            "Alt-data scores: "
-            + ", ".join(f"{t}={v:.2f}" for t, v in feat["alt_score"].items())
-        )
+        if len(feat) <= 12:
+            self.log(
+                "Alt-data scores: "
+                + ", ".join(f"{t}={v:.2f}" for t, v in feat["alt_score"].items())
+            )
+        else:
+            top = feat["alt_score"].sort_values(ascending=False).head(5)
+            self.log(
+                f"Alt-data scores (top 5 of {len(feat)}): "
+                + ", ".join(f"{t}={v:.2f}" for t, v in top.items())
+            )
 
         return {"signals": df, "features": feat}

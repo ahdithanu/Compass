@@ -101,9 +101,20 @@ class ResearchWorkflow:
         portfolio_snapshot: dict,
         as_of: _date,
         company_names: dict[str, str] | None = None,
+        sectors: dict[str, str] | None = None,
         evidence_k: int = 6,
+        reason_on: Iterable[str] | None = None,
     ) -> WorkflowOutput:
+        """Run retrieval + reasoning + memo composition.
+
+        `reason_on` controls the two-stage funnel: only these tickers get
+        the expensive LangChain hops (retrieve → SignalInsight → Thesis →
+        OutboundAngle). Tickers outside the slice still appear in the
+        ranking and the memo's full-list section, but with a placeholder
+        qualitative score and no thesis. Default = the whole universe.
+        """
         company_names = company_names or {}
+        sectors = sectors or {}
         risk_flags_by_ticker = {r["ticker"]: list(r.get("flags", [])) for r in risk_reviews}
 
         evidence_by_ticker: dict[str, list[EvidenceItem]] = {}
@@ -113,17 +124,53 @@ class ResearchWorkflow:
         rankings: list[CompanyRanking] = []
 
         ranked = feature_table.sort_values("signal_score", ascending=False)
+
+        if reason_on is None:
+            reason_set: set[str] = set(ranked.index)
+        else:
+            reason_set = {t for t in reason_on}
+
         for rank, ticker in enumerate(ranked.index, start=1):
             row = ranked.loc[ticker]
             score = float(row["signal_score"])
             rating = str(row["rating"])
+            in_slice = ticker in reason_set
+
+            if not in_slice:
+                # Thin row: no LangChain calls, no retrieved evidence.
+                pillar_mean = float(
+                    (row.get("market_score", 0.5)
+                     + row.get("news_score", 0.5)
+                     + row.get("fundamental_score", 0.5)
+                     + row.get("alt_score", 0.5)) / 4.0
+                )
+                rankings.append(
+                    CompanyRanking(
+                        rank=rank,
+                        ticker=ticker,
+                        signal_score=score,
+                        rating=rating if rating in {"BUY", "HOLD", "AVOID"} else "HOLD",
+                        qualitative_score=pillar_mean,
+                        headline=(
+                            f"{ticker} ranked #{rank} on quant score "
+                            f"{score:.0f}/100 - outside the reasoning slice."
+                        ),
+                        sector=sectors.get(ticker),
+                        company_name=company_names.get(ticker),
+                        in_reasoning_slice=False,
+                    )
+                )
+                continue
+
             pillar = {
                 "market_score": float(row.get("market_score", 0.5)),
                 "news_score": float(row.get("news_score", 0.5)),
                 "fundamental_score": float(row.get("fundamental_score", 0.5)),
                 "alt_score": float(row.get("alt_score", 0.5)),
             }
-            self.logger.info(f"[{rank}/{len(ranked)}] {ticker} (score {score:.0f}, {rating})")
+            self.logger.info(
+                f"[{rank}/{len(ranked)}] {ticker} (score {score:.0f}, {rating})"
+            )
 
             evidence = self.retrieval.for_ticker(ticker=ticker, k=evidence_k)
             evidence_by_ticker[ticker] = evidence
@@ -179,6 +226,9 @@ class ResearchWorkflow:
                     rating=rating if rating in {"BUY", "HOLD", "AVOID"} else "HOLD",
                     qualitative_score=insight.qualitative_score,
                     headline=insight.headline_summary,
+                    sector=sectors.get(ticker),
+                    company_name=company_names.get(ticker),
+                    in_reasoning_slice=True,
                 )
             )
 

@@ -107,9 +107,9 @@ def _business_days(end: datetime, days_back: int) -> list[datetime]:
     ]
 
 
-# Per-ticker bias for mock generation: roughly mirrors the fundamentals
-# tier so the demo memo lands on names that "deserve" their signal score.
-# Higher = more positive news / more frequent + stronger alt signals.
+# Per-ticker bias for mock generation: hand-tuned for the original tech
+# demo so that universe lands on plausible names.  Higher bias = more
+# positive news / more frequent + stronger alt-data signals.
 TICKER_BIAS: dict[str, float] = {
     "NVDA": 0.85,
     "MSFT": 0.70,
@@ -123,19 +123,65 @@ TICKER_BIAS: dict[str, float] = {
 }
 
 
+# Sector-level priors for the 11 GICS sectors, used as the fallback bias
+# for any ticker that is not in `TICKER_BIAS`. These are intentionally
+# coarse - the point is to give the synthetic SP500 universe realistic
+# *dispersion* (i.e. tech leans bullish, energy is more mixed, utilities
+# are sleepy) rather than to predict anything.
+SECTOR_BIAS: dict[str, float] = {
+    "Information Technology": 0.62,
+    "Communication Services": 0.55,
+    "Consumer Discretionary": 0.50,
+    "Health Care": 0.50,
+    "Financials": 0.48,
+    "Industrials": 0.50,
+    "Materials": 0.45,
+    "Energy": 0.45,
+    "Consumer Staples": 0.42,
+    "Real Estate": 0.42,
+    "Utilities": 0.40,
+}
+
+
+def _ticker_bias(ticker: str, sector_lookup: dict[str, str]) -> float:
+    """Resolve the bias for a ticker.
+
+    Order: explicit per-ticker entry > sector-level prior > 0.50 neutral.
+    """
+    if ticker in TICKER_BIAS:
+        return TICKER_BIAS[ticker]
+    sector = sector_lookup.get(ticker)
+    if sector and sector in SECTOR_BIAS:
+        return SECTOR_BIAS[sector]
+    return 0.50
+
+
+def _sector_lookup(data_dir: Path | None) -> dict[str, str]:
+    """Build a {ticker: sector} map from the constituents CSV if present."""
+    if data_dir is None:
+        return {}
+    csv = Path(data_dir) / "sp500_constituents.csv"
+    if not csv.exists():
+        return {}
+    df = pd.read_csv(csv)
+    return dict(zip(df["ticker"].astype(str).str.upper(), df["sector"]))
+
+
 def generate_news_events(
     tickers: list[str],
     end: datetime | None = None,
     days_back: int = 365,
     events_per_ticker: int = 18,
     seed: int = 7,
+    data_dir: Path | None = None,
 ) -> pd.DataFrame:
     rng = random.Random(seed)
     end = end or datetime.utcnow()
     rows = []
     bdays = _business_days(end, days_back)
+    sectors = _sector_lookup(data_dir)
     for tk in tickers:
-        bias = TICKER_BIAS.get(tk, 0.50)
+        bias = _ticker_bias(tk, sectors)
         # Probability-of-positive scales with bias; probability-of-negative
         # is the symmetric complement (with neutral fixed at 15%).
         p_pos = 0.20 + 0.60 * bias    # bias=0.85 -> 0.71; bias=0.30 -> 0.38
@@ -176,13 +222,15 @@ def generate_alt_signals(
     days_back: int = 365,
     signals_per_ticker: int = 12,
     seed: int = 7,
+    data_dir: Path | None = None,
 ) -> pd.DataFrame:
     rng = random.Random(seed)
     end = end or datetime.utcnow()
     rows = []
     bdays = _business_days(end, days_back)
+    sectors = _sector_lookup(data_dir)
     for tk in tickers:
-        bias = TICKER_BIAS.get(tk, 0.50)
+        bias = _ticker_bias(tk, sectors)
         # Higher-tier names get more signals AND those signals are stronger.
         # Recent-date probability also rises with bias so decay still pays.
         n_signals = max(4, int(signals_per_ticker * (0.6 + bias)))
@@ -217,11 +265,145 @@ def generate_alt_signals(
     return df.sort_values(["ticker", "date"]).reset_index(drop=True)
 
 
-def generate_fundamentals(tickers: list[str]) -> pd.DataFrame:
-    """Hand-tuned fundamentals snapshot. Used as fallback to live data."""
-    df = pd.DataFrame(MOCK_FUNDAMENTALS)
-    df = df[df["ticker"].isin(tickers)].reset_index(drop=True)
-    return df
+# Sector-level fundamental priors used to synthesize a plausible row when
+# a ticker is not in the hand-tuned `MOCK_FUNDAMENTALS`. Returned values
+# are deterministic per-ticker (seeded by hash) so reruns are stable.
+SECTOR_FUNDAMENTAL_PRIOR: dict[str, dict[str, tuple[float, float]]] = {
+    # Each pair is (mean, half-spread) for a uniform draw.
+    "Information Technology": {
+        "revenue_growth_yoy": (0.18, 0.10),
+        "gross_margin": (0.62, 0.10),
+        "operating_margin": (0.25, 0.10),
+        "net_margin": (0.20, 0.10),
+        "pe_ratio": (35.0, 15.0),
+        "ps_ratio": (8.0, 4.0),
+        "return_on_equity": (0.25, 0.15),
+    },
+    "Communication Services": {
+        "revenue_growth_yoy": (0.10, 0.08),
+        "gross_margin": (0.55, 0.10),
+        "operating_margin": (0.20, 0.08),
+        "net_margin": (0.15, 0.08),
+        "pe_ratio": (24.0, 8.0),
+        "ps_ratio": (4.0, 2.0),
+        "return_on_equity": (0.20, 0.10),
+    },
+    "Consumer Discretionary": {
+        "revenue_growth_yoy": (0.08, 0.07),
+        "gross_margin": (0.40, 0.10),
+        "operating_margin": (0.12, 0.06),
+        "net_margin": (0.08, 0.05),
+        "pe_ratio": (22.0, 8.0),
+        "ps_ratio": (2.0, 1.5),
+        "return_on_equity": (0.18, 0.08),
+    },
+    "Health Care": {
+        "revenue_growth_yoy": (0.08, 0.06),
+        "gross_margin": (0.55, 0.10),
+        "operating_margin": (0.18, 0.08),
+        "net_margin": (0.13, 0.07),
+        "pe_ratio": (22.0, 8.0),
+        "ps_ratio": (4.0, 2.0),
+        "return_on_equity": (0.18, 0.10),
+    },
+    "Financials": {
+        "revenue_growth_yoy": (0.06, 0.05),
+        "gross_margin": (0.50, 0.10),
+        "operating_margin": (0.30, 0.08),
+        "net_margin": (0.22, 0.08),
+        "pe_ratio": (14.0, 4.0),
+        "ps_ratio": (3.0, 1.5),
+        "return_on_equity": (0.13, 0.05),
+    },
+    "Industrials": {
+        "revenue_growth_yoy": (0.07, 0.05),
+        "gross_margin": (0.30, 0.08),
+        "operating_margin": (0.13, 0.06),
+        "net_margin": (0.09, 0.05),
+        "pe_ratio": (20.0, 6.0),
+        "ps_ratio": (2.0, 1.0),
+        "return_on_equity": (0.18, 0.08),
+    },
+    "Materials": {
+        "revenue_growth_yoy": (0.04, 0.05),
+        "gross_margin": (0.27, 0.08),
+        "operating_margin": (0.13, 0.06),
+        "net_margin": (0.09, 0.05),
+        "pe_ratio": (18.0, 6.0),
+        "ps_ratio": (1.6, 0.8),
+        "return_on_equity": (0.14, 0.07),
+    },
+    "Energy": {
+        "revenue_growth_yoy": (0.02, 0.10),
+        "gross_margin": (0.30, 0.10),
+        "operating_margin": (0.15, 0.08),
+        "net_margin": (0.10, 0.06),
+        "pe_ratio": (12.0, 4.0),
+        "ps_ratio": (1.0, 0.5),
+        "return_on_equity": (0.15, 0.08),
+    },
+    "Consumer Staples": {
+        "revenue_growth_yoy": (0.05, 0.04),
+        "gross_margin": (0.40, 0.08),
+        "operating_margin": (0.17, 0.05),
+        "net_margin": (0.11, 0.04),
+        "pe_ratio": (22.0, 5.0),
+        "ps_ratio": (1.8, 0.8),
+        "return_on_equity": (0.20, 0.08),
+    },
+    "Real Estate": {
+        "revenue_growth_yoy": (0.05, 0.04),
+        "gross_margin": (0.65, 0.10),
+        "operating_margin": (0.30, 0.08),
+        "net_margin": (0.18, 0.07),
+        "pe_ratio": (28.0, 8.0),
+        "ps_ratio": (8.0, 4.0),
+        "return_on_equity": (0.08, 0.04),
+    },
+    "Utilities": {
+        "revenue_growth_yoy": (0.03, 0.03),
+        "gross_margin": (0.45, 0.08),
+        "operating_margin": (0.20, 0.05),
+        "net_margin": (0.12, 0.04),
+        "pe_ratio": (18.0, 4.0),
+        "ps_ratio": (2.4, 0.8),
+        "return_on_equity": (0.10, 0.04),
+    },
+}
+
+
+def _synth_fundamentals(ticker: str, sector: str | None, seed: int) -> dict:
+    """Deterministically draw a fundamentals row for an unknown ticker."""
+    prior = SECTOR_FUNDAMENTAL_PRIOR.get(
+        sector or "", SECTOR_FUNDAMENTAL_PRIOR["Industrials"]
+    )
+    rng = random.Random(f"{seed}::{ticker}")
+    row = {"ticker": ticker}
+    for col, (mean, spread) in prior.items():
+        row[col] = round(rng.uniform(mean - spread, mean + spread), 4)
+    return row
+
+
+def generate_fundamentals(
+    tickers: list[str],
+    seed: int = 7,
+    data_dir: Path | None = None,
+) -> pd.DataFrame:
+    """Per-ticker fundamentals snapshot (offline fallback for FundamentalsAgent).
+
+    Hand-tuned values in `MOCK_FUNDAMENTALS` win when present; everything
+    else gets a sector-level synthetic row drawn deterministically from
+    `SECTOR_FUNDAMENTAL_PRIOR`.
+    """
+    sectors = _sector_lookup(data_dir)
+    by_ticker = {row["ticker"]: row for row in MOCK_FUNDAMENTALS}
+    rows = []
+    for tk in tickers:
+        if tk in by_ticker:
+            rows.append(by_ticker[tk])
+        else:
+            rows.append(_synth_fundamentals(tk, sectors.get(tk), seed=seed))
+    return pd.DataFrame(rows)
 
 
 # Short company profiles - these get ingested into Chroma so the
@@ -304,14 +486,50 @@ COMPANY_PROFILES: dict[str, dict[str, str]] = {
 }
 
 
-def generate_company_descriptions(tickers: list[str]) -> pd.DataFrame:
+def _constituents_lookup(data_dir: Path | None) -> dict[str, dict[str, str]]:
+    """Map ticker -> {company_name, sector, sub_industry} from the SP500 CSV."""
+    if data_dir is None:
+        return {}
+    csv = Path(data_dir) / "sp500_constituents.csv"
+    if not csv.exists():
+        return {}
+    df = pd.read_csv(csv).set_index("ticker")
+    return df[["company_name", "sector", "sub_industry"]].to_dict(orient="index")
+
+
+def generate_company_descriptions(
+    tickers: list[str],
+    data_dir: Path | None = None,
+) -> pd.DataFrame:
+    """Build a description row per ticker.
+
+    Order of preference for `description`:
+    1. Hand-written entry in `COMPANY_PROFILES`.
+    2. Generic sector / sub-industry boilerplate using metadata from
+       `sp500_constituents.csv`.
+    3. Bare ticker fallback.
+    """
+    constituents = _constituents_lookup(data_dir)
     rows = []
     for tk in tickers:
         prof = COMPANY_PROFILES.get(tk)
-        if prof is None:
-            rows.append({"ticker": tk, "company_name": tk, "description": ""})
+        if prof is not None:
+            rows.append({"ticker": tk, **prof})
             continue
-        rows.append({"ticker": tk, **prof})
+        meta = constituents.get(tk)
+        if meta is not None:
+            rows.append(
+                {
+                    "ticker": tk,
+                    "company_name": meta["company_name"],
+                    "description": (
+                        f"{meta['company_name']} - {meta['sub_industry']} "
+                        f"company in the {meta['sector']} sector."
+                    ),
+                }
+            )
+            continue
+        rows.append({"ticker": tk, "company_name": tk, "description": ""})
     return pd.DataFrame(rows)
 
 
@@ -332,26 +550,33 @@ def ensure_mock_data(
         "desc": data_dir / "mock_company_descriptions.csv",
     }
     if overwrite or not files["news"].exists():
-        generate_news_events(tickers, end=end, seed=seed).to_csv(
-            files["news"], index=False
-        )
+        generate_news_events(
+            tickers, end=end, seed=seed, data_dir=data_dir
+        ).to_csv(files["news"], index=False)
     if overwrite or not files["alt"].exists():
-        generate_alt_signals(tickers, end=end, seed=seed).to_csv(
-            files["alt"], index=False
-        )
+        generate_alt_signals(
+            tickers, end=end, seed=seed, data_dir=data_dir
+        ).to_csv(files["alt"], index=False)
     if overwrite or not files["fund"].exists():
-        generate_fundamentals(tickers).to_csv(files["fund"], index=False)
+        generate_fundamentals(tickers, seed=seed, data_dir=data_dir).to_csv(
+            files["fund"], index=False
+        )
     if overwrite or not files["desc"].exists():
-        generate_company_descriptions(tickers).to_csv(files["desc"], index=False)
+        generate_company_descriptions(tickers, data_dir=data_dir).to_csv(
+            files["desc"], index=False
+        )
     return files
 
 
 if __name__ == "__main__":   # pragma: no cover
     from ..config import DEFAULT_CONFIG
+    from .universe import load_constituents, select_tickers
 
+    constituents = load_constituents(DEFAULT_CONFIG.data_dir)
+    tickers = select_tickers(constituents, limit=DEFAULT_CONFIG.universe.limit)
     paths = ensure_mock_data(
         DEFAULT_CONFIG.data_dir,
-        list(DEFAULT_CONFIG.universe),
+        tickers,
         overwrite=True,
     )
     for k, v in paths.items():

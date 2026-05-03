@@ -1,12 +1,12 @@
 {
   "starting_capital": 100000.0,
-  "ending_capital": 96770.00350987841,
-  "total_return_pct": -3.2299964901215894,
-  "benchmark_return_pct": 10.148564629500356,
-  "num_trades": 71,
-  "win_rate_pct": 65.78947368421053,
-  "max_drawdown_pct": -6.391183048961069,
-  "sharpe_like": -0.6460934876725443,
+  "ending_capital": 113933.36550473497,
+  "total_return_pct": 13.933365504734985,
+  "benchmark_return_pct": 7.490917863325519,
+  "num_trades": 388,
+  "win_rate_pct": 72.05882352941177,
+  "max_drawdown_pct": -5.5132480450145405,
+  "sharpe_like": 1.741047671366016,
   "start_date": "2025-05-16",
   "end_date": "2026-05-01"
 }

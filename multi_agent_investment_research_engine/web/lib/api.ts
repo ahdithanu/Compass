@@ -77,10 +77,13 @@ export interface DashboardPayload {
 }
 
 export interface UniversePayload {
-  universe: string[];
+  universe: string;          // logical name (e.g. "sp500")
+  size: number;              // number of constituents in the latest run
+  sectors: string[];         // sectors present in the rankings (for filters)
   benchmark: string;
   weights: { market: number; news: number; fundamentals: number; alternative: number };
   thresholds: { buy: number; hold: number };
+  funnel_top_n: number | null;
   starting_capital: number;
 }
 
@@ -98,12 +101,40 @@ export interface EvidenceItem {
 export interface RankingFull {
   rank: number;
   ticker: string;
+  company_name?: string | null;
+  sector?: string | null;
   rating: Rating;
   signal_score: number;
   qualitative_score: number;
   headline: string;
   investment_thesis: string;
   conviction: "high" | "medium" | "low" | null;
+  in_reasoning_slice?: boolean;
+}
+
+export interface RankingsPage {
+  total: number;
+  offset: number;
+  limit: number;
+  rows: (CompanyScoreRow & {
+    rank?: number;
+    company_name?: string | null;
+    sector?: string | null;
+    qualitative_score?: number;
+    headline?: string;
+    investment_thesis?: string;
+    conviction?: "high" | "medium" | "low" | null;
+    in_reasoning_slice?: boolean;
+  })[];
+}
+
+export interface RankingsQuery {
+  sector?: string;
+  rating?: Rating;
+  in_slice?: boolean;
+  q?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export interface TickerDetail {
@@ -142,10 +173,22 @@ async function getText(path: string, server = true): Promise<string> {
   return await res.text();
 }
 
+function buildQuery(query: Record<string, unknown>): string {
+  const parts: string[] = [];
+  for (const [k, v] of Object.entries(query)) {
+    if (v == null || v === "") continue;
+    parts.push(
+      `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`,
+    );
+  }
+  return parts.length ? `?${parts.join("&")}` : "";
+}
+
 export const api = {
   health: () => getJson<{ status: string; has_outputs: boolean }>("/api/health"),
   universe: () => getJson<UniversePayload>("/api/universe"),
-  rankings: () => getJson<CompanyScoreRow[]>("/api/rankings"),
+  rankings: (query: RankingsQuery = {}) =>
+    getJson<RankingsPage>(`/api/rankings${buildQuery(query as Record<string, unknown>)}`),
   rankingsFull: () => getJson<RankingFull[]>("/api/rankings_full"),
   ticker: (sym: string) => getJson<TickerDetail>(`/api/ticker/${sym}`),
   dashboard: () => getJson<DashboardPayload>("/api/dashboard"),
