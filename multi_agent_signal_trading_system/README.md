@@ -135,12 +135,13 @@ Decision: Paper trade position approved at 15.0 percent portfolio allocation.
 ## Setup
 
 ```bash
-pip install -r requirements.txt
+pip install -r multi_agent_signal_trading_system/requirements.txt
 ```
 
-Required: `pandas`, `numpy`, `yfinance`, `matplotlib`, `pydantic`, `pytest`.
+Required Python packages: `pandas`, `numpy`, `yfinance`, `matplotlib`,
+`pydantic`, `pytest`, `fastapi`, `uvicorn`.
 
-## Run
+## Run the pipeline (CLI)
 
 From the repo root (`trading-bots/`):
 
@@ -151,7 +152,7 @@ python -m multi_agent_signal_trading_system.main
 If yfinance is unavailable (offline / blocked-egress sandbox), `MarketAgent`
 automatically falls back to a deterministic synthetic price panel and
 `FundamentalsAgent` uses the bundled `mock_fundamentals.csv`. The pipeline
-will log loudly when it does this so consumers know the output is not
+logs loudly when it does this so consumers know the output is not
 market-truth.
 
 To regenerate mock CSVs explicitly:
@@ -165,6 +166,75 @@ python -m multi_agent_signal_trading_system.data.mock_data
 ```bash
 python -m pytest multi_agent_signal_trading_system/tests/ -q
 ```
+
+## Web UI (FastAPI + Next.js)
+
+A typed REST API under `multi_agent_signal_trading_system/api/` and a
+Next.js 14 dashboard under `multi_agent_signal_trading_system/web/` give
+the same outputs an interactive presentation: equity curve, sortable
+rankings, per-ticker drill-downs (per-pillar score chart, fundamentals
+snapshot, risk review, trade log), the rendered weekly memo, and a
+"Re-run pipeline" button.
+
+Run them together in two terminals:
+
+```bash
+# Terminal 1 - backend on :8000
+uvicorn multi_agent_signal_trading_system.api.main:app --reload --port 8000
+
+# Terminal 2 - frontend on :3000
+cd multi_agent_signal_trading_system/web
+npm install
+npm run dev
+```
+
+Open http://localhost:3000 . The UI calls the API through a Next.js
+rewrite (`next.config.js`), so the browser only sees relative `/api/*`
+URLs - no CORS configuration required for the user.
+
+The pipeline must have produced outputs at least once before the UI has
+data to show. If it has not, the dashboard renders a friendly "backend not
+ready" panel with the exact commands to fix it.
+
+### API endpoints
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/health` | Liveness + last-run state |
+| GET | `/api/universe` | Universe, benchmark, weights, thresholds |
+| GET | `/api/dashboard` | Top picks + perf + snapshot + equity curve |
+| GET | `/api/rankings` | Per-ticker rows |
+| GET | `/api/ticker/{symbol}` | Detail incl. trades + risk review |
+| GET | `/api/memo` | Weekly memo (markdown) |
+| GET | `/api/risk` | Portfolio + per-ticker risk review |
+| GET | `/api/backtest` | Equity curve + trades + summary |
+| POST | `/api/run` | Re-execute the full pipeline (synchronous) |
+
+## Deployment
+
+The cleanest split for a portfolio-quality deploy is **Vercel for the
+Next.js UI + Render / Railway / Fly for the FastAPI service**:
+
+* **Vercel (frontend).** Import the repo, set the project root to
+  `multi_agent_signal_trading_system/web`, set env var
+  `API_URL=https://<your-backend>.onrender.com`. The build is just
+  `next build`; Vercel handles routing.
+* **Render (backend).** New "Web Service" from the same repo,
+  start command:
+  `pip install -r multi_agent_signal_trading_system/requirements.txt && uvicorn multi_agent_signal_trading_system.api.main:app --host 0.0.0.0 --port $PORT`.
+  Add a one-shot job (or just hit `POST /api/run` after deploy) so
+  `outputs/` is populated.
+* **Single VPS with Docker Compose** is also a fine option if you'd rather
+  show "I can run a server": one container per service, both behind
+  nginx, and a small persistent volume on `outputs/`.
+
+Either way the rules are:
+1. Frontend talks to the backend via `API_URL` (server-side fetch) and
+   the rewrite proxy (browser fetch) - so production Just Works without
+   CORS holes.
+2. The backend needs writable `outputs/` if `POST /api/run` is enabled.
+3. Treat the synthetic-data fallback as a feature: it lets the demo run
+   with no egress to data vendors.
 
 ---
 

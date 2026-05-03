@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository layout
 
-This repo contains one project: `multi_agent_signal_trading_system/` — a Python multi-agent research system that turns market / news / fundamentals / alternative-data signals into explainable investment memos, risk reviews, company rankings, and a paper-trading backtest.
+This repo contains one project: `multi_agent_signal_trading_system/` — a Python multi-agent research system that turns market / news / fundamentals / alternative-data signals into explainable investment memos, risk reviews, company rankings, and a paper-trading backtest. A FastAPI service (`api/`) and a Next.js 14 dashboard (`web/`) sit on top of the same outputs.
 
 It is **simulation only**: no brokerage integration, no live orders, no profit claims. Keep it that way.
 
@@ -27,6 +27,14 @@ python -m pytest multi_agent_signal_trading_system/tests/ -q
 
 # A single test file
 python -m pytest multi_agent_signal_trading_system/tests/test_risk_agent.py -q
+
+# Backend (port 8000) — reads outputs/ produced by main.py
+uvicorn multi_agent_signal_trading_system.api.main:app --reload --port 8000
+
+# Frontend (port 3000) — proxies /api/* to the backend
+cd multi_agent_signal_trading_system/web
+npm install   # first time only
+npm run dev
 ```
 
 ## Architecture
@@ -62,3 +70,9 @@ Risk, thesis, portfolio, and reporting will all pick up the new pillar without f
 ### Offline / sandbox runs
 
 If yfinance is blocked, both `MarketAgent` and `FundamentalsAgent` fall back to deterministic mock data — the pipeline still produces all output files. Do not delete the fallback paths; CI and hosted sandboxes rely on them.
+
+### Web stack
+
+- `api/main.py` — FastAPI service. GET endpoints (`/api/dashboard`, `/api/rankings`, `/api/ticker/{symbol}`, `/api/memo`, `/api/risk`, `/api/backtest`) read from `outputs/` so navigation is fast. `POST /api/run` triggers a synchronous pipeline rebuild and is guarded by a thread lock. CORS is open to `:3000` only.
+- `web/` — Next.js 14 App Router with TypeScript + Tailwind + Recharts + react-markdown. Server components fetch from the FastAPI URL; client components hit `/api/*` on the same origin via the rewrite in `web/next.config.js` (configurable with the `API_URL` env var for production).
+- The frontend is decorative: every fact it shows is in `outputs/`. Don't duplicate logic into TS — keep new analytics in the Python agents and surface them through one API field.
