@@ -1,0 +1,10 @@
+ticker,company_name,description
+NVDA,NVIDIA Corporation,"Designs GPUs and accelerated-computing platforms. Dominant supplier of training silicon for AI infrastructure; expanding into networking (InfiniBand / Spectrum-X) and software (CUDA, NIM, Omniverse)."
+MSFT,Microsoft Corporation,"Cloud (Azure), productivity (M365 / Copilot), and Windows. Largest commercial AI distribution channel via Azure OpenAI and Copilot integration across the enterprise SKU stack."
+AMZN,"Amazon.com, Inc.","Online retail, AWS cloud, advertising, and Prime media. Investing heavily in AI infrastructure (Trainium / Inferentia, Bedrock) and logistics automation."
+META,"Meta Platforms, Inc.","Family of apps (Facebook, Instagram, WhatsApp, Threads), Reality Labs, and an open-weights AI strategy (Llama). Revenue is concentrated in performance advertising."
+TSLA,"Tesla, Inc.","Electric vehicles, energy storage, and FSD / Optimus AI. Margin profile tied tightly to factory utilization and average selling price."
+AMD,"Advanced Micro Devices, Inc.",CPUs (Ryzen / EPYC) and AI accelerators (MI300 / MI325). Primary credible alternative to NVIDIA in data-center AI training and inference.
+PLTR,Palantir Technologies,Foundry + AIP platforms for ontology-driven enterprise AI; concentrated US government and defense exposure plus a growing commercial book.
+CRWD,CrowdStrike Holdings,"Cloud-native endpoint security (Falcon platform). Land-and-expand model with rising attach rate of identity, cloud, and log-management modules."
+SNOW,Snowflake Inc.,"Cloud data platform with a consumption pricing model. Shifting from analytics warehouse positioning toward an AI data-platform message (Cortex, Snowpark)."

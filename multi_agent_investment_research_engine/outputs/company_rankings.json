@@ -1,0 +1,92 @@
+[
+  {
+    "rank": 1,
+    "ticker": "CRWD",
+    "rating": "BUY",
+    "signal_score": 72.6,
+    "qualitative_score": 0.82,
+    "headline": "CRWD is showing positive signal across 6 retrieved evidence items.",
+    "investment_thesis": "Long CRWD: signal regime is constructive across multiple pillars.",
+    "conviction": "medium"
+  },
+  {
+    "rank": 2,
+    "ticker": "META",
+    "rating": "BUY",
+    "signal_score": 72.4,
+    "qualitative_score": 0.7,
+    "headline": "META is showing positive signal across 6 retrieved evidence items.",
+    "investment_thesis": "Long META: signal regime is constructive across multiple pillars.",
+    "conviction": "medium"
+  },
+  {
+    "rank": 3,
+    "ticker": "NVDA",
+    "rating": "HOLD",
+    "signal_score": 61.1,
+    "qualitative_score": 0.66,
+    "headline": "NVDA is showing positive signal across 6 retrieved evidence items.",
+    "investment_thesis": "Watch NVDA: mixed signal needs confirmation.",
+    "conviction": "medium"
+  },
+  {
+    "rank": 4,
+    "ticker": "AMD",
+    "rating": "HOLD",
+    "signal_score": 58.8,
+    "qualitative_score": 0.67,
+    "headline": "AMD is showing positive signal across 6 retrieved evidence items.",
+    "investment_thesis": "Watch AMD: mixed signal needs confirmation.",
+    "conviction": "low"
+  },
+  {
+    "rank": 5,
+    "ticker": "PLTR",
+    "rating": "HOLD",
+    "signal_score": 52.5,
+    "qualitative_score": 0.54,
+    "headline": "PLTR is showing mixed signal across 6 retrieved evidence items.",
+    "investment_thesis": "Watch PLTR: mixed signal needs confirmation.",
+    "conviction": "low"
+  },
+  {
+    "rank": 6,
+    "ticker": "MSFT",
+    "rating": "AVOID",
+    "signal_score": 43.3,
+    "qualitative_score": 0.41,
+    "headline": "MSFT is showing soft signal across 6 retrieved evidence items.",
+    "investment_thesis": "Pass on MSFT: signal regime is weak.",
+    "conviction": "low"
+  },
+  {
+    "rank": 7,
+    "ticker": "SNOW",
+    "rating": "AVOID",
+    "signal_score": 36.3,
+    "qualitative_score": 0.4,
+    "headline": "SNOW is showing soft signal across 6 retrieved evidence items.",
+    "investment_thesis": "Pass on SNOW: signal regime is weak.",
+    "conviction": "low"
+  },
+  {
+    "rank": 8,
+    "ticker": "AMZN",
+    "rating": "AVOID",
+    "signal_score": 26.3,
+    "qualitative_score": 0.29,
+    "headline": "AMZN is showing soft signal across 6 retrieved evidence items.",
+    "investment_thesis": "Pass on AMZN: signal regime is weak.",
+    "conviction": "low"
+  },
+  {
+    "rank": 9,
+    "ticker": "TSLA",
+    "rating": "AVOID",
+    "signal_score": 24.0,
+    "qualitative_score": 0.24,
+    "headline": "TSLA is showing soft signal across 6 retrieved evidence items.",
+    "investment_thesis": "Pass on TSLA: signal regime is weak.",
+    "conviction": "low"
+  }
+]
