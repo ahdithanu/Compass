@@ -1,0 +1,123 @@
+date,ticker,signal_type,signal_strength,description
+2025-01-21,AMD,app_review_surge,0.65,AMD app store reviews jump
+2025-07-29,AMD,product_launch,0.68,AMD unveils new product / SKU
+2025-12-02,AMD,web_traffic_spike,0.73,AMD web-traffic proxies spike
+2025-12-03,AMD,web_traffic_spike,0.77,AMD web-traffic proxies spike
+2025-12-04,AMD,web_traffic_spike,0.66,AMD web-traffic proxies spike
+2026-01-05,AMD,web_traffic_spike,0.75,AMD web-traffic proxies spike
+2026-01-08,AMD,product_launch,0.68,AMD unveils new product / SKU
+2026-02-02,AMD,funding_announcement,0.68,AMD-related ecosystem startup announces funding round
+2026-02-24,AMD,infrastructure_expansion,0.72,AMD expands data-center / supply footprint
+2026-03-02,AMD,funding_announcement,0.68,AMD-related ecosystem startup announces funding round
+2026-03-05,AMD,app_review_surge,0.76,AMD app store reviews jump
+2026-03-16,AMD,web_traffic_spike,0.76,AMD web-traffic proxies spike
+2026-04-28,AMD,infrastructure_expansion,0.77,AMD expands data-center / supply footprint
+2025-08-13,AMZN,infrastructure_expansion,0.6,AMZN expands data-center / supply footprint
+2025-10-30,AMZN,web_traffic_spike,0.68,AMZN web-traffic proxies spike
+2025-12-11,AMZN,infrastructure_expansion,0.66,AMZN expands data-center / supply footprint
+2025-12-15,AMZN,funding_announcement,0.61,AMZN-related ecosystem startup announces funding round
+2025-12-23,AMZN,hiring_spike,0.53,AMZN job postings up materially this week
+2025-12-31,AMZN,product_launch,0.65,AMZN unveils new product / SKU
+2026-01-13,AMZN,permit_activity,0.6,AMZN files new construction permits
+2026-01-20,AMZN,permit_activity,0.56,AMZN files new construction permits
+2026-01-20,AMZN,infrastructure_expansion,0.6,AMZN expands data-center / supply footprint
+2026-03-10,AMZN,app_review_surge,0.61,AMZN app store reviews jump
+2026-03-11,AMZN,web_traffic_spike,0.64,AMZN web-traffic proxies spike
+2026-03-25,AMZN,product_launch,0.72,AMZN unveils new product / SKU
+2025-02-06,CRWD,product_launch,0.68,CRWD unveils new product / SKU
+2025-02-26,CRWD,web_traffic_spike,0.67,CRWD web-traffic proxies spike
+2025-04-16,CRWD,product_launch,0.78,CRWD unveils new product / SKU
+2025-09-23,CRWD,product_launch,0.71,CRWD unveils new product / SKU
+2025-12-04,CRWD,app_review_surge,0.7,CRWD app store reviews jump
+2025-12-04,CRWD,product_launch,0.64,CRWD unveils new product / SKU
+2025-12-29,CRWD,funding_announcement,0.77,CRWD-related ecosystem startup announces funding round
+2026-01-22,CRWD,funding_announcement,0.68,CRWD-related ecosystem startup announces funding round
+2026-02-03,CRWD,hiring_spike,0.68,CRWD job postings up materially this week
+2026-02-09,CRWD,permit_activity,0.77,CRWD files new construction permits
+2026-02-10,CRWD,funding_announcement,0.77,CRWD-related ecosystem startup announces funding round
+2026-02-19,CRWD,infrastructure_expansion,0.68,CRWD expands data-center / supply footprint
+2026-02-23,CRWD,infrastructure_expansion,0.74,CRWD expands data-center / supply footprint
+2026-04-07,CRWD,web_traffic_spike,0.81,CRWD web-traffic proxies spike
+2026-04-27,CRWD,permit_activity,0.66,CRWD files new construction permits
+2025-02-11,META,app_review_surge,0.79,META app store reviews jump
+2025-04-02,META,infrastructure_expansion,0.63,META expands data-center / supply footprint
+2025-04-25,META,web_traffic_spike,0.67,META web-traffic proxies spike
+2025-11-11,META,product_launch,0.66,META unveils new product / SKU
+2025-11-24,META,web_traffic_spike,0.73,META web-traffic proxies spike
+2025-12-22,META,product_launch,0.65,META unveils new product / SKU
+2026-01-19,META,app_review_surge,0.68,META app store reviews jump
+2026-01-20,META,permit_activity,0.79,META files new construction permits
+2026-02-12,META,product_launch,0.64,META unveils new product / SKU
+2026-02-24,META,web_traffic_spike,0.73,META web-traffic proxies spike
+2026-03-09,META,web_traffic_spike,0.78,META web-traffic proxies spike
+2026-03-30,META,hiring_spike,0.82,META job postings up materially this week
+2026-04-10,META,funding_announcement,0.66,META-related ecosystem startup announces funding round
+2026-04-20,META,permit_activity,0.82,META files new construction permits
+2026-04-30,META,funding_announcement,0.7,META-related ecosystem startup announces funding round
+2025-06-25,MSFT,app_review_surge,0.73,MSFT app store reviews jump
+2025-06-30,MSFT,app_review_surge,0.73,MSFT app store reviews jump
+2025-11-14,MSFT,permit_activity,0.72,MSFT files new construction permits
+2025-11-28,MSFT,hiring_spike,0.68,MSFT job postings up materially this week
+2025-12-12,MSFT,funding_announcement,0.7,MSFT-related ecosystem startup announces funding round
+2025-12-31,MSFT,funding_announcement,0.81,MSFT-related ecosystem startup announces funding round
+2026-02-09,MSFT,hiring_spike,0.69,MSFT job postings up materially this week
+2026-02-26,MSFT,permit_activity,0.77,MSFT files new construction permits
+2026-03-06,MSFT,infrastructure_expansion,0.85,MSFT expands data-center / supply footprint
+2026-03-11,MSFT,hiring_spike,0.8,MSFT job postings up materially this week
+2026-03-11,MSFT,hiring_spike,0.66,MSFT job postings up materially this week
+2026-03-24,MSFT,funding_announcement,0.73,MSFT-related ecosystem startup announces funding round
+2026-04-10,MSFT,hiring_spike,0.84,MSFT job postings up materially this week
+2026-04-17,MSFT,web_traffic_spike,0.71,MSFT web-traffic proxies spike
+2026-04-20,MSFT,permit_activity,0.84,MSFT files new construction permits
+2025-05-09,NVDA,hiring_spike,0.74,NVDA job postings up materially this week
+2025-11-14,NVDA,infrastructure_expansion,0.84,NVDA expands data-center / supply footprint
+2025-11-14,NVDA,infrastructure_expansion,0.77,NVDA expands data-center / supply footprint
+2025-11-19,NVDA,hiring_spike,0.83,NVDA job postings up materially this week
+2025-11-27,NVDA,product_launch,0.84,NVDA unveils new product / SKU
+2025-12-08,NVDA,funding_announcement,0.85,NVDA-related ecosystem startup announces funding round
+2025-12-17,NVDA,permit_activity,0.86,NVDA files new construction permits
+2025-12-29,NVDA,hiring_spike,0.84,NVDA job postings up materially this week
+2026-01-12,NVDA,hiring_spike,0.84,NVDA job postings up materially this week
+2026-01-19,NVDA,hiring_spike,0.84,NVDA job postings up materially this week
+2026-01-20,NVDA,hiring_spike,0.84,NVDA job postings up materially this week
+2026-02-24,NVDA,app_review_surge,0.81,NVDA app store reviews jump
+2026-02-24,NVDA,funding_announcement,0.91,NVDA-related ecosystem startup announces funding round
+2026-03-06,NVDA,hiring_spike,0.83,NVDA job postings up materially this week
+2026-03-24,NVDA,funding_announcement,0.83,NVDA-related ecosystem startup announces funding round
+2026-03-26,NVDA,web_traffic_spike,0.79,NVDA web-traffic proxies spike
+2026-04-06,NVDA,product_launch,0.78,NVDA unveils new product / SKU
+2025-01-22,PLTR,permit_activity,0.64,PLTR files new construction permits
+2025-06-11,PLTR,infrastructure_expansion,0.75,PLTR expands data-center / supply footprint
+2025-12-05,PLTR,permit_activity,0.69,PLTR files new construction permits
+2026-01-08,PLTR,app_review_surge,0.64,PLTR app store reviews jump
+2026-01-14,PLTR,funding_announcement,0.63,PLTR-related ecosystem startup announces funding round
+2026-01-14,PLTR,app_review_surge,0.68,PLTR app store reviews jump
+2026-01-27,PLTR,hiring_spike,0.71,PLTR job postings up materially this week
+2026-01-28,PLTR,app_review_surge,0.68,PLTR app store reviews jump
+2026-02-16,PLTR,infrastructure_expansion,0.61,PLTR expands data-center / supply footprint
+2026-02-19,PLTR,funding_announcement,0.66,PLTR-related ecosystem startup announces funding round
+2026-03-03,PLTR,infrastructure_expansion,0.74,PLTR expands data-center / supply footprint
+2026-04-20,PLTR,funding_announcement,0.76,PLTR-related ecosystem startup announces funding round
+2026-04-21,PLTR,web_traffic_spike,0.6,PLTR web-traffic proxies spike
+2025-05-15,SNOW,hiring_spike,0.55,SNOW job postings up materially this week
+2025-06-05,SNOW,hiring_spike,0.5,SNOW job postings up materially this week
+2025-12-22,SNOW,product_launch,0.7,SNOW unveils new product / SKU
+2025-12-23,SNOW,web_traffic_spike,0.54,SNOW web-traffic proxies spike
+2026-01-05,SNOW,web_traffic_spike,0.55,SNOW web-traffic proxies spike
+2026-01-07,SNOW,funding_announcement,0.6,SNOW-related ecosystem startup announces funding round
+2026-01-21,SNOW,funding_announcement,0.69,SNOW-related ecosystem startup announces funding round
+2026-01-30,SNOW,hiring_spike,0.69,SNOW job postings up materially this week
+2026-02-05,SNOW,infrastructure_expansion,0.53,SNOW expands data-center / supply footprint
+2026-03-10,SNOW,hiring_spike,0.63,SNOW job postings up materially this week
+2026-03-24,SNOW,permit_activity,0.61,SNOW files new construction permits
+2026-04-20,SNOW,funding_announcement,0.55,SNOW-related ecosystem startup announces funding round
+2025-02-07,TSLA,web_traffic_spike,0.64,TSLA web-traffic proxies spike
+2025-03-04,TSLA,permit_activity,0.61,TSLA files new construction permits
+2025-08-12,TSLA,web_traffic_spike,0.58,TSLA web-traffic proxies spike
+2025-08-14,TSLA,product_launch,0.47,TSLA unveils new product / SKU
+2025-11-05,TSLA,permit_activity,0.6,TSLA files new construction permits
+2025-11-14,TSLA,funding_announcement,0.54,TSLA-related ecosystem startup announces funding round
+2026-01-29,TSLA,funding_announcement,0.65,TSLA-related ecosystem startup announces funding round
+2026-03-26,TSLA,funding_announcement,0.52,TSLA-related ecosystem startup announces funding round
+2026-04-16,TSLA,permit_activity,0.61,TSLA files new construction permits
+2026-04-21,TSLA,web_traffic_spike,0.45,TSLA web-traffic proxies spike

@@ -1,0 +1,77 @@
+{
+  "as_of": "2026-05-01",
+  "concentration_pct_top": 0.15,
+  "portfolio_volatility": 0.05691276474955907,
+  "portfolio_drawdown": -0.015674776741051742,
+  "cash_pct": 0.7,
+  "flags": [],
+  "per_ticker": [
+    {
+      "ticker": "CRWD",
+      "approved": true,
+      "suggested_weight_pct": 0.15,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "META",
+      "approved": true,
+      "suggested_weight_pct": 0.15,
+      "flags": [
+        "position_cap"
+      ],
+      "notes": [
+        "Trimmed from 15.0% to single-name cap 15%"
+      ]
+    },
+    {
+      "ticker": "NVDA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMD",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "PLTR",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "MSFT",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "SNOW",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "AMZN",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    },
+    {
+      "ticker": "TSLA",
+      "approved": false,
+      "suggested_weight_pct": 0.0,
+      "flags": [],
+      "notes": []
+    }
+  ]
+}

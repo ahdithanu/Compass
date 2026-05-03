@@ -1,0 +1,12 @@
+{
+  "starting_capital": 100000.0,
+  "ending_capital": 96770.00350987841,
+  "total_return_pct": -3.2299964901215894,
+  "benchmark_return_pct": 10.148564629500356,
+  "num_trades": 71,
+  "win_rate_pct": 65.78947368421053,
+  "max_drawdown_pct": -6.391183048961069,
+  "sharpe_like": -0.6460934876725443,
+  "start_date": "2025-05-16",
+  "end_date": "2026-05-01"
+}

@@ -1,0 +1,163 @@
+date,ticker,headline,sentiment_hint,event_type
+2024-12-20,AMD,AMD files routine 10-Q with regulator,neu,earnings
+2025-01-08,AMD,AMD wins major partnership for cloud expansion,pos,color
+2025-01-29,AMD,"AMD beats Q earnings, raises guidance",pos,partnership
+2025-02-10,AMD,AMD announces record buyback program,pos,product_launch
+2025-03-05,AMD,AMD margins expand on operating leverage,pos,color
+2025-03-11,AMD,Analyst downgrades AMD citing valuation concerns,neg,product_launch
+2025-04-02,AMD,AMD announces record buyback program,pos,guidance
+2025-05-21,AMD,AMD files routine 10-Q with regulator,neu,earnings
+2025-06-02,AMD,AMD files routine 10-Q with regulator,neu,analyst
+2025-06-12,AMD,AMD wins major partnership for cloud expansion,pos,earnings
+2025-06-20,AMD,AMD announces record buyback program,pos,guidance
+2025-07-18,AMD,AMD faces lawsuit over data breach,neg,guidance
+2025-10-02,AMD,AMD announces upcoming earnings date,neu,partnership
+2025-12-02,AMD,Analyst downgrades AMD citing valuation concerns,neg,regulatory
+2025-12-04,AMD,AMD faces lawsuit over data breach,neg,product_launch
+2025-12-12,AMD,Regulator opens investigation into AMD,neg,earnings
+2025-12-26,AMD,Analysts mixed on AMD ahead of print,neu,analyst
+2026-03-18,AMD,Hiring surge at AMD suggests aggressive expansion,pos,partnership
+2024-12-27,AMZN,AMZN announces upcoming earnings date,neu,product_launch
+2025-01-24,AMZN,Analysts mixed on AMZN ahead of print,neu,earnings
+2025-01-28,AMZN,Analysts mixed on AMZN ahead of print,neu,earnings
+2025-02-11,AMZN,Analyst downgrades AMZN citing valuation concerns,neg,product_launch
+2025-02-28,AMZN,Outage at AMZN sparks reliability questions,neg,product_launch
+2025-03-26,AMZN,"AMZN delays product launch, cuts outlook",neg,partnership
+2025-04-07,AMZN,AMZN wins major partnership for cloud expansion,pos,partnership
+2025-04-25,AMZN,Slowdown concerns weigh on AMZN,neg,analyst
+2025-04-25,AMZN,"AMZN delays product launch, cuts outlook",neg,product_launch
+2025-05-05,AMZN,AMZN announces upcoming earnings date,neu,earnings
+2025-05-20,AMZN,Hiring surge at AMZN suggests aggressive expansion,pos,regulatory
+2025-06-06,AMZN,AMZN announces upcoming earnings date,neu,product_launch
+2025-06-16,AMZN,AMZN issues weak forward guidance,neg,product_launch
+2025-07-18,AMZN,Analysts upgrade AMZN on AI demand,pos,analyst
+2025-08-08,AMZN,Regulator opens investigation into AMZN,neg,earnings
+2025-08-14,AMZN,AMZN announces upcoming earnings date,neu,earnings
+2025-12-03,AMZN,AMZN wins major partnership for cloud expansion,pos,partnership
+2026-01-01,AMZN,AMZN announces upcoming earnings date,neu,color
+2024-12-10,CRWD,Analysts upgrade CRWD on AI demand,pos,analyst
+2025-01-07,CRWD,CRWD margins expand on operating leverage,pos,color
+2025-01-23,CRWD,Outage at CRWD sparks reliability questions,neg,guidance
+2025-01-30,CRWD,CRWD faces lawsuit over data breach,neg,analyst
+2025-02-06,CRWD,CRWD files routine 10-Q with regulator,neu,guidance
+2025-03-13,CRWD,"CRWD beats Q earnings, raises guidance",pos,product_launch
+2025-03-24,CRWD,Strong product launch from CRWD drives bullish reaction,pos,partnership
+2025-05-05,CRWD,Hiring surge at CRWD suggests aggressive expansion,pos,product_launch
+2025-07-03,CRWD,Analyst downgrades CRWD citing valuation concerns,neg,product_launch
+2025-09-03,CRWD,"CRWD misses revenue estimates, shares drop",neg,partnership
+2025-09-08,CRWD,Strong product launch from CRWD drives bullish reaction,pos,analyst
+2025-11-06,CRWD,CRWD faces lawsuit over data breach,neg,guidance
+2025-12-03,CRWD,CRWD files routine 10-Q with regulator,neu,analyst
+2025-12-04,CRWD,"CRWD beats Q earnings, raises guidance",pos,macro
+2026-01-30,CRWD,CRWD faces lawsuit over data breach,neg,earnings
+2026-02-23,CRWD,CRWD faces lawsuit over data breach,neg,earnings
+2026-03-02,CRWD,CRWD wins major partnership for cloud expansion,pos,product_launch
+2026-04-03,CRWD,CRWD wins major partnership for cloud expansion,pos,analyst
+2024-12-20,META,META CEO speaks at industry conference,neu,partnership
+2025-01-21,META,META announces upcoming earnings date,neu,color
+2025-02-19,META,META wins major partnership for cloud expansion,pos,regulatory
+2025-03-04,META,META CEO speaks at industry conference,neu,product_launch
+2025-04-09,META,META files routine 10-Q with regulator,neu,earnings
+2025-04-15,META,META margins expand on operating leverage,pos,earnings
+2025-04-25,META,META faces lawsuit over data breach,neg,earnings
+2025-05-08,META,META wins major partnership for cloud expansion,pos,analyst
+2025-07-29,META,META signals breakthrough in enterprise segment,pos,macro
+2025-09-17,META,Analysts upgrade META on AI demand,pos,analyst
+2025-11-06,META,META issues weak forward guidance,neg,partnership
+2025-11-19,META,"META misses revenue estimates, shares drop",neg,product_launch
+2025-12-02,META,META announces record buyback program,pos,partnership
+2026-01-05,META,"META beats Q earnings, raises guidance",pos,analyst
+2026-02-09,META,META announces upcoming earnings date,neu,earnings
+2026-03-18,META,META announces record buyback program,pos,product_launch
+2026-03-20,META,Analysts upgrade META on AI demand,pos,macro
+2026-03-27,META,META signals breakthrough in enterprise segment,pos,macro
+2025-01-23,MSFT,Strong product launch from MSFT drives bullish reaction,pos,analyst
+2025-02-12,MSFT,Analysts mixed on MSFT ahead of print,neu,analyst
+2025-03-26,MSFT,MSFT wins major partnership for cloud expansion,pos,earnings
+2025-06-25,MSFT,Analysts mixed on MSFT ahead of print,neu,color
+2025-06-25,MSFT,"MSFT delays product launch, cuts outlook",neg,analyst
+2025-07-02,MSFT,MSFT wins major partnership for cloud expansion,pos,regulatory
+2025-08-15,MSFT,Hiring surge at MSFT suggests aggressive expansion,pos,earnings
+2025-09-05,MSFT,MSFT CEO speaks at industry conference,neu,earnings
+2025-09-16,MSFT,MSFT signals breakthrough in enterprise segment,pos,earnings
+2025-10-03,MSFT,MSFT margins expand on operating leverage,pos,color
+2025-11-28,MSFT,Hiring surge at MSFT suggests aggressive expansion,pos,product_launch
+2026-01-22,MSFT,"MSFT delays product launch, cuts outlook",neg,regulatory
+2026-02-03,MSFT,Strong product launch from MSFT drives bullish reaction,pos,earnings
+2026-02-18,MSFT,"MSFT beats Q earnings, raises guidance",pos,guidance
+2026-04-01,MSFT,Hiring surge at MSFT suggests aggressive expansion,pos,regulatory
+2026-04-09,MSFT,Analyst downgrades MSFT citing valuation concerns,neg,analyst
+2026-04-09,MSFT,Slowdown concerns weigh on MSFT,neg,regulatory
+2026-04-16,MSFT,MSFT files routine 10-Q with regulator,neu,product_launch
+2025-01-17,NVDA,NVDA CEO speaks at industry conference,neu,earnings
+2025-01-29,NVDA,Regulator opens investigation into NVDA,neg,regulatory
+2025-03-13,NVDA,NVDA announces record buyback program,pos,partnership
+2025-06-04,NVDA,NVDA faces lawsuit over data breach,neg,earnings
+2025-07-02,NVDA,Analysts upgrade NVDA on AI demand,pos,earnings
+2025-07-10,NVDA,NVDA margins expand on operating leverage,pos,analyst
+2025-07-28,NVDA,Analysts mixed on NVDA ahead of print,neu,analyst
+2025-09-18,NVDA,NVDA wins major partnership for cloud expansion,pos,earnings
+2025-10-03,NVDA,NVDA margins expand on operating leverage,pos,earnings
+2025-10-08,NVDA,Analysts upgrade NVDA on AI demand,pos,color
+2025-10-15,NVDA,NVDA wins major partnership for cloud expansion,pos,earnings
+2025-11-06,NVDA,Hiring surge at NVDA suggests aggressive expansion,pos,regulatory
+2025-11-24,NVDA,Analysts upgrade NVDA on AI demand,pos,analyst
+2025-11-28,NVDA,NVDA signals breakthrough in enterprise segment,pos,analyst
+2026-01-21,NVDA,NVDA announces record buyback program,pos,earnings
+2026-01-21,NVDA,NVDA margins expand on operating leverage,pos,earnings
+2026-03-04,NVDA,"NVDA beats Q earnings, raises guidance",pos,partnership
+2026-05-01,NVDA,"NVDA beats Q earnings, raises guidance",pos,partnership
+2024-12-10,PLTR,PLTR margins expand on operating leverage,pos,color
+2025-01-09,PLTR,PLTR announces record buyback program,pos,guidance
+2025-01-16,PLTR,PLTR signals breakthrough in enterprise segment,pos,color
+2025-02-10,PLTR,"PLTR beats Q earnings, raises guidance",pos,regulatory
+2025-04-30,PLTR,"PLTR beats Q earnings, raises guidance",pos,earnings
+2025-05-21,PLTR,PLTR announces record buyback program,pos,product_launch
+2025-07-10,PLTR,PLTR wins major partnership for cloud expansion,pos,earnings
+2025-07-17,PLTR,PLTR announces record buyback program,pos,earnings
+2025-08-13,PLTR,PLTR CEO speaks at industry conference,neu,earnings
+2025-09-08,PLTR,Strong product launch from PLTR drives bullish reaction,pos,product_launch
+2025-09-16,PLTR,PLTR announces upcoming earnings date,neu,analyst
+2025-11-27,PLTR,PLTR announces record buyback program,pos,earnings
+2025-12-10,PLTR,PLTR issues weak forward guidance,neg,color
+2025-12-22,PLTR,PLTR CEO speaks at industry conference,neu,analyst
+2026-01-05,PLTR,"PLTR beats Q earnings, raises guidance",pos,color
+2026-02-09,PLTR,PLTR margins expand on operating leverage,pos,analyst
+2026-03-02,PLTR,Analyst downgrades PLTR citing valuation concerns,neg,product_launch
+2026-04-02,PLTR,PLTR CEO speaks at industry conference,neu,analyst
+2025-01-10,SNOW,"SNOW beats Q earnings, raises guidance",pos,macro
+2025-01-13,SNOW,Analysts mixed on SNOW ahead of print,neu,product_launch
+2025-01-31,SNOW,Outage at SNOW sparks reliability questions,neg,color
+2025-02-11,SNOW,Strong product launch from SNOW drives bullish reaction,pos,color
+2025-03-04,SNOW,SNOW CEO speaks at industry conference,neu,analyst
+2025-03-12,SNOW,Analyst downgrades SNOW citing valuation concerns,neg,color
+2025-03-19,SNOW,SNOW signals breakthrough in enterprise segment,pos,guidance
+2025-06-17,SNOW,SNOW margins expand on operating leverage,pos,earnings
+2025-07-01,SNOW,SNOW issues weak forward guidance,neg,guidance
+2025-07-03,SNOW,Analysts upgrade SNOW on AI demand,pos,regulatory
+2025-08-01,SNOW,SNOW margins expand on operating leverage,pos,macro
+2025-09-02,SNOW,Slowdown concerns weigh on SNOW,neg,color
+2025-09-11,SNOW,SNOW wins major partnership for cloud expansion,pos,earnings
+2025-11-20,SNOW,SNOW announces record buyback program,pos,earnings
+2025-11-25,SNOW,Slowdown concerns weigh on SNOW,neg,guidance
+2026-02-03,SNOW,SNOW signals breakthrough in enterprise segment,pos,analyst
+2026-03-05,SNOW,SNOW wins major partnership for cloud expansion,pos,analyst
+2026-04-27,SNOW,Hiring surge at SNOW suggests aggressive expansion,pos,color
+2025-01-17,TSLA,Strong product launch from TSLA drives bullish reaction,pos,earnings
+2025-01-22,TSLA,TSLA faces lawsuit over data breach,neg,analyst
+2025-02-13,TSLA,Outage at TSLA sparks reliability questions,neg,earnings
+2025-02-17,TSLA,"TSLA misses revenue estimates, shares drop",neg,analyst
+2025-03-04,TSLA,"TSLA delays product launch, cuts outlook",neg,analyst
+2025-03-17,TSLA,TSLA CEO speaks at industry conference,neu,analyst
+2025-03-25,TSLA,Hiring surge at TSLA suggests aggressive expansion,pos,partnership
+2025-03-28,TSLA,TSLA announces upcoming earnings date,neu,earnings
+2025-05-01,TSLA,TSLA issues weak forward guidance,neg,product_launch
+2025-06-03,TSLA,Analyst downgrades TSLA citing valuation concerns,neg,color
+2025-07-24,TSLA,TSLA margins expand on operating leverage,pos,earnings
+2025-09-15,TSLA,Regulator opens investigation into TSLA,neg,analyst
+2025-10-10,TSLA,Strong product launch from TSLA drives bullish reaction,pos,analyst
+2025-10-28,TSLA,Outage at TSLA sparks reliability questions,neg,product_launch
+2025-12-11,TSLA,Slowdown concerns weigh on TSLA,neg,earnings
+2025-12-23,TSLA,Regulator opens investigation into TSLA,neg,color
+2026-01-08,TSLA,"TSLA misses revenue estimates, shares drop",neg,regulatory
+2026-03-31,TSLA,TSLA issues weak forward guidance,neg,analyst
