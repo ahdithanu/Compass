@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Recommendation } from "@/lib/types";
+import type { InsightDigest, Recommendation } from "@/lib/types";
 
 export default function DashboardPage() {
   const [rec, setRec] = useState<Recommendation | null>(null);
+  const [digest, setDigest] = useState<InsightDigest | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,14 +17,16 @@ export default function DashboardPage() {
         ? sessionStorage.getItem("compass:profile")
         : null;
     const profile = stored ? JSON.parse(stored) : null;
+    const body = JSON.stringify(profile ? { profile } : {});
+    const opts = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body,
+    };
 
     (async () => {
       try {
-        const res = await fetch("/api/recommendations", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(profile ? { profile } : {}),
-        });
+        const res = await fetch("/api/recommendations", opts);
         const data = await res.json();
         if (!res.ok) {
           setError(data.error ?? "Something went wrong.");
@@ -35,6 +38,17 @@ export default function DashboardPage() {
         setError("Could not reach the recommendation service.");
       } finally {
         setLoading(false);
+      }
+    })();
+
+    // Insights load independently — a failure here shouldn't block the plan.
+    (async () => {
+      try {
+        const res = await fetch("/api/insights", opts);
+        const data = await res.json();
+        if (res.ok) setDigest(data.digest);
+      } catch {
+        /* insights are best-effort */
       }
     })();
   }, []);
@@ -70,12 +84,87 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {rec && <RecommendationView rec={rec} />}
+      {rec && <RecommendationView rec={rec} digest={digest} />}
     </main>
   );
 }
 
-function RecommendationView({ rec }: { rec: Recommendation }) {
+function InsightsView({ digest }: { digest: InsightDigest }) {
+  return (
+    <section className="card p-6">
+      <p className="label" style={{ color: "var(--accent)" }}>
+        What&apos;s moving — for you
+      </p>
+      <h2 className="mt-2 text-xl font-bold">{digest.headline}</h2>
+      <div className="mt-4 space-y-3">
+        {digest.insights.map((ins, i) => {
+          const cited = digest.sources.filter((s) =>
+            ins.sourceIds.includes(s.id),
+          );
+          return (
+            <div
+              key={i}
+              className="rounded-xl p-4"
+              style={{ background: "var(--panel-2)" }}
+            >
+              <h3 className="font-semibold">{ins.title}</h3>
+              <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+                {ins.summary}
+              </p>
+              <p className="mt-2 text-sm">
+                <span style={{ color: "var(--accent)" }}>So what: </span>
+                {ins.soWhat}
+              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                {ins.relatedTickers.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-md px-2 py-0.5 text-xs"
+                    style={{ background: "var(--border)", color: "var(--muted)" }}
+                  >
+                    {t}
+                  </span>
+                ))}
+                {cited.map((s) =>
+                  s.url ? (
+                    <a
+                      key={s.id}
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs underline"
+                      style={{ color: "var(--muted)" }}
+                    >
+                      {s.source}
+                    </a>
+                  ) : (
+                    <span key={s.id} className="text-xs" style={{ color: "var(--muted)" }}>
+                      {s.source}
+                    </span>
+                  ),
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-4 text-xs" style={{ color: "var(--muted)" }}>
+        {digest.meta.checks.filter((c) => c.passed).length}/
+        {digest.meta.checks.length} checks passed ·{" "}
+        {digest.meta.reasoningSource === "claude" ? "Claude-synthesized" : "rule-based"} ·{" "}
+        {digest.meta.dataSource === "live" ? "live news" : "sample news"}
+      </p>
+    </section>
+  );
+}
+
+function RecommendationView({
+  rec,
+  digest,
+}: {
+  rec: Recommendation;
+  digest: InsightDigest | null;
+}) {
   return (
     <div className="space-y-6">
       {/* The move */}
@@ -89,6 +178,9 @@ function RecommendationView({ rec }: { rec: Recommendation }) {
         </p>
         <p className="mt-4 text-sm">{rec.summary}</p>
       </section>
+
+      {/* Insights digest (best-effort; renders when ready) */}
+      {digest && <InsightsView digest={digest} />}
 
       {/* Allocation */}
       <section className="card p-6">

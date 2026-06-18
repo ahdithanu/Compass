@@ -11,6 +11,8 @@ import type {
   Allocation,
   CandidatePick,
   CritiqueResult,
+  InsightDraft,
+  NewsItem,
   Profile,
   Quote,
   SectorWatch,
@@ -185,4 +187,120 @@ export async function critique(
   return firstJson<CritiqueResult>(message);
 }
 
-export type { SynthesisContext };
+// --- Insights / newsletter synthesis ---
+
+const INSIGHT_SCHEMA = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    headline: { type: "string" },
+    insights: {
+      type: "array",
+      items: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          title: { type: "string" },
+          summary: { type: "string" },
+          soWhat: { type: "string" },
+          relatedTickers: { type: "array", items: { type: "string" } },
+          sourceIds: { type: "array", items: { type: "string" } },
+        },
+        required: ["title", "summary", "soWhat", "relatedTickers", "sourceIds"],
+      },
+    },
+  },
+  required: ["headline", "insights"],
+} as const;
+
+const INSIGHT_SYSTEM = `You are the market-insights writer in a personalized investing co-pilot. You distill provided news/source items into a short, digestible "what matters for you" digest.
+
+Hard rules:
+- Ground EVERY insight in the provided source items. Each insight must list the sourceIds it draws from; never assert anything not supported by those sources.
+- relatedTickers may ONLY contain tickers that appear in the provided watchlist or in the source items. Never invent a ticker.
+- Never invent prices, percentages, dates, or facts not present in the sources.
+- Tie each "soWhat" to the user's profile (goal, risk, horizon, interests).
+- This is educational information, not personalized advice. No "you must buy/sell" language, no return guarantees.
+- Produce 3-5 focused insights, most relevant first. Return JSON only, matching the schema.`;
+
+const INSIGHT_CRITIC_SYSTEM = `You are an independent reviewer auditing a market-insights digest. You did NOT write it. Be adversarial.
+
+Fail (passed=false), listing each problem, if ANY hold:
+- An insight asserts something not supported by its cited sourceIds, or cites a sourceId that doesn't exist.
+- It references a ticker not in the provided watchlist or sources.
+- It invents prices, figures, dates, or facts.
+- It uses prescriptive advice language or guarantees/implies returns.
+- The digest is empty or an insight is missing its "soWhat".
+Otherwise pass. Return JSON only, matching the schema.`;
+
+interface InsightContext {
+  profile: Profile;
+  watchlist: string[];
+  news: NewsItem[];
+}
+
+function insightContextBlock(ctx: InsightContext): string {
+  return [
+    `User profile: ${JSON.stringify(ctx.profile)}`,
+    `Watchlist tickers (allowed in relatedTickers): ${ctx.watchlist.join(", ") || "(none)"}`,
+    `Source items (cite by id; these are the ONLY facts you may use):`,
+    ...ctx.news.map(
+      (n) =>
+        `  [${n.id}] (${n.tickers.join(",") || "market"}) ${n.title} — ${n.summary}`,
+    ),
+  ].join("\n");
+}
+
+export async function synthesizeInsights(
+  ctx: InsightContext,
+  priorIssues?: string[],
+): Promise<InsightDraft | null> {
+  const anthropic = client();
+  if (!anthropic) return null;
+
+  const revisionNote = priorIssues?.length
+    ? `\n\nYour previous draft was rejected for these reasons. Fix ALL of them:\n- ${priorIssues.join("\n- ")}`
+    : "";
+
+  const message = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 4000,
+    thinking: { type: "adaptive" },
+    system: INSIGHT_SYSTEM,
+    output_config: { format: { type: "json_schema", schema: INSIGHT_SCHEMA } },
+    messages: [
+      {
+        role: "user",
+        content: `Write a personalized market-insights digest.\n\n${insightContextBlock(ctx)}${revisionNote}`,
+      },
+    ],
+  });
+
+  return firstJson<InsightDraft>(message);
+}
+
+export async function critiqueInsights(
+  draft: InsightDraft,
+  ctx: InsightContext,
+): Promise<CritiqueResult | null> {
+  const anthropic = client();
+  if (!anthropic) return null;
+
+  const message = await anthropic.messages.create({
+    model: MODEL,
+    max_tokens: 2000,
+    thinking: { type: "adaptive" },
+    system: INSIGHT_CRITIC_SYSTEM,
+    output_config: { format: { type: "json_schema", schema: CRITIQUE_SCHEMA } },
+    messages: [
+      {
+        role: "user",
+        content: `Audit this digest against its sources.\n\nSOURCE CONTEXT:\n${insightContextBlock(ctx)}\n\nDRAFT:\n${JSON.stringify(draft, null, 2)}`,
+      },
+    ],
+  });
+
+  return firstJson<CritiqueResult>(message);
+}
+
+export type { SynthesisContext, InsightContext };

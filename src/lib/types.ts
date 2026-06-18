@@ -109,3 +109,49 @@ export interface CritiqueResult {
   passed: boolean;
   issues: string[];
 }
+
+// --- Insights / newsletter synthesis ---
+
+/** A single source item (news, press, analyst note) from the market feed. */
+export interface NewsItem {
+  id: string;
+  title: string;
+  source: string;
+  publishedAt: string;
+  tickers: string[];
+  summary: string;
+  url?: string;
+}
+
+/** One synthesized insight, grounded in one or more source items. */
+export interface Insight {
+  title: string;
+  /** What happened. */
+  summary: string;
+  /** Why it matters specifically for this user. */
+  soWhat: string;
+  relatedTickers: string[];
+  /** ids of the NewsItems that support this insight. */
+  sourceIds: string[];
+}
+
+export interface InsightDigest {
+  headline: string;
+  insights: Insight[];
+  /** The source items actually used, for citation/links. */
+  sources: NewsItem[];
+  disclaimers: string[];
+  meta: {
+    traceId: string;
+    generatedAt: string;
+    dataSource: "live" | "fallback";
+    reasoningSource: "claude" | "rule_based";
+    checks: CheckResult[];
+  };
+}
+
+/** The draft shape the insight synthesizer is constrained to produce. */
+export interface InsightDraft {
+  headline: string;
+  insights: Insight[];
+}

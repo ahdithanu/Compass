@@ -7,7 +7,9 @@ import type {
   CandidatePick,
   CheckResult,
   Goal,
+  InsightDraft,
   JourneyStage,
+  NewsItem,
   Profile,
   RiskTolerance,
   SynthesisDraft,
@@ -210,6 +212,64 @@ export function checkSynthesis(
       draft.summary?.trim() && draft.theMove?.headline?.trim()
         ? undefined
         : "Synthesis is missing a summary or a headline for 'the move'.",
+  });
+
+  return results;
+}
+
+/**
+ * Deterministic groundedness checks for the insights digest: every insight must
+ * cite real source ids, reference only allowed tickers, and carry a "so what".
+ */
+export function checkInsights(
+  draft: InsightDraft,
+  news: NewsItem[],
+  watchlist: string[],
+): CheckResult[] {
+  const results: CheckResult[] = [];
+  const validIds = new Set(news.map((n) => n.id));
+  const allowedTickers = new Set([
+    ...watchlist,
+    ...news.flatMap((n) => n.tickers),
+  ]);
+
+  const badCitations = draft.insights.filter(
+    (ins) =>
+      ins.sourceIds.length === 0 ||
+      ins.sourceIds.some((id) => !validIds.has(id)),
+  );
+  results.push({
+    stage: "insight_critic",
+    name: "insights_grounded_in_sources",
+    passed: badCitations.length === 0,
+    detail: badCitations.length
+      ? `${badCitations.length} insight(s) cite missing or no source ids.`
+      : undefined,
+  });
+
+  const badTickers = draft.insights
+    .flatMap((ins) => ins.relatedTickers)
+    .filter((t) => !allowedTickers.has(t));
+  results.push({
+    stage: "insight_critic",
+    name: "no_invented_tickers",
+    passed: badTickers.length === 0,
+    detail: badTickers.length
+      ? `References tickers outside watchlist/sources: ${Array.from(new Set(badTickers)).join(", ")}.`
+      : undefined,
+  });
+
+  const missingSoWhat = draft.insights.filter((ins) => !ins.soWhat?.trim());
+  results.push({
+    stage: "insight_critic",
+    name: "insights_have_so_what",
+    passed: draft.insights.length > 0 && missingSoWhat.length === 0,
+    detail:
+      draft.insights.length === 0
+        ? "Digest contains no insights."
+        : missingSoWhat.length
+          ? `${missingSoWhat.length} insight(s) missing a 'so what'.`
+          : undefined,
   });
 
   return results;
