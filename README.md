@@ -14,6 +14,14 @@ It re-tunes whenever the user updates their profile.
   allocation, sectors to watch, specific tickers, and "the move."
 - **Multi-stage recommendation pipeline with checker gates** (the core of the
   reliability story — see below).
+- **Insights digest** — market news **+ ingested newsletters/RSS** synthesized
+  into a personalized "what's moving for you" feed with per-source citations.
+  Ingestion (`ingest.ts`) fetches configurable RSS/Atom feeds concurrently
+  (per-feed timeout + retry, skip-on-fail), normalizes + ticker-tags them, and
+  merges them with the market feed as first-class, citable sources. Configure
+  via `NEWSLETTER_FEEDS`; falls back to sample items with zero network.
+- **Persisted run history + checker audit log** (Supabase `runs` / `run_checks`
+  tables, RLS-scoped), surfaced in the dashboard.
 - **Resilience & observability** baked in: timeouts + bounded retries on every
   external call, graceful degradation, and a trace ID + structured logs for
   every run.

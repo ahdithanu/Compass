@@ -191,8 +191,10 @@ function InsightsView({ digest }: { digest: InsightDigest }) {
                     {t}
                   </span>
                 ))}
-                {cited.map((s) =>
-                  s.url ? (
+                {cited.map((s) => {
+                  const label =
+                    s.kind === "newsletter" ? `📩 ${s.source}` : s.source;
+                  return s.url ? (
                     <a
                       key={s.id}
                       href={s.url}
@@ -201,14 +203,14 @@ function InsightsView({ digest }: { digest: InsightDigest }) {
                       className="text-xs underline"
                       style={{ color: "var(--muted)" }}
                     >
-                      {s.source}
+                      {label}
                     </a>
                   ) : (
                     <span key={s.id} className="text-xs" style={{ color: "var(--muted)" }}>
-                      {s.source}
+                      {label}
                     </span>
-                  ),
-                )}
+                  );
+                })}
               </div>
             </div>
           );

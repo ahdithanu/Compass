@@ -112,7 +112,7 @@ export interface CritiqueResult {
 
 // --- Insights / newsletter synthesis ---
 
-/** A single source item (news, press, analyst note) from the market feed. */
+/** A single source item (news, press, analyst note, newsletter) from a feed. */
 export interface NewsItem {
   id: string;
   title: string;
@@ -121,6 +121,8 @@ export interface NewsItem {
   tickers: string[];
   summary: string;
   url?: string;
+  /** Where the item came from — market data feed vs an ingested newsletter. */
+  kind?: "market" | "newsletter";
 }
 
 /** One synthesized insight, grounded in one or more source items. */

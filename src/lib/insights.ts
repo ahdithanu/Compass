@@ -9,6 +9,7 @@ import {
   type InsightContext,
 } from "./claude";
 import { getMarketNews } from "./news";
+import { ingestNewsletters } from "./ingest";
 import { logEvent, newTraceId } from "./observability";
 import { PipelineError } from "./pipeline";
 import type { CheckResult, Insight, InsightDigest, InsightDraft } from "./types";
@@ -44,23 +45,51 @@ export async function runInsightsPipeline(
   }
   const profile = validated.profile;
 
-  // Stage 2: derive the same watchlist the recommendation uses, then fetch news.
+  // Stage 2: derive the same watchlist the recommendation uses, then gather
+  // sources from BOTH the market feed and ingested newsletters, concurrently.
   const watchlist = selectCandidates(profile, buildAllocation(profile)).map(
     (c) => c.ticker,
   );
-  const { items: news, source } = await getMarketNews(watchlist);
+  const [marketRes, newsletterRes] = await Promise.all([
+    getMarketNews(watchlist),
+    ingestNewsletters(watchlist),
+  ]);
+
+  const marketItems = marketRes.items.map((i) => ({
+    ...i,
+    kind: i.kind ?? ("market" as const),
+  }));
+  // Cap total to keep token usage bounded; favor a balanced mix.
+  const news = [...marketItems.slice(0, 10), ...newsletterRes.items.slice(0, 8)]
+    .slice(0, 16)
+    .map((item, i) => ({ ...item, id: item.id || `src${i}` }));
+  const source: "live" | "fallback" =
+    marketRes.source === "live" || newsletterRes.source === "live"
+      ? "live"
+      : "fallback";
+
   record({
     stage: "sources",
-    name: "sources_present",
-    passed: news.length > 0,
+    name: "market_sources_present",
+    passed: marketItems.length > 0,
     detail:
-      source === "fallback"
-        ? "Using sample news (no FMP_API_KEY or feed unavailable)."
-        : `Fetched ${news.length} live source items.`,
+      marketRes.source === "fallback"
+        ? "Market feed: sample data (no FMP_API_KEY or feed unavailable)."
+        : `Market feed: ${marketItems.length} live items.`,
   });
+  record({
+    stage: "sources",
+    name: "newsletters_ingested",
+    passed: true, // ingestion failures are tolerated, not blocking
+    detail:
+      newsletterRes.source === "fallback"
+        ? `Newsletters: sample data (0/${newsletterRes.feedsTotal} feeds reachable).`
+        : `Newsletters: ${newsletterRes.feedsOk}/${newsletterRes.feedsTotal} feeds ingested.`,
+  });
+
   if (news.length === 0) {
     throw new PipelineError("No source items available.", [
-      "The market-news feed returned nothing.",
+      "Neither the market feed nor any newsletter returned content.",
     ]);
   }
 
