@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server";
 import { runRecommendationPipeline, PipelineError } from "@/lib/pipeline";
+import { persistRun } from "@/lib/persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
 
   try {
     const recommendation = await runRecommendationPipeline(rawProfile);
+    await persistRun("recommendation", recommendation); // best-effort
     return NextResponse.json({ recommendation });
   } catch (err) {
     if (err instanceof PipelineError) {

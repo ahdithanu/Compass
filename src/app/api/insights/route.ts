@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { runInsightsPipeline } from "@/lib/insights";
 import { PipelineError } from "@/lib/pipeline";
+import { persistRun } from "@/lib/persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
 
   try {
     const digest = await runInsightsPipeline(rawProfile);
+    await persistRun("insights", digest); // best-effort
     return NextResponse.json({ digest });
   } catch (err) {
     if (err instanceof PipelineError) {

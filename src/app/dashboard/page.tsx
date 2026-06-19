@@ -4,9 +4,20 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { InsightDigest, Recommendation } from "@/lib/types";
 
+interface RunSummary {
+  id: string;
+  kind: "recommendation" | "insights";
+  reasoning_source: string;
+  data_source: string;
+  checks_passed: number;
+  checks_total: number;
+  created_at: string;
+}
+
 export default function DashboardPage() {
   const [rec, setRec] = useState<Recommendation | null>(null);
   const [digest, setDigest] = useState<InsightDigest | null>(null);
+  const [history, setHistory] = useState<RunSummary[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +62,21 @@ export default function DashboardPage() {
         /* insights are best-effort */
       }
     })();
+
+    // History is best-effort and only populated for signed-in users. Refetch
+    // shortly after so the run we just generated shows up.
+    const loadHistory = async () => {
+      try {
+        const res = await fetch("/api/history");
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.runs)) setHistory(data.runs);
+      } catch {
+        /* history is best-effort */
+      }
+    };
+    loadHistory();
+    const t = setTimeout(loadHistory, 2500);
+    return () => clearTimeout(t);
   }, []);
 
   return (
@@ -84,8 +110,48 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {rec && <RecommendationView rec={rec} digest={digest} />}
+      {rec && <RecommendationView rec={rec} digest={digest} history={history} />}
     </main>
+  );
+}
+
+function HistoryPanel({ runs }: { runs: RunSummary[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <section className="card p-6">
+      <button
+        className="flex w-full items-center justify-between"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="label">Run history</span>
+        <span className="text-sm" style={{ color: "var(--muted)" }}>
+          {runs.length} saved {runs.length === 1 ? "run" : "runs"} · {open ? "hide" : "show"}
+        </span>
+      </button>
+      {open && (
+        <ul className="mt-4 space-y-2 text-sm">
+          {runs.map((r) => (
+            <li
+              key={r.id}
+              className="flex items-center justify-between rounded-lg px-3 py-2"
+              style={{ background: "var(--panel-2)" }}
+            >
+              <span>
+                <span className="font-medium">
+                  {r.kind === "recommendation" ? "Recommendation" : "Insights"}
+                </span>
+                <span style={{ color: "var(--muted)" }}>
+                  {" "}· {new Date(r.created_at).toLocaleString()}
+                </span>
+              </span>
+              <span style={{ color: "var(--muted)" }}>
+                {r.checks_passed}/{r.checks_total} checks · {r.reasoning_source}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -161,9 +227,11 @@ function InsightsView({ digest }: { digest: InsightDigest }) {
 function RecommendationView({
   rec,
   digest,
+  history,
 }: {
   rec: Recommendation;
   digest: InsightDigest | null;
+  history: RunSummary[];
 }) {
   return (
     <div className="space-y-6">
@@ -259,6 +327,9 @@ function RecommendationView({
 
       {/* Checker audit panel — surfaces the multi-stage verification */}
       <ChecksPanel rec={rec} />
+
+      {/* Run history (signed-in users only) */}
+      {history.length > 0 && <HistoryPanel runs={history} />}
 
       {/* Disclaimers */}
       <footer className="space-y-1 px-2 pb-8 text-xs" style={{ color: "var(--muted)" }}>

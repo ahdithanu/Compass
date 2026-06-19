@@ -27,3 +27,43 @@ create policy "own profile - upsert" on public.profiles
 drop policy if exists "own profile - update" on public.profiles;
 create policy "own profile - update" on public.profiles
   for update using (auth.uid() = id) with check (auth.uid() = id);
+
+-- Persisted history of every recommendation/insights run.
+create table if not exists public.runs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  kind text not null check (kind in ('recommendation','insights')),
+  trace_id text,
+  reasoning_source text,
+  data_source text,
+  checks_passed int not null default 0,
+  checks_total int not null default 0,
+  payload jsonb not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists runs_user_created_idx on public.runs(user_id, created_at desc);
+
+alter table public.runs enable row level security;
+drop policy if exists "own runs - select" on public.runs;
+create policy "own runs - select" on public.runs for select using (auth.uid() = user_id);
+drop policy if exists "own runs - insert" on public.runs;
+create policy "own runs - insert" on public.runs for insert with check (auth.uid() = user_id);
+
+-- Normalized checker audit log: one row per gate result, per run.
+create table if not exists public.run_checks (
+  id bigint generated always as identity primary key,
+  run_id uuid not null references public.runs(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  stage text not null,
+  name text not null,
+  passed boolean not null,
+  detail text,
+  created_at timestamptz not null default now()
+);
+create index if not exists run_checks_run_idx on public.run_checks(run_id);
+
+alter table public.run_checks enable row level security;
+drop policy if exists "own run_checks - select" on public.run_checks;
+create policy "own run_checks - select" on public.run_checks for select using (auth.uid() = user_id);
+drop policy if exists "own run_checks - insert" on public.run_checks;
+create policy "own run_checks - insert" on public.run_checks for insert with check (auth.uid() = user_id);
