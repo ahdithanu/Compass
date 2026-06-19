@@ -83,7 +83,28 @@ rule-based rationale. Add keys to light up the full experience:
 npm run dev        # local dev
 npm run build      # production build
 npm run typecheck  # tsc --noEmit
+npm test           # run the Vitest suite
+npm run test:watch # watch mode
 ```
+
+## Testing
+
+A Vitest suite (`tests/`) covers the pure logic and the pipeline orchestration —
+45 tests, all hermetic (no network, no API keys; external calls hit the
+deterministic fallbacks):
+
+- **Validators & checker gates** — profile validation, contradictions,
+  allocation/synthesis/insight groundedness checks.
+- **Allocator regression guard** — sweeps all ~3,800 profile combinations and
+  asserts the allocation always sums to 100 with no negative weights (the
+  invariant that caught the original bug).
+- **RSS/Atom parser** — CDATA, HTML stripping, ticker tagging, Atom link
+  extraction, garbage input, and the network-failure fallback.
+- **Pipeline orchestration** — the offline rule-based path, invalid/contradictory
+  profiles, and the multi-agent branches with the LLM mocked: Claude success,
+  revise-once-after-a-bad-draft, and double-critic-failure → safe fallback.
+
+CI (`.github/workflows/ci.yml`) runs typecheck + tests + build on every push/PR.
 
 ## Roadmap (next slices)
 

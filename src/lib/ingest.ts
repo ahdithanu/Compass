@@ -112,13 +112,14 @@ async function fetchAndParse(
   );
   if (!xml) return [];
   try {
-    return normalize(xml, feed, watch);
+    return parseFeed(xml, feed, watch);
   } catch {
     return [];
   }
 }
 
-function normalize(
+/** Parse one feed's XML into NewsItems. Exported for direct unit testing. */
+export function parseFeed(
   xml: string,
   feed: FeedSource,
   watch: Set<string>,
