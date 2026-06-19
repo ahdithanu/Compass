@@ -62,8 +62,12 @@ const SAMPLE_NEWSLETTERS: NewsItem[] = [
 
 export async function ingestNewsletters(
   watchlist: string[],
+  feedsOverride?: FeedSource[],
 ): Promise<IngestResult> {
-  const feeds = configuredFeeds();
+  // Per-user feeds take precedence; otherwise fall back to the configured
+  // (env / curated default) list.
+  const feeds =
+    feedsOverride && feedsOverride.length > 0 ? feedsOverride : configuredFeeds();
   const watch = new Set(watchlist.map((t) => t.toUpperCase()));
 
   const settled = await Promise.allSettled(

@@ -67,3 +67,23 @@ drop policy if exists "own run_checks - select" on public.run_checks;
 create policy "own run_checks - select" on public.run_checks for select using (auth.uid() = user_id);
 drop policy if exists "own run_checks - insert" on public.run_checks;
 create policy "own run_checks - insert" on public.run_checks for insert with check (auth.uid() = user_id);
+
+-- Per-user newsletter / RSS feeds for the insights engine.
+create table if not exists public.user_feeds (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  url text not null,
+  category text,
+  created_at timestamptz not null default now(),
+  unique (user_id, url)
+);
+create index if not exists user_feeds_user_idx on public.user_feeds(user_id, created_at);
+
+alter table public.user_feeds enable row level security;
+drop policy if exists "own feeds - select" on public.user_feeds;
+create policy "own feeds - select" on public.user_feeds for select using (auth.uid() = user_id);
+drop policy if exists "own feeds - insert" on public.user_feeds;
+create policy "own feeds - insert" on public.user_feeds for insert with check (auth.uid() = user_id);
+drop policy if exists "own feeds - delete" on public.user_feeds;
+create policy "own feeds - delete" on public.user_feeds for delete using (auth.uid() = user_id);

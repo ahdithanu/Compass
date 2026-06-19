@@ -85,9 +85,14 @@ export default function DashboardPage() {
         <Link href="/" className="text-lg font-bold tracking-tight">
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
-        <Link href="/onboarding" className="btn-ghost text-sm">
-          Update my profile
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/sources" className="btn-ghost text-sm">
+            Sources
+          </Link>
+          <Link href="/onboarding" className="btn-ghost text-sm">
+            Update my profile
+          </Link>
+        </div>
       </header>
 
       {loading && <p style={{ color: "var(--muted)" }}>Building your plan…</p>}

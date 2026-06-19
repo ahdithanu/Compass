@@ -70,4 +70,20 @@ describe("ingestNewsletters", () => {
     // ids are reassigned sequentially as nl0, nl1, ...
     expect(res.items[0].id).toMatch(/^nl\d+$/);
   });
+
+  it("uses a per-user feed override when provided", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ ok: true, text: async () => RSS });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await ingestNewsletters(
+      ["VTI"],
+      [{ name: "My Feed", url: "https://only-this.example/rss" }],
+    );
+
+    // exactly the one override feed was fetched (defaults were not used)
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe("https://only-this.example/rss");
+  });
 });

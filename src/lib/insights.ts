@@ -12,8 +12,14 @@ import { getMarketNews } from "./news";
 import { ingestNewsletters } from "./ingest";
 import { logEvent, newTraceId } from "./observability";
 import { PipelineError } from "./pipeline";
+import type { FeedSource } from "./sources";
 import type { CheckResult, Insight, InsightDigest, InsightDraft } from "./types";
 import { checkInsights, validateProfile } from "./validate";
+
+export interface InsightsOptions {
+  /** Per-user feed list; when present, overrides the default/env feeds. */
+  feeds?: FeedSource[];
+}
 
 const DISCLAIMERS = [
   "These insights are educational summaries of public sources, not personalized financial advice.",
@@ -22,6 +28,7 @@ const DISCLAIMERS = [
 
 export async function runInsightsPipeline(
   rawProfile: unknown,
+  opts: InsightsOptions = {},
 ): Promise<InsightDigest> {
   const traceId = newTraceId();
   const checks: CheckResult[] = [];
@@ -52,7 +59,7 @@ export async function runInsightsPipeline(
   );
   const [marketRes, newsletterRes] = await Promise.all([
     getMarketNews(watchlist),
-    ingestNewsletters(watchlist),
+    ingestNewsletters(watchlist, opts.feeds),
   ]);
 
   const marketItems = marketRes.items.map((i) => ({
