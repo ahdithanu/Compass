@@ -91,7 +91,7 @@ npm run test:integration  # live Supabase smoke test (needs env, see Testing)
 ## Testing
 
 A Vitest suite (`tests/`) covers the pure logic, the pipeline orchestration, and
-the API route handlers — 73 tests, all hermetic (no network, no API keys;
+the API route handlers — 77 tests, all hermetic (no network, no API keys;
 external calls and Supabase are mocked, so external paths hit the deterministic
 fallbacks):
 
@@ -105,6 +105,11 @@ fallbacks):
 - **Pipeline orchestration** — the offline rule-based path, invalid/contradictory
   profiles, and the multi-agent branches with the LLM mocked: Claude success,
   revise-once-after-a-bad-draft, and double-critic-failure → safe fallback.
+- **Feed-source precedence (end-to-end)** — drives `runInsightsPipeline` and
+  asserts the full ladder for which newsletters get fetched: per-user feeds >
+  `NEWSLETTER_FEEDS` (env) > curated defaults, including that an empty user list
+  falls through to the env/defaults and that the winning feed's items reach the
+  digest.
 - **API route handlers** — auth gating, request validation, status-code/error
   mapping (`PipelineError` → 422, unique-violation → 409) and DB-result handling
   for `/api/feeds`, `/api/recommendations`, `/api/insights` and `/api/history`,
