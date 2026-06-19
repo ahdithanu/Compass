@@ -83,15 +83,17 @@ rule-based rationale. Add keys to light up the full experience:
 npm run dev        # local dev
 npm run build      # production build
 npm run typecheck  # tsc --noEmit
-npm test           # run the Vitest suite
+npm test           # run the hermetic Vitest suite
 npm run test:watch # watch mode
+npm run test:integration  # live Supabase smoke test (needs env, see Testing)
 ```
 
 ## Testing
 
-A Vitest suite (`tests/`) covers the pure logic and the pipeline orchestration —
-45 tests, all hermetic (no network, no API keys; external calls hit the
-deterministic fallbacks):
+A Vitest suite (`tests/`) covers the pure logic, the pipeline orchestration, and
+the API route handlers — 73 tests, all hermetic (no network, no API keys;
+external calls and Supabase are mocked, so external paths hit the deterministic
+fallbacks):
 
 - **Validators & checker gates** — profile validation, contradictions,
   allocation/synthesis/insight groundedness checks.
@@ -103,8 +105,30 @@ deterministic fallbacks):
 - **Pipeline orchestration** — the offline rule-based path, invalid/contradictory
   profiles, and the multi-agent branches with the LLM mocked: Claude success,
   revise-once-after-a-bad-draft, and double-critic-failure → safe fallback.
+- **API route handlers** — auth gating, request validation, status-code/error
+  mapping (`PipelineError` → 422, unique-violation → 409) and DB-result handling
+  for `/api/feeds`, `/api/recommendations`, `/api/insights` and `/api/history`,
+  with Supabase, the pipelines and persistence mocked.
 
-CI (`.github/workflows/ci.yml`) runs typecheck + tests + build on every push/PR.
+### Live integration smoke test
+
+`tests/integration/feeds.integration.test.ts` exercises the **real** `user_feeds`
+table — columns, RLS policies, and the `(user_id, url)` unique constraint — via a
+full insert → list → duplicate → delete → verify-gone round trip. It's excluded
+from the hermetic suite/CI and self-skips unless its env vars are set:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...      \
+NEXT_PUBLIC_SUPABASE_ANON_KEY=... \
+SMOKE_TEST_EMAIL=you@example.com  \
+SMOKE_TEST_PASSWORD=...           \
+npm run test:integration
+```
+
+(Requires `supabase/schema.sql` applied and a confirmed test user in the project.)
+
+CI (`.github/workflows/ci.yml`) runs typecheck + the hermetic tests + build on
+every push/PR.
 
 ## Roadmap (next slices)
 

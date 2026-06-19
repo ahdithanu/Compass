@@ -12,5 +12,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.ts"],
+    // Integration tests hit a live Supabase project and need network + creds;
+    // they run via `npm run test:integration`, never in the hermetic suite/CI.
+    exclude: ["tests/integration/**", "node_modules/**"],
   },
 });
