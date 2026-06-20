@@ -87,6 +87,13 @@ the server and browser Supabase clients are instantiated as
 checked against the real columns — a renamed/dropped column breaks compilation at
 the exact call site. Regenerate after any schema change with `npm run db:types`.
 
+### Typography
+
+Anthropic-style font pairing loaded via `next/font/google` in `app/layout.tsx`:
+**Fraunces** (warm display serif) for headings and **Inter** (grotesque) for body,
+exposed as `--font-serif` / `--font-sans` and applied in `globals.css`. `next/font`
+self-hosts the files at build time, so there's no runtime dependency on Google.
+
 ### Client-side API access
 
 The pages call the API through `lib/apiClient.ts` (`apiGet`/`apiPost`/`apiDelete`)
