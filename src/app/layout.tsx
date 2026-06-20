@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Newsreader, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 
-// Anthropic-style pairing: a warm display serif (Fraunces) for headings and a
-// clean grotesque (Inter) for body text. Exposed as CSS variables so globals.css
-// drives where each is applied.
-const serif = Fraunces({
+// Anthropic-style pairing: a restrained editorial serif (Newsreader, close to
+// Tiempos) for headings and a neo-grotesque (Hanken Grotesk, close to Styrene)
+// for body. Exposed as CSS variables so globals.css drives where each applies.
+const serif = Newsreader({
   subsets: ["latin"],
   variable: "--font-serif",
   display: "swap",
   axes: ["opsz"],
 });
 
-const sans = Inter({
+const sans = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
