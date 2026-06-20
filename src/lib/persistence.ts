@@ -4,6 +4,7 @@
 
 import type { InsightDigest, Recommendation } from "./types";
 import { createClient, isSupabaseConfigured } from "./supabase/server";
+import type { Json } from "./supabase/database.types";
 
 type RunKind = "recommendation" | "insights";
 
@@ -32,7 +33,8 @@ export async function persistRun(
         data_source: meta.dataSource,
         checks_passed: passed,
         checks_total: meta.checks.length,
-        payload,
+        // Our domain objects are JSON-serializable but not structurally `Json`.
+        payload: payload as unknown as Json,
       })
       .select("id")
       .single();

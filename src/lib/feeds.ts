@@ -3,6 +3,10 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FeedSource } from "./sources";
+import type { Database, Tables } from "./supabase/database.types";
+
+/** A Supabase client typed against our generated schema. */
+export type TypedClient = SupabaseClient<Database>;
 
 export interface FeedValidation {
   ok: boolean;
@@ -70,16 +74,12 @@ export function validateFeed(nameRaw: unknown, urlRaw: unknown): FeedValidation 
   };
 }
 
-export interface UserFeedRow {
-  id: string;
-  name: string;
-  url: string;
-  category: string | null;
-}
+/** A row from the generated `user_feeds` schema. */
+export type UserFeedRow = Tables<"user_feeds">;
 
 /** Load a user's saved feeds as FeedSource[] (empty if none). */
 export async function getUserFeeds(
-  db: SupabaseClient,
+  db: TypedClient,
   userId: string,
 ): Promise<FeedSource[]> {
   const { data } = await db
@@ -87,8 +87,7 @@ export async function getUserFeeds(
     .select("id, name, url, category")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
-  const rows = (data ?? []) as UserFeedRow[];
-  return rows.map((r) => ({
+  return (data ?? []).map((r) => ({
     name: r.name,
     url: r.url,
     category: r.category ?? undefined,

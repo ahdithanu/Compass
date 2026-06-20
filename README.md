@@ -79,6 +79,14 @@ guarded by:
   request/response log line, and converts any uncaught handler error into a
   clean `500` that echoes the id in the body for support/debugging.
 
+### Typed database access
+
+`src/lib/supabase/database.types.ts` is generated from the live schema, and both
+the server and browser Supabase clients are instantiated as
+`createClient<Database>(...)`. Every `.from(...).select/insert` is therefore
+checked against the real columns — a renamed/dropped column breaks compilation at
+the exact call site. Regenerate after any schema change with `npm run db:types`.
+
 ## Stack
 
 Next.js (App Router, TypeScript) · Tailwind v4 · Supabase (auth + profile
