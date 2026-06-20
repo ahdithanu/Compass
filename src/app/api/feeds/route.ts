@@ -6,6 +6,11 @@
 import { NextResponse } from "next/server";
 import { validateFeed } from "@/lib/feeds";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+
+const WINDOW_MS = 60_000;
+const feedWriteLimit = () => Number(process.env.API_RATE_LIMIT_FEEDS ?? 30);
 
 async function requireUser() {
   if (!isSupabaseConfigured()) return { error: "config" as const };
@@ -34,6 +39,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const rl = rateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
+  if (!rl.ok) return rateLimitedResponse(rl);
+
   const ctx = await requireUser();
   if ("error" in ctx) {
     return NextResponse.json({ error: "Sign in to manage feeds." }, { status: 401 });
@@ -41,8 +49,9 @@ export async function POST(request: Request) {
 
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = await readJsonCapped(request);
+  } catch (err) {
+    if (err instanceof BodyTooLargeError) return bodyTooLargeResponse();
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
   const { name, url } = (body ?? {}) as { name?: unknown; url?: unknown };

@@ -53,8 +53,26 @@ makes the critic gate enforceable.
 
 Adopted now: API-first boundary, layered/modular monolith, staged pipeline with
 gates, resilience (timeouts/retries/graceful degradation), observability (trace
-IDs + structured logs). Deliberately deferred until scale: microservices,
-micro-frontends, a dedicated API gateway, and rate limiting.
+IDs + structured logs), and basic abuse hardening on the write/compute routes
+(per-client rate limiting + request body-size caps — see below). Deliberately
+deferred until scale: microservices, micro-frontends, a dedicated API gateway,
+and a shared/distributed rate-limit store.
+
+### API hardening
+
+The POST routes (`/api/recommendations`, `/api/insights`, `/api/feeds`) are
+guarded by:
+
+- **Per-client rate limiting** (`lib/ratelimit.ts`) — a fixed-window limiter
+  keyed by `x-forwarded-for`/`x-real-ip` and scoped per route. Over-limit
+  callers get `429` with a `Retry-After` header. Defaults: 20/min for the
+  pipeline routes, 30/min for feed writes; overridable via
+  `API_RATE_LIMIT_RECS` / `API_RATE_LIMIT_INSIGHTS` / `API_RATE_LIMIT_FEEDS`.
+  State is per-process (acceptable as a first defense; a shared store is the
+  scale-up path).
+- **Body-size caps** (`lib/http.ts`) — bodies over 16 KB are rejected with `413`
+  before parsing (checked via `Content-Length` and actual byte length), and feed
+  URLs are capped at 2 KB in `validateFeed`.
 
 ## Stack
 
@@ -91,7 +109,7 @@ npm run test:integration  # live Supabase smoke test (needs env, see Testing)
 ## Testing
 
 A Vitest suite (`tests/`) covers the pure logic, the pipeline orchestration, and
-the API route handlers — 77 tests, all hermetic (no network, no API keys;
+the API route handlers — 94 tests, all hermetic (no network, no API keys;
 external calls and Supabase are mocked, so external paths hit the deterministic
 fallbacks):
 
@@ -114,6 +132,10 @@ fallbacks):
   mapping (`PipelineError` → 422, unique-violation → 409) and DB-result handling
   for `/api/feeds`, `/api/recommendations`, `/api/insights` and `/api/history`,
   with Supabase, the pipelines and persistence mocked.
+- **Abuse hardening** — the fixed-window rate limiter (allow-up-to-limit, block,
+  window reset, per-client isolation, `Retry-After`), the body-size cap
+  (`413` via `Content-Length` and byte length), and the route-level `429`/`413`
+  responses.
 
 ### Live integration smoke test
 

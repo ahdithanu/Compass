@@ -43,6 +43,8 @@ function isBlockedHost(hostname: string): boolean {
 export function validateFeed(nameRaw: unknown, urlRaw: unknown): FeedValidation {
   const url = typeof urlRaw === "string" ? urlRaw.trim() : "";
   if (!url) return { ok: false, error: "A feed URL is required." };
+  // Cap length before parsing — a sane URL is well under this; longer is abuse.
+  if (url.length > 2048) return { ok: false, error: "That feed URL is too long." };
 
   let parsed: URL;
   try {

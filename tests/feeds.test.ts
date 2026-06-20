@@ -19,6 +19,11 @@ describe("validateFeed", () => {
     expect(validateFeed("x", "not a url").ok).toBe(false);
   });
 
+  it("rejects an absurdly long URL before parsing", () => {
+    const long = "https://ex.com/" + "a".repeat(3000);
+    expect(validateFeed("x", long).ok).toBe(false);
+  });
+
   it("rejects non-http(s) protocols", () => {
     expect(validateFeed("x", "ftp://ex.com/feed").ok).toBe(false);
     expect(validateFeed("x", "file:///etc/passwd").ok).toBe(false);

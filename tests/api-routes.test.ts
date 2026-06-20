@@ -35,6 +35,7 @@ vi.mock("@/lib/insights", () => ({
 }));
 
 import { PipelineError } from "@/lib/pipeline";
+import { __resetRateLimit } from "@/lib/ratelimit";
 
 // --- a tiny chainable + thenable fake of the Supabase query builder ----------
 type TableResults = Record<string, { data?: unknown; error?: unknown }>;
@@ -65,6 +66,7 @@ beforeEach(() => {
   H.runRec.mockReset();
   H.runIns.mockReset();
   H.persist.mockReset();
+  __resetRateLimit(); // isolate cases — buckets are process-global
 });
 
 // ---------------------------------------------------------------------------
@@ -290,5 +292,63 @@ describe("/api/history", () => {
     const res = await GET();
     expect(res.status).toBe(200);
     expect((await res.json()).runs).toEqual(runs);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Hardening: rate limiting + body-size caps on the POST routes
+// ---------------------------------------------------------------------------
+describe("POST route hardening", () => {
+  const ip = (addr: string) => ({ "x-forwarded-for": addr });
+
+  it("recommendations returns 429 once the per-client window is exhausted", async () => {
+    process.env.API_RATE_LIMIT_RECS = "2";
+    H.runRec.mockResolvedValue({ traceId: "t" });
+    const { POST } = await import("@/app/api/recommendations/route");
+    const call = () =>
+      POST(new Request("http://t/api/recommendations", { method: "POST", headers: ip("7.7.7.7"), body: JSON.stringify({ profile: { age: 30 } }) }));
+
+    expect((await call()).status).toBe(200);
+    expect((await call()).status).toBe(200);
+    const limited = await call();
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("Retry-After")).toBeTruthy();
+    delete process.env.API_RATE_LIMIT_RECS;
+  });
+
+  it("rate-limit buckets are per-client (a second IP is unaffected)", async () => {
+    process.env.API_RATE_LIMIT_RECS = "1";
+    H.runRec.mockResolvedValue({ traceId: "t" });
+    const { POST } = await import("@/app/api/recommendations/route");
+    const call = (addr: string) =>
+      POST(new Request("http://t/api/recommendations", { method: "POST", headers: ip(addr), body: JSON.stringify({ profile: { age: 30 } }) }));
+
+    expect((await call("1.1.1.1")).status).toBe(200);
+    expect((await call("1.1.1.1")).status).toBe(429); // first client exhausted
+    expect((await call("2.2.2.2")).status).toBe(200); // different client, fresh budget
+    delete process.env.API_RATE_LIMIT_RECS;
+  });
+
+  it("recommendations rejects an over-cap body with 413", async () => {
+    const { POST } = await import("@/app/api/recommendations/route");
+    const huge = JSON.stringify({ profile: { note: "a".repeat(20_000) } });
+    const res = await POST(new Request("http://t/api/recommendations", { method: "POST", body: huge }));
+    expect(res.status).toBe(413);
+  });
+
+  it("insights rejects an over-cap body with 413", async () => {
+    H.configured = false;
+    const { POST } = await import("@/app/api/insights/route");
+    const huge = JSON.stringify({ profile: { note: "a".repeat(20_000) } });
+    const res = await POST(new Request("http://t/api/insights", { method: "POST", body: huge }));
+    expect(res.status).toBe(413);
+  });
+
+  it("feeds POST rejects an over-cap body with 413 (before touching auth)", async () => {
+    H.client = fakeSupabase({ user: { id: "u1" } });
+    const { POST } = await import("@/app/api/feeds/route");
+    const huge = JSON.stringify({ url: "https://x.com/" + "a".repeat(20_000) });
+    const res = await POST(new Request("http://t/api/feeds", { method: "POST", body: huge }));
+    expect(res.status).toBe(413);
   });
 });

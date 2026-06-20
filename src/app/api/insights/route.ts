@@ -8,18 +8,27 @@ import { persistRun } from "@/lib/persistence";
 import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+
+const WINDOW_MS = 60_000;
+const limitFor = () => Number(process.env.API_RATE_LIMIT_INSIGHTS ?? 20);
 
 export async function POST(request: Request) {
+  const rl = rateLimit(clientKey(request, "insights"), limitFor(), WINDOW_MS);
+  if (!rl.ok) return rateLimitedResponse(rl);
+
   let rawProfile: unknown = null;
   let feeds: FeedSource[] | undefined;
 
   try {
-    const body = await request.json();
+    const body = await readJsonCapped(request);
     if (body && typeof body === "object" && "profile" in body) {
       rawProfile = (body as { profile: unknown }).profile;
     }
-  } catch {
-    // no body — fall through to the saved profile
+  } catch (err) {
+    if (err instanceof BodyTooLargeError) return bodyTooLargeResponse();
+    // malformed/empty body — fall through to the saved profile
   }
 
   // Load the signed-in user's profile (if not posted) and their custom feeds.

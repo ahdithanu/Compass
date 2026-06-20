@@ -7,18 +7,29 @@ import { NextResponse } from "next/server";
 import { runRecommendationPipeline, PipelineError } from "@/lib/pipeline";
 import { persistRun } from "@/lib/persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+
+// Pipeline runs are the most expensive endpoint (LLM + market data), so keep the
+// per-client budget modest. Overridable via env for load testing / tuning.
+const WINDOW_MS = 60_000;
+const limitFor = () => Number(process.env.API_RATE_LIMIT_RECS ?? 20);
 
 export async function POST(request: Request) {
+  const rl = rateLimit(clientKey(request, "recs"), limitFor(), WINDOW_MS);
+  if (!rl.ok) return rateLimitedResponse(rl);
+
   let rawProfile: unknown = null;
 
   // Prefer an explicitly posted profile.
   try {
-    const body = await request.json();
+    const body = await readJsonCapped(request);
     if (body && typeof body === "object" && "profile" in body) {
       rawProfile = (body as { profile: unknown }).profile;
     }
-  } catch {
-    // no body — fall through to the saved profile
+  } catch (err) {
+    if (err instanceof BodyTooLargeError) return bodyTooLargeResponse();
+    // malformed/empty body — fall through to the saved profile
   }
 
   // Otherwise load the signed-in user's saved profile.
