@@ -87,6 +87,15 @@ the server and browser Supabase clients are instantiated as
 checked against the real columns — a renamed/dropped column breaks compilation at
 the exact call site. Regenerate after any schema change with `npm run db:types`.
 
+### Client-side API access
+
+The pages call the API through `lib/apiClient.ts` (`apiGet`/`apiPost`/`apiDelete`)
+rather than raw `fetch`. It returns a discriminated `ApiResult<T>` —
+`{ ok: true, data, requestId }` or `{ ok: false, error, issues?, status, requestId }` —
+with friendly per-status fallback messages and network-failure handling. On error
+the UI shows the message plus the `x-request-id` (via `withRef`) so a user can
+quote it for support.
+
 ## Stack
 
 Next.js (App Router, TypeScript) · Tailwind v4 · Supabase (auth + profile
@@ -122,7 +131,7 @@ npm run test:integration  # live Supabase smoke test (needs env, see Testing)
 ## Testing
 
 A Vitest suite (`tests/`) covers the pure logic, the pipeline orchestration, and
-the API route handlers — 98 tests, all hermetic (no network, no API keys;
+the API route handlers — 109 tests, all hermetic (no network, no API keys;
 external calls and Supabase are mocked, so external paths hit the deterministic
 fallbacks):
 
@@ -152,6 +161,9 @@ fallbacks):
 - **Request-id correlation** — every response carries an `x-request-id`, a sane
   client-supplied id is honored (junk is ignored), and an uncaught handler error
   becomes a `500` echoing the id.
+- **Typed API client** (`lib/apiClient.ts`) — success/data/requestId parsing,
+  per-status fallback messages, network-failure handling, JSON-body edge cases,
+  and the `withRef` support-id formatter.
 
 ### Live integration smoke test
 

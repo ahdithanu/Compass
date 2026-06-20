@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { apiGet, apiPost, apiDelete, withRef } from "@/lib/apiClient";
 
 interface Feed {
   id: string;
@@ -31,9 +32,8 @@ export default function SourcesPage() {
       } = await supabase.auth.getUser();
       setAuthed(Boolean(user));
       if (user) {
-        const res = await fetch("/api/feeds");
-        const data = await res.json();
-        if (res.ok) setFeeds(data.feeds ?? []);
+        const r = await apiGet<{ feeds: Feed[] }>("/api/feeds");
+        if (r.ok) setFeeds(r.data.feeds ?? []);
       }
     })();
   }, []);
@@ -42,18 +42,16 @@ export default function SourcesPage() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const res = await fetch("/api/feeds", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name.trim() || undefined, url: url.trim() }),
+    const r = await apiPost<{ feed: Feed }>("/api/feeds", {
+      name: name.trim() || undefined,
+      url: url.trim(),
     });
-    const data = await res.json();
     setBusy(false);
-    if (!res.ok) {
-      setError(data.error ?? "Could not add feed.");
+    if (!r.ok) {
+      setError(withRef(r.error, r.requestId));
       return;
     }
-    setFeeds((f) => [...f, data.feed]);
+    setFeeds((f) => [...f, r.data.feed]);
     setName("");
     setUrl("");
   }
@@ -61,10 +59,8 @@ export default function SourcesPage() {
   async function removeFeed(id: string) {
     const prev = feeds;
     setFeeds((f) => f.filter((x) => x.id !== id));
-    const res = await fetch(`/api/feeds?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
-    if (!res.ok) setFeeds(prev); // rollback on failure
+    const r = await apiDelete(`/api/feeds?id=${encodeURIComponent(id)}`);
+    if (!r.ok) setFeeds(prev); // rollback on failure
   }
 
   return (

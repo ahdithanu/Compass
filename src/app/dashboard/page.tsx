@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { InsightDigest, Recommendation } from "@/lib/types";
+import { apiGet, apiPost, withRef } from "@/lib/apiClient";
 
 interface RunSummary {
   id: string;
@@ -28,51 +29,33 @@ export default function DashboardPage() {
         ? sessionStorage.getItem("compass:profile")
         : null;
     const profile = stored ? JSON.parse(stored) : null;
-    const body = JSON.stringify(profile ? { profile } : {});
-    const opts = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    };
+    const payload = profile ? { profile } : {};
 
     (async () => {
-      try {
-        const res = await fetch("/api/recommendations", opts);
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? "Something went wrong.");
-          setIssues(data.issues ?? []);
-          return;
-        }
-        setRec(data.recommendation);
-      } catch {
-        setError("Could not reach the recommendation service.");
-      } finally {
-        setLoading(false);
+      const r = await apiPost<{ recommendation: Recommendation }>(
+        "/api/recommendations",
+        payload,
+      );
+      if (!r.ok) {
+        setError(withRef(r.error, r.requestId));
+        setIssues(r.issues ?? []);
+      } else {
+        setRec(r.data.recommendation);
       }
+      setLoading(false);
     })();
 
     // Insights load independently — a failure here shouldn't block the plan.
     (async () => {
-      try {
-        const res = await fetch("/api/insights", opts);
-        const data = await res.json();
-        if (res.ok) setDigest(data.digest);
-      } catch {
-        /* insights are best-effort */
-      }
+      const r = await apiPost<{ digest: InsightDigest }>("/api/insights", payload);
+      if (r.ok) setDigest(r.data.digest);
     })();
 
     // History is best-effort and only populated for signed-in users. Refetch
     // shortly after so the run we just generated shows up.
     const loadHistory = async () => {
-      try {
-        const res = await fetch("/api/history");
-        const data = await res.json();
-        if (res.ok && Array.isArray(data.runs)) setHistory(data.runs);
-      } catch {
-        /* history is best-effort */
-      }
+      const r = await apiGet<{ runs: RunSummary[] }>("/api/history");
+      if (r.ok && Array.isArray(r.data.runs)) setHistory(r.data.runs);
     };
     loadHistory();
     const t = setTimeout(loadHistory, 2500);
