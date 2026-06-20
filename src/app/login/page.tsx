@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [msg, setMsg] = useState<string | null>(null);
+  const [msg, setMsg] = useState<{ text: string; kind: "error" | "info" } | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
@@ -26,11 +26,11 @@ export default function LoginPage() {
     const { error } = await fn;
     setBusy(false);
     if (error) {
-      setMsg(error.message);
+      setMsg({ text: error.message, kind: "error" });
       return;
     }
     if (mode === "signup") {
-      setMsg("Check your email to confirm, then sign in.");
+      setMsg({ text: "Check your email to confirm, then sign in.", kind: "info" });
       return;
     }
     router.push("/dashboard");
@@ -80,8 +80,11 @@ export default function LoginPage() {
             />
           </div>
           {msg && (
-            <p className="text-sm" style={{ color: "var(--warn)" }}>
-              {msg}
+            <p
+              className="text-sm"
+              style={{ color: msg.kind === "error" ? "var(--danger)" : "var(--positive)" }}
+            >
+              {msg.text}
             </p>
           )}
           <button className="btn w-full" disabled={busy}>

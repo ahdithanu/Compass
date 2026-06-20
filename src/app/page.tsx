@@ -19,7 +19,7 @@ export default function Home() {
         >
           Your investing co-pilot
         </p>
-        <h1 className="text-4xl font-bold leading-tight sm:text-5xl">
+        <h1 className="text-balance text-4xl font-bold leading-tight sm:text-5xl">
           Know what to track, what to watch, and what the move is — built around{" "}
           <span style={{ color: "var(--accent)" }}>you</span>.
         </h1>
