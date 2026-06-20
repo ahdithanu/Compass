@@ -4,8 +4,9 @@
 
 import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { withRequest } from "@/lib/api";
 
-export async function GET() {
+export const GET = withRequest("history", async () => {
   if (!isSupabaseConfigured()) return NextResponse.json({ runs: [] });
 
   const supabase = await createClient();
@@ -27,4 +28,4 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to load history." }, { status: 500 });
   }
   return NextResponse.json({ runs: data ?? [] });
-}
+});

@@ -73,6 +73,11 @@ guarded by:
 - **Body-size caps** (`lib/http.ts`) — bodies over 16 KB are rejected with `413`
   before parsing (checked via `Content-Length` and actual byte length), and feed
   URLs are capped at 2 KB in `validateFeed`.
+- **Request-id correlation** (`lib/api.ts`) — every API route is wrapped by
+  `withRequest`, which stamps each response with an `x-request-id` (reusing a
+  sane client-supplied one for end-to-end correlation), emits a structured
+  request/response log line, and converts any uncaught handler error into a
+  clean `500` that echoes the id in the body for support/debugging.
 
 ## Stack
 
@@ -109,7 +114,7 @@ npm run test:integration  # live Supabase smoke test (needs env, see Testing)
 ## Testing
 
 A Vitest suite (`tests/`) covers the pure logic, the pipeline orchestration, and
-the API route handlers — 94 tests, all hermetic (no network, no API keys;
+the API route handlers — 98 tests, all hermetic (no network, no API keys;
 external calls and Supabase are mocked, so external paths hit the deterministic
 fallbacks):
 
@@ -136,6 +141,9 @@ fallbacks):
   window reset, per-client isolation, `Retry-After`), the body-size cap
   (`413` via `Content-Length` and byte length), and the route-level `429`/`413`
   responses.
+- **Request-id correlation** — every response carries an `x-request-id`, a sane
+  client-supplied id is honored (junk is ignored), and an uncaught handler error
+  becomes a `500` echoing the id.
 
 ### Live integration smoke test
 

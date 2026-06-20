@@ -8,6 +8,7 @@ import { validateFeed } from "@/lib/feeds";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { rateLimit, clientKey } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+import { withRequest } from "@/lib/api";
 
 const WINDOW_MS = 60_000;
 const feedWriteLimit = () => Number(process.env.API_RATE_LIMIT_FEEDS ?? 30);
@@ -22,7 +23,7 @@ async function requireUser() {
   return { supabase, user };
 }
 
-export async function GET() {
+export const GET = withRequest("feeds:list", async () => {
   const ctx = await requireUser();
   if ("error" in ctx) return NextResponse.json({ feeds: [] });
 
@@ -36,9 +37,9 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to load feeds." }, { status: 500 });
   }
   return NextResponse.json({ feeds: data ?? [] });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = withRequest("feeds:add", async (request) => {
   const rl = rateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
@@ -80,9 +81,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to add feed." }, { status: 500 });
   }
   return NextResponse.json({ feed: data }, { status: 201 });
-}
+});
 
-export async function DELETE(request: Request) {
+export const DELETE = withRequest("feeds:remove", async (request) => {
+  const rl = rateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
+  if (!rl.ok) return rateLimitedResponse(rl);
+
   const ctx = await requireUser();
   if ("error" in ctx) {
     return NextResponse.json({ error: "Sign in to manage feeds." }, { status: 401 });
@@ -101,4 +105,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Failed to remove feed." }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
-}
+});

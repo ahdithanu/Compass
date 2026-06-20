@@ -11,7 +11,8 @@ export function newTraceId(): string {
 }
 
 export interface TraceEvent {
-  traceId: string;
+  traceId?: string;
+  requestId?: string;
   stage: string;
   event: string;
   ok?: boolean;

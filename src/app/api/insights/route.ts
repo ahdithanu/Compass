@@ -10,11 +10,12 @@ import type { FeedSource } from "@/lib/sources";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { rateLimit, clientKey } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+import { withRequest } from "@/lib/api";
 
 const WINDOW_MS = 60_000;
 const limitFor = () => Number(process.env.API_RATE_LIMIT_INSIGHTS ?? 20);
 
-export async function POST(request: Request) {
+export const POST = withRequest("insights", async (request) => {
   const rl = rateLimit(clientKey(request, "insights"), limitFor(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
@@ -89,10 +90,6 @@ export async function POST(request: Request) {
         { status: 422 },
       );
     }
-    console.error("Insights pipeline error:", err);
-    return NextResponse.json(
-      { error: "Failed to generate insights." },
-      { status: 500 },
-    );
+    throw err; // -> withRequest logs it and returns a 500 with the request id
   }
-}
+});

@@ -83,7 +83,7 @@ describe("/api/feeds", () => {
         },
       },
     });
-    const res = await GET();
+    const res = await GET(new Request("http://t/api/feeds"));
     expect(res.status).toBe(200);
     expect((await res.json()).feeds).toHaveLength(1);
   });
@@ -91,7 +91,7 @@ describe("/api/feeds", () => {
   it("GET returns an empty list when Supabase isn't configured", async () => {
     const { GET } = await import("@/app/api/feeds/route");
     H.configured = false;
-    const res = await GET();
+    const res = await GET(new Request("http://t/api/feeds"));
     expect(await res.json()).toEqual({ feeds: [] });
   });
 
@@ -276,20 +276,20 @@ describe("/api/history", () => {
   it("returns an empty list when Supabase isn't configured", async () => {
     const { GET } = await import("@/app/api/history/route");
     H.configured = false;
-    expect(await (await GET()).json()).toEqual({ runs: [] });
+    expect(await (await GET(new Request("http://t/api/history"))).json()).toEqual({ runs: [] });
   });
 
   it("returns an empty list for anonymous users", async () => {
     const { GET } = await import("@/app/api/history/route");
     H.client = fakeSupabase({ user: null });
-    expect(await (await GET()).json()).toEqual({ runs: [] });
+    expect(await (await GET(new Request("http://t/api/history"))).json()).toEqual({ runs: [] });
   });
 
   it("returns the user's recent runs", async () => {
     const { GET } = await import("@/app/api/history/route");
     const runs = [{ id: "r1", kind: "insights", checks_passed: 3, checks_total: 3 }];
     H.client = fakeSupabase({ user: { id: "u1" }, results: { runs: { data: runs } } });
-    const res = await GET();
+    const res = await GET(new Request("http://t/api/history"));
     expect(res.status).toBe(200);
     expect((await res.json()).runs).toEqual(runs);
   });
@@ -350,5 +350,42 @@ describe("POST route hardening", () => {
     const huge = JSON.stringify({ url: "https://x.com/" + "a".repeat(20_000) });
     const res = await POST(new Request("http://t/api/feeds", { method: "POST", body: huge }));
     expect(res.status).toBe(413);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Request-id correlation (withRequest wrapper)
+// ---------------------------------------------------------------------------
+describe("request-id wrapping", () => {
+  it("stamps every response with an x-request-id", async () => {
+    H.runIns.mockResolvedValue({ traceId: "i" });
+    H.configured = false;
+    const { POST } = await import("@/app/api/insights/route");
+    const res = await POST(new Request("http://t/api/insights", { method: "POST", body: JSON.stringify({ profile: { age: 30 } }) }));
+    expect(res.headers.get("x-request-id")).toMatch(/^req_/);
+  });
+
+  it("honors a client-supplied correlation id", async () => {
+    const { GET } = await import("@/app/api/history/route");
+    H.configured = false;
+    const res = await GET(new Request("http://t/api/history", { headers: { "x-request-id": "trace-abc.123" } }));
+    expect(res.headers.get("x-request-id")).toBe("trace-abc.123");
+  });
+
+  it("ignores a junk correlation id and mints its own", async () => {
+    const { GET } = await import("@/app/api/history/route");
+    H.configured = false;
+    const res = await GET(new Request("http://t/api/history", { headers: { "x-request-id": "has spaces & symbols!" } }));
+    expect(res.headers.get("x-request-id")).toMatch(/^req_/);
+  });
+
+  it("turns an uncaught handler error into a 500 carrying the request id", async () => {
+    H.runRec.mockRejectedValue(new Error("kaboom"));
+    const { POST } = await import("@/app/api/recommendations/route");
+    const res = await POST(new Request("http://t/api/recommendations", { method: "POST", body: JSON.stringify({ profile: { age: 30 } }) }));
+    expect(res.status).toBe(500);
+    const body = await res.json();
+    expect(body.error).toBe("Internal server error.");
+    expect(body.requestId).toBe(res.headers.get("x-request-id"));
   });
 });

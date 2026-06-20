@@ -9,13 +9,14 @@ import { persistRun } from "@/lib/persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { rateLimit, clientKey } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
+import { withRequest } from "@/lib/api";
 
 // Pipeline runs are the most expensive endpoint (LLM + market data), so keep the
 // per-client budget modest. Overridable via env for load testing / tuning.
 const WINDOW_MS = 60_000;
 const limitFor = () => Number(process.env.API_RATE_LIMIT_RECS ?? 20);
 
-export async function POST(request: Request) {
+export const POST = withRequest("recommendations", async (request) => {
   const rl = rateLimit(clientKey(request, "recs"), limitFor(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
@@ -81,10 +82,6 @@ export async function POST(request: Request) {
         { status: 422 },
       );
     }
-    console.error("Recommendation pipeline error:", err);
-    return NextResponse.json(
-      { error: "Failed to generate recommendation." },
-      { status: 500 },
-    );
+    throw err; // -> withRequest logs it and returns a 500 with the request id
   }
-}
+});
