@@ -1,16 +1,24 @@
 @import "tailwindcss";
 
+/*
+ * Claude-inspired theme: a warm, editorial light palette — ivory canvas, clay
+ * accent, soft cards, and serif display headings. The whole UI is driven by
+ * these tokens + the component classes below, so the look is centralized here.
+ */
 :root {
-  --bg: #0b1120;
-  --panel: #131c31;
-  --panel-2: #1b2740;
-  --border: #25324f;
-  --text: #e6ecf7;
-  --muted: #93a1bd;
-  --accent: #34d399;
-  --accent-dim: #10b981;
-  --danger: #f87171;
-  --warn: #fbbf24;
+  --bg: #faf9f5;        /* ivory canvas */
+  --panel: #ffffff;     /* cards sit just above the canvas */
+  --panel-2: #f3f1ea;   /* inputs / subtle fills */
+  --border: #e7e3d8;    /* warm hairline */
+  --text: #1f1e1c;      /* warm near-black */
+  --muted: #6e6a60;     /* warm gray */
+  --accent: #c15f3c;    /* Claude clay */
+  --accent-dim: #b5502f;/* deeper clay for solid buttons */
+  --positive: #5f8b61;  /* sage green — gains */
+  --danger: #bf3b30;    /* warm red — losses / errors */
+  --warn: #b07a1e;      /* ochre */
+  --chart-bonds: #7e93b8; /* muted slate-blue */
+  --chart-cash: #a99c86;  /* taupe */
 }
 
 html,
@@ -26,22 +34,38 @@ body {
     Arial, sans-serif;
 }
 
+/* Editorial serif for display headings — the signature of Claude's typography. */
+h1,
+h2,
+h3,
+h4 {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(40, 33, 28, 0.04),
+    0 1px 3px rgba(40, 33, 28, 0.06);
 }
 
 .btn {
   background: var(--accent-dim);
-  color: #04130c;
+  color: #faf9f5;
   font-weight: 600;
   border-radius: 10px;
   padding: 0.65rem 1.1rem;
   transition: filter 0.15s ease;
 }
 .btn:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.06);
 }
 .btn:disabled {
   opacity: 0.5;
@@ -53,6 +77,11 @@ body {
   border-radius: 10px;
   padding: 0.6rem 1rem;
   color: var(--text);
+  background: var(--panel);
+  transition: background 0.15s ease;
+}
+.btn-ghost:hover {
+  background: var(--panel-2);
 }
 
 .input,
@@ -63,6 +92,12 @@ body {
   padding: 0.6rem 0.8rem;
   color: var(--text);
   width: 100%;
+}
+.input:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
 
 .label {

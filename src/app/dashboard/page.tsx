@@ -276,7 +276,7 @@ function RecommendationView({
                       style={{
                         color:
                           (p.changePercent ?? 0) >= 0
-                            ? "var(--accent)"
+                            ? "var(--positive)"
                             : "var(--danger)",
                       }}
                     >
@@ -374,8 +374,8 @@ function ChecksPanel({ rec }: { rec: Recommendation }) {
 function AllocationBar({ rec }: { rec: Recommendation }) {
   const segs = [
     { v: rec.allocation.stocks, c: "var(--accent)" },
-    { v: rec.allocation.bonds, c: "#60a5fa" },
-    { v: rec.allocation.cash, c: "#a78bfa" },
+    { v: rec.allocation.bonds, c: "var(--chart-bonds)" },
+    { v: rec.allocation.cash, c: "var(--chart-cash)" },
     { v: rec.allocation.alternatives, c: "var(--warn)" },
   ];
   return (
