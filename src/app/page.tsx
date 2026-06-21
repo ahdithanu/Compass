@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import SiteNav from "@/components/SiteNav";
+import CountUp from "@/components/CountUp";
 
 const FEATURES: [string, string][] = [
   ["Personalized", "Allocation, sectors, and tickers tuned to your profile."],
@@ -14,10 +15,10 @@ const HOW = [
   ["03", "See the why, verified", "Every pick comes with a sourced rationale that clears a multi-stage checker first."],
 ];
 
-const STATS = [
-  ["5-stage", "verification pipeline runs behind every recommendation"],
-  ["100% grounded", "in your real allocation and market data — no invented tickers"],
-  ["2 passes", "an analyst writes the why; an independent critic audits it"],
+const STATS: { to: number; suffix: string; small: string }[] = [
+  { to: 5, suffix: "-stage", small: "verification pipeline runs behind every recommendation" },
+  { to: 100, suffix: "% grounded", small: "in your real allocation and market data — no invented tickers" },
+  { to: 2, suffix: " passes", small: "an analyst writes the why; an independent critic audits it" },
 ];
 
 const FAQ: [string, string][] = [
@@ -141,16 +142,16 @@ export default function Home() {
             className="grid gap-8 rounded-2xl p-10 sm:grid-cols-3"
             style={{ background: "var(--text)", color: "#ffffff" }}
           >
-            {STATS.map(([big, small]) => (
-              <div key={big}>
+            {STATS.map((s) => (
+              <div key={s.suffix}>
                 <div
                   className="text-3xl font-extrabold tracking-tight sm:text-4xl"
                   style={{ color: "var(--accent-dim)" }}
                 >
-                  {big}
+                  <CountUp to={s.to} suffix={s.suffix} />
                 </div>
                 <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.72)" }}>
-                  {small}
+                  {s.small}
                 </p>
               </div>
             ))}
