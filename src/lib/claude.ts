@@ -148,7 +148,7 @@ export async function synthesize(
 
   const message = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 4000,
+    max_tokens: 8000,
     thinking: { type: "adaptive" },
     system: SYNTHESIS_SYSTEM,
     output_config: { format: { type: "json_schema", schema: SYNTHESIS_SCHEMA } },
@@ -172,7 +172,7 @@ export async function critique(
 
   const message = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 2000,
+    max_tokens: 4000,
     thinking: { type: "adaptive" },
     system: CRITIQUE_SYSTEM,
     output_config: { format: { type: "json_schema", schema: CRITIQUE_SCHEMA } },
@@ -264,7 +264,7 @@ export async function synthesizeInsights(
 
   const message = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 4000,
+    max_tokens: 8000,
     thinking: { type: "adaptive" },
     system: INSIGHT_SYSTEM,
     output_config: { format: { type: "json_schema", schema: INSIGHT_SCHEMA } },
@@ -288,7 +288,7 @@ export async function critiqueInsights(
 
   const message = await anthropic.messages.create({
     model: MODEL,
-    max_tokens: 2000,
+    max_tokens: 4000,
     thinking: { type: "adaptive" },
     system: INSIGHT_CRITIC_SYSTEM,
     output_config: { format: { type: "json_schema", schema: CRITIQUE_SCHEMA } },
