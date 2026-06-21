@@ -1,5 +1,12 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
+import SiteNav from "@/components/SiteNav";
+
+const FEATURES: [string, string][] = [
+  ["Personalized", "Allocation, sectors, and tickers tuned to your profile."],
+  ["Explained", "Every recommendation comes with a grounded 'here's why'."],
+  ["Verified", "A multi-stage checker audits each output before you see it."],
+];
 
 const HOW = [
   ["01", "Tell it about you", "Age, goals, risk appetite, and where you are in your journey — about 30 seconds."],
@@ -34,16 +41,9 @@ const FAQ: [string, string][] = [
 
 export default function Home() {
   return (
-    <main className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-      <nav className="mb-16 flex items-center justify-between sm:mb-20">
-        <span className="text-lg font-bold tracking-tight">
-          Compass<span style={{ color: "var(--accent)" }}>.</span>
-        </span>
-        <Link href="/login" className="btn-ghost text-sm">
-          Sign in
-        </Link>
-      </nav>
-
+    <>
+      <SiteNav />
+      <main className="mx-auto max-w-5xl px-6 pb-16 pt-10 sm:pb-20">
       {/* Hero — two columns on desktop: copy on the left, product preview on the right */}
       <section className="grid items-center gap-12 lg:grid-cols-2">
         <div>
@@ -77,36 +77,36 @@ export default function Home() {
         </Reveal>
       </section>
 
-      {/* Feature trio */}
-      <Reveal>
-        <section className="mt-20 grid gap-4 sm:grid-cols-3">
-          {[
-            ["Personalized", "Allocation, sectors, and tickers tuned to your profile."],
-            ["Explained", "Every recommendation comes with a grounded 'here's why'."],
-            ["Verified", "A multi-stage checker audits each output before you see it."],
-          ].map(([h, d]) => (
-            <div key={h} className="card lift p-5">
+      {/* Feature trio — staggered reveal */}
+      <section className="mt-20 grid gap-4 sm:grid-cols-3">
+        {FEATURES.map(([h, d], i) => (
+          <Reveal key={h} delay={i * 90}>
+            <div className="card lift h-full p-5">
               <h3 className="font-semibold">{h}</h3>
               <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
                 {d}
               </p>
             </div>
-          ))}
-        </section>
-      </Reveal>
+          </Reveal>
+        ))}
+      </section>
 
       {/* How it works */}
-      <Reveal>
-        <section className="mt-24">
-          <p className="label" style={{ color: "var(--accent)" }}>
-            How it works
-          </p>
-          <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">
-            From profile to plan in three steps.
-          </h2>
-          <div className="mt-10 grid gap-5 sm:grid-cols-3">
-            {HOW.map(([n, h, d]) => (
-              <div key={n} className="card lift p-6">
+      <section className="mt-24">
+        <Reveal>
+          <div>
+            <p className="label" style={{ color: "var(--accent)" }}>
+              How it works
+            </p>
+            <h2 className="mt-2 text-3xl font-extrabold sm:text-4xl">
+              From profile to plan in three steps.
+            </h2>
+          </div>
+        </Reveal>
+        <div className="mt-10 grid gap-5 sm:grid-cols-3">
+          {HOW.map(([n, h, d], i) => (
+            <Reveal key={n} delay={i * 90}>
+              <div className="card lift h-full p-6">
                 <div className="text-2xl font-extrabold" style={{ color: "var(--accent)" }}>
                   {n}
                 </div>
@@ -115,10 +115,10 @@ export default function Home() {
                   {d}
                 </p>
               </div>
-            ))}
-          </div>
-        </section>
-      </Reveal>
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
       {/* Pull-quote — the product's own stance, not a fabricated testimonial */}
       <Reveal>
@@ -208,7 +208,8 @@ export default function Home() {
         Educational information only — not personalized financial advice. All
         investing carries risk, including possible loss of principal.
       </footer>
-    </main>
+      </main>
+    </>
   );
 }
 

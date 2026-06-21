@@ -10,10 +10,24 @@ const sans = Manrope({
   display: "swap",
 });
 
+const DESCRIPTION =
+  "A personalized dashboard that tells you what to track, what markets to watch, and what the move is — tailored to your goals, age, and journey, with a sourced why.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://trading-bots-indol.vercel.app"),
   title: "Compass — your investing co-pilot",
-  description:
-    "A personalized dashboard that tells you what to track, what markets to watch, and what the move is — tailored to your goals, age, and journey, with a sourced why.",
+  description: DESCRIPTION,
+  openGraph: {
+    title: "Compass — your investing co-pilot",
+    description: DESCRIPTION,
+    siteName: "Compass",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Compass — your investing co-pilot",
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
