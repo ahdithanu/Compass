@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-// Anthropic-style pairing: a restrained editorial serif (Newsreader, close to
-// Tiempos) for headings and a neo-grotesque (Hanken Grotesk, close to Styrene)
-// for body. Exposed as CSS variables so globals.css drives where each applies.
-const serif = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-  axes: ["opsz"],
-});
-
-const sans = Hanken_Grotesk({
+// Robinhood-style typography: one bold geometric grotesque used everywhere,
+// leaning on heavy weights + tight tracking for big confident headlines.
+const sans = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -30,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="en" className={sans.variable}>
       <body>{children}</body>
     </html>
   );

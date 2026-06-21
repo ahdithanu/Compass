@@ -1,24 +1,24 @@
 @import "tailwindcss";
 
 /*
- * Claude-inspired theme: a warm, editorial light palette — ivory canvas, clay
- * accent, soft cards, and serif display headings. The whole UI is driven by
- * these tokens + the component classes below, so the look is centralized here.
+ * Robinhood-inspired theme: clean, high-contrast, confident. White canvas, near
+ * black bold sans type, vivid Robinhood green for actions/data, crisp cards.
+ * The whole UI is driven by these tokens + the component classes below.
  */
 :root {
-  --bg: #faf9f5;        /* ivory canvas */
-  --panel: #ffffff;     /* cards sit just above the canvas */
-  --panel-2: #f3f1ea;   /* inputs / subtle fills */
-  --border: #e7e3d8;    /* warm hairline */
-  --text: #1f1e1c;      /* warm near-black */
-  --muted: #6e6a60;     /* warm gray */
-  --accent: #c15f3c;    /* Claude clay */
-  --accent-dim: #b5502f;/* deeper clay for solid buttons */
-  --positive: #5f8b61;  /* sage green — gains */
-  --danger: #bf3b30;    /* warm red — losses / errors */
-  --warn: #b07a1e;      /* ochre */
-  --chart-bonds: #7e93b8; /* muted slate-blue */
-  --chart-cash: #a99c86;  /* taupe */
+  --bg: #ffffff;          /* clean white canvas */
+  --panel: #ffffff;       /* cards */
+  --panel-2: #f4f5f6;     /* nested fills / rows */
+  --border: #e4e7e9;      /* crisp hairline */
+  --text: #0b0e0f;        /* near-black, for bold confident type */
+  --muted: #5c666e;       /* cool gray */
+  --accent: #018a39;      /* readable green — text, links, eyebrows */
+  --accent-dim: #00c805;  /* vivid Robinhood green — solid fills / buttons */
+  --positive: #018a39;    /* gains */
+  --danger: #e0241b;      /* losses / errors */
+  --warn: #c77700;        /* amber */
+  --chart-bonds: #3f4753; /* slate */
+  --chart-cash: #aeb4bb;  /* gray */
 }
 
 html,
@@ -34,38 +34,42 @@ body {
     Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Editorial serif for display headings — the signature of Claude's typography. */
+/* Big, tight, heavy headlines — the Robinhood signature. */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-serif), ui-serif, Georgia, Cambria, "Times New Roman", serif;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+h1 {
+  letter-spacing: -0.035em;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  background: color-mix(in srgb, var(--accent-dim) 26%, transparent);
 }
 
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow:
-    0 1px 2px rgba(40, 33, 28, 0.04),
-    0 1px 3px rgba(40, 33, 28, 0.06);
+    0 1px 2px rgba(11, 14, 15, 0.04),
+    0 6px 20px rgba(11, 14, 15, 0.05);
 }
 
+/* Pill buttons — vivid green primary with near-black label. */
 .btn {
   background: var(--accent-dim);
-  color: #faf9f5;
-  font-weight: 600;
-  border-radius: 10px;
-  padding: 0.65rem 1.1rem;
+  color: #04140a;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.72rem 1.4rem;
   transition: filter 0.15s ease;
 }
 .btn:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.05);
 }
 .btn:disabled {
   opacity: 0.5;
@@ -74,36 +78,39 @@ h4 {
 
 .btn-ghost {
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.6rem 1rem;
+  border-radius: 9999px;
+  padding: 0.65rem 1.25rem;
   color: var(--text);
   background: var(--panel);
-  transition: background 0.15s ease;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 .btn-ghost:hover {
   background: var(--panel-2);
+  border-color: #d4d8db;
 }
 
 .input,
 .select {
-  background: var(--panel-2);
+  background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  padding: 0.7rem 0.85rem;
   color: var(--text);
   width: 100%;
+  font-weight: 500;
 }
 .input:focus,
 .select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-dim) 22%, transparent);
 }
 
 .label {
   color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }

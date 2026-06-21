@@ -230,7 +230,7 @@ function RecommendationView({
         <p className="label" style={{ color: "var(--accent)" }}>
           What&apos;s the move
         </p>
-        <h2 className="mt-2 text-2xl font-bold">{rec.theMove.headline}</h2>
+        <h2 className="mt-2 text-3xl font-extrabold">{rec.theMove.headline}</h2>
         <p className="mt-3" style={{ color: "var(--muted)" }}>
           {rec.theMove.reasoning}
         </p>
@@ -373,7 +373,7 @@ function ChecksPanel({ rec }: { rec: Recommendation }) {
 
 function AllocationBar({ rec }: { rec: Recommendation }) {
   const segs = [
-    { v: rec.allocation.stocks, c: "var(--accent)" },
+    { v: rec.allocation.stocks, c: "var(--accent-dim)" },
     { v: rec.allocation.bonds, c: "var(--chart-bonds)" },
     { v: rec.allocation.cash, c: "var(--chart-cash)" },
     { v: rec.allocation.alternatives, c: "var(--warn)" },
@@ -393,7 +393,7 @@ function Stat({ label, value }: { label: string; value: string }) {
       <p className="text-xs" style={{ color: "var(--muted)" }}>
         {label}
       </p>
-      <p className="text-lg font-bold">{value}</p>
+      <p className="text-2xl font-extrabold tracking-tight">{value}</p>
     </div>
   );
 }
