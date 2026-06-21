@@ -23,6 +23,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={sans.variable}>
+      <head>
+        {/* Without JS, reveal-wrapped content must still be visible. */}
+        <noscript>
+          <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
+      </head>
       <body>{children}</body>
     </html>
   );

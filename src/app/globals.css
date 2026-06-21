@@ -126,6 +126,25 @@ h1 {
     0 14px 34px rgba(11, 14, 15, 0.1);
 }
 
+/* Scroll-reveal (driven by the Reveal client component). */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  will-change: opacity, transform;
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Black pill — the other half of Robinhood's black/green button duality. */
 .btn-dark {
   background: var(--text);
