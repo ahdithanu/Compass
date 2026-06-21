@@ -114,3 +114,61 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+/* Black pill — the other half of Robinhood's black/green button duality. */
+.btn-dark {
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.72rem 1.4rem;
+  transition: filter 0.15s ease;
+}
+.btn-dark:hover {
+  filter: brightness(1.25);
+}
+
+/* Category tags. Base is neutral; colored variants tint by meaning. */
+.pill {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--panel-2);
+  color: var(--muted);
+}
+.pill-green {
+  background: color-mix(in srgb, var(--accent-dim) 16%, white);
+  color: var(--accent);
+}
+.pill-slate {
+  background: color-mix(in srgb, var(--chart-bonds) 14%, white);
+  color: var(--chart-bonds);
+}
+.pill-amber {
+  background: color-mix(in srgb, var(--warn) 16%, white);
+  color: var(--warn);
+}
+
+/* Green/red change chip with a directional arrow — the markets-app cue. */
+.change {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  border-radius: 9999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.change-up {
+  background: color-mix(in srgb, var(--accent-dim) 14%, white);
+  color: var(--positive);
+}
+.change-down {
+  background: color-mix(in srgb, var(--danger) 12%, white);
+  color: var(--danger);
+}

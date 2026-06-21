@@ -34,7 +34,7 @@ export default function Home() {
           <Link href="/onboarding" className="btn">
             Build my plan
           </Link>
-          <Link href="/login" className="btn-ghost">
+          <Link href="/login" className="btn-dark">
             I already have an account
           </Link>
         </div>

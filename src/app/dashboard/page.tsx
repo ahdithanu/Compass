@@ -270,31 +270,25 @@ function RecommendationView({
                   </span>
                 </div>
                 {p.price != null && (
-                  <div className="text-right text-sm">
-                    <span>${p.price.toFixed(2)}</span>{" "}
-                    <span
-                      style={{
-                        color:
-                          (p.changePercent ?? 0) >= 0
-                            ? "var(--positive)"
-                            : "var(--danger)",
-                      }}
-                    >
-                      {(p.changePercent ?? 0) >= 0 ? "+" : ""}
-                      {(p.changePercent ?? 0).toFixed(2)}%
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold tabular-nums">
+                      ${p.price.toFixed(2)}
                     </span>
+                    {p.changePercent != null && (
+                      <span
+                        className={`change ${p.changePercent >= 0 ? "change-up" : "change-down"}`}
+                      >
+                        {p.changePercent >= 0 ? "▲" : "▼"}
+                        {Math.abs(p.changePercent).toFixed(2)}%
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
               <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
                 {p.rationale}
               </p>
-              <span
-                className="mt-2 inline-block rounded-md px-2 py-0.5 text-xs"
-                style={{ background: "var(--border)", color: "var(--muted)" }}
-              >
-                {p.bucket}
-              </span>
+              <span className={`mt-2 ${bucketPill(p.bucket)}`}>{p.bucket}</span>
             </div>
           ))}
         </div>
@@ -385,6 +379,15 @@ function AllocationBar({ rec }: { rec: Recommendation }) {
       ))}
     </div>
   );
+}
+
+/** Map a pick's bucket to a tinted pill class. */
+function bucketPill(bucket: string): string {
+  const b = bucket.toLowerCase();
+  if (b.includes("growth")) return "pill pill-green";
+  if (b.includes("defensive") || b.includes("bond")) return "pill pill-slate";
+  if (b.includes("income") || b.includes("dividend")) return "pill pill-amber";
+  return "pill";
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
