@@ -16,6 +16,7 @@ const MAX_TOTAL_ITEMS = 10;
 const RECENCY_DAYS = 14;
 const MAX_REDIRECTS = 3;
 const MAX_FEED_BYTES = 5_000_000; // cap parsed feed size (DoS guard)
+const MAX_FEEDS_PER_RUN = 50; // cap outbound fan-out per ingestion run
 
 export interface IngestResult {
   items: NewsItem[];
@@ -69,9 +70,11 @@ export async function ingestNewsletters(
   feedsOverride?: FeedSource[],
 ): Promise<IngestResult> {
   // Per-user feeds take precedence; otherwise fall back to the configured
-  // (env / curated default) list.
-  const feeds =
-    feedsOverride && feedsOverride.length > 0 ? feedsOverride : configuredFeeds();
+  // (env / curated default) list. Cap the count so the outbound fan-out per run
+  // is bounded regardless of how many feeds are configured.
+  const feeds = (
+    feedsOverride && feedsOverride.length > 0 ? feedsOverride : configuredFeeds()
+  ).slice(0, MAX_FEEDS_PER_RUN);
   const watch = new Set(watchlist.map((t) => t.toUpperCase()));
 
   const settled = await Promise.allSettled(

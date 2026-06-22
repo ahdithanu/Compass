@@ -38,7 +38,7 @@ import { PipelineError } from "@/lib/pipeline";
 import { __resetRateLimit } from "@/lib/ratelimit";
 
 // --- a tiny chainable + thenable fake of the Supabase query builder ----------
-type TableResults = Record<string, { data?: unknown; error?: unknown }>;
+type TableResults = Record<string, { data?: unknown; error?: unknown; count?: number }>;
 
 function fakeSupabase(opts: { user?: unknown; results?: TableResults }) {
   const { user = null, results = {} } = opts;
@@ -122,6 +122,16 @@ describe("/api/feeds", () => {
     );
     expect(res.status).toBe(201);
     expect((await res.json()).feed).toEqual(stored);
+  });
+
+  it("POST rejects once the per-user feed quota is reached (422)", async () => {
+    const { POST } = await import("@/app/api/feeds/route");
+    H.client = fakeSupabase({ user: { id: "u1" }, results: { user_feeds: { count: 50 } } });
+    const res = await POST(
+      new Request("http://t/api/feeds", { method: "POST", body: JSON.stringify({ url: "https://x.com/r" }) }),
+    );
+    expect(res.status).toBe(422);
+    expect((await res.json()).error).toMatch(/maximum/i);
   });
 
   it("POST maps a unique-violation to 409", async () => {

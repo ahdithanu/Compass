@@ -12,6 +12,8 @@ import { withRequest } from "@/lib/api";
 
 const WINDOW_MS = 60_000;
 const feedWriteLimit = () => envLimit("API_RATE_LIMIT_FEEDS", 30);
+// Per-user quota: bounds storage and the per-run ingestion fan-out.
+const MAX_FEEDS_PER_USER = 50;
 
 async function requireUser() {
   if (!isSupabaseConfigured()) return { error: "config" as const };
@@ -60,6 +62,18 @@ export const POST = withRequest("feeds:add", async (request) => {
   const v = validateFeed(name, url);
   if (!v.ok || !v.feed) {
     return NextResponse.json({ error: v.error ?? "Invalid feed." }, { status: 400 });
+  }
+
+  // Enforce a per-user quota (soft cap; the unique constraint handles dupes).
+  const { count } = await ctx.supabase
+    .from("user_feeds")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", ctx.user.id);
+  if ((count ?? 0) >= MAX_FEEDS_PER_USER) {
+    return NextResponse.json(
+      { error: `You've reached the maximum of ${MAX_FEEDS_PER_USER} sources.` },
+      { status: 422 },
+    );
   }
 
   const { data, error } = await ctx.supabase

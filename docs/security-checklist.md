@@ -12,8 +12,10 @@ questionnaires.
   (managed Postgres on Supabase).
 - ✅ **Typed DB access** generated from the live schema — column drift breaks the
   build, not production.
+- ✅ **Per-user feed quota** (max 50) + a per-run ingestion fan-out cap — bounds
+  storage growth and outbound request volume.
 - 🟡 **Data retention / deletion** — cascade deletes on user removal; no formal
-  retention policy or self-serve data export/erasure (GDPR/CCPA) yet.
+  `runs` retention policy or self-serve data export/erasure (GDPR/CCPA) yet.
 
 ## Application hardening
 - ✅ **SSRF guards** on user-supplied feed URLs: blocks loopback / private /
