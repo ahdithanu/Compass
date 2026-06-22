@@ -30,3 +30,21 @@ jobs:
       - run: npm ci
       # Fail only on high/critical advisories in production dependencies.
       - run: npm audit --omit=dev --audit-level=high
+
+  sast:
+    name: SAST (Semgrep)
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      # OSS rulesets (free, no token). Non-blocking for now — findings show in
+      # the step log; drop `continue-on-error` to gate merges once triaged.
+      - name: Semgrep scan
+        continue-on-error: true
+        run: >
+          semgrep scan --metrics=off --error
+          --config=p/default
+          --config=p/typescript
+          --config=p/javascript
+          --config=p/owasp-top-ten

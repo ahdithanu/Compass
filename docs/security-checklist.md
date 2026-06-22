@@ -52,8 +52,10 @@ questionnaires.
 - ✅ **CI dependency audit** (`npm audit --omit=dev --audit-level=high`).
 - 🟡 **Secret scanning** — enable GitHub native secret scanning + push
   protection in repo settings.
-- ⬜ **SAST** (CodeQL/Semgrep) — CodeQL needs GitHub Advanced Security on private
-  repos; decide GHAS vs Semgrep.
+- ✅ **SAST** — Semgrep in CI (free OSS rulesets: `p/default`, `p/typescript`,
+  `p/javascript`, `p/owasp-top-ten`). Non-blocking for now (`continue-on-error`)
+  so findings surface in the step log; flip to gating once triaged. CodeQL
+  deferred (needs GitHub Advanced Security on private repos).
 - ⬜ **Secret rotation** policy, SBOM.
 
 ## Observability & operations
@@ -71,10 +73,10 @@ questionnaires.
 ## Recommended next steps (in priority order)
 1. Enable GitHub native **secret scanning + push protection** and **Dependabot
    alerts** (settings toggles, free).
-2. Move rate limiting to a **shared store** (Upstash Redis) so limits hold across
-   instances.
-3. Decide **SAST**: GitHub Advanced Security (CodeQL) or Semgrep CI.
-4. Tighten **CSP** to enforced with script nonces once Report-Only is clean.
-5. Add **SSO + enforced MFA** (Supabase supports both on paid tiers) for
-   enterprise tenants.
-6. Add **error monitoring** (Sentry) and a log drain for centralized audit.
+2. Tighten **CSP** to enforced with script nonces once Report-Only is clean
+   (verify on a Vercel preview first — nonces force dynamic rendering).
+3. Move rate limiting to a **shared store** (Upstash Redis) so limits hold across
+   instances. *(paid tier)*
+4. Add **SSO + enforced MFA** (Supabase supports both on paid tiers) for
+   enterprise tenants. *(paid tier)*
+5. Add **error monitoring** (Sentry) and a log drain for centralized audit.
