@@ -121,7 +121,8 @@ rule-based rationale. Add keys to light up the full experience:
 
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — auth + saved
   profiles. Run `supabase/schema.sql` in the Supabase SQL editor first.
-- `FINNHUB_API_KEY` — live market quotes (free tier covers US stocks/ETFs).
+- `FINNHUB_API_KEY` **or** `ALPHAVANTAGE_API_KEY` — live market quotes (free
+  tiers cover US stocks/ETFs; Finnhub ~60/min, Alpha Vantage ~25/day).
 - `ANTHROPIC_API_KEY` — Claude-written reasoning + the adversarial critic.
 - `FMP_API_KEY` — *(optional)* market news; the RSS/newsletter feeds already
   provide live news without a key.

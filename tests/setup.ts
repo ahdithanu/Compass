@@ -11,5 +11,6 @@ beforeEach(() => {
 // fallback paths (sample data + rule-based reasoning).
 delete process.env.FMP_API_KEY;
 delete process.env.FINNHUB_API_KEY;
+delete process.env.ALPHAVANTAGE_API_KEY;
 delete process.env.ANTHROPIC_API_KEY;
 delete process.env.NEWSLETTER_FEEDS;

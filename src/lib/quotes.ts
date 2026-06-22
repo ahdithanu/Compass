@@ -1,15 +1,16 @@
-// Market-data client (Finnhub). Degrades gracefully: if no API key is set or the
-// feed errors, it returns deterministic sample quotes so the rest of the
-// pipeline — and the UI — keep working. The caller is told which source was used
-// so the audit trail and disclaimers stay honest.
+// Market-data client. Degrades gracefully: if no API key is set or the feed
+// errors, it returns deterministic sample quotes so the rest of the pipeline —
+// and the UI — keep working. The caller is told which source was used so the
+// audit trail and disclaimers stay honest.
 //
-// Finnhub's free tier includes real-time US stock/ETF quotes (one symbol per
-// call; ~60 calls/min). We only quote the handful of candidate tickers per run.
+// Provider-flexible: uses Alpha Vantage if ALPHAVANTAGE_API_KEY is set, else
+// Finnhub if FINNHUB_API_KEY is set, else the static sample set. Both free tiers
+// cover US stocks/ETFs (Alpha Vantage caps at ~25 req/day; Finnhub ~60/min).
+// One symbol per call either way; we only quote the handful of candidates.
 
 import type { Quote } from "./types";
 import { fetchWithTimeout, withRetry } from "./resilience";
 
-const FINNHUB_BASE = "https://finnhub.io/api/v1";
 const QUOTE_TIMEOUT_MS = 4000;
 
 export interface MarketData {
@@ -18,7 +19,7 @@ export interface MarketData {
 }
 
 /** Static fallback so the app is fully functional without any API keys. Also
- *  the source of human-readable names (Finnhub's /quote returns price only). */
+ *  the source of human-readable names (the quote endpoints return price only). */
 const SAMPLE_QUOTES: Record<string, Quote> = {
   VTI: { symbol: "VTI", name: "Vanguard Total US Stock Market ETF", price: 295.4, changePercent: -0.8 },
   VXUS: { symbol: "VXUS", name: "Vanguard Total International Stock ETF", price: 68.2, changePercent: -0.4 },
@@ -44,46 +45,71 @@ function fallback(symbols: string[]): MarketData {
   return { quotes, source: "fallback" };
 }
 
-// Finnhub /quote response: c=current, d=change, dp=percent change, pc=prev close.
-interface FinnhubQuote {
-  c?: number;
-  dp?: number;
+function toQuote(symbol: string, price: number, changePercent: number): Quote {
+  return {
+    symbol,
+    name: SAMPLE_QUOTES[symbol]?.name ?? symbol,
+    price,
+    changePercent: Number.isFinite(changePercent) ? changePercent : 0,
+  };
 }
 
-async function fetchOne(symbol: string, key: string): Promise<Quote | null> {
+// --- Alpha Vantage (GLOBAL_QUOTE) ---
+async function fetchAlphaVantage(symbol: string, key: string): Promise<Quote | null> {
   const data = await withRetry(
     async () => {
-      const url = `${FINNHUB_BASE}/quote?symbol=${encodeURIComponent(symbol)}&token=${key}`;
-      const res = await fetchWithTimeout(url, QUOTE_TIMEOUT_MS, {
-        next: { revalidate: 60 },
-      });
+      const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(symbol)}&apikey=${key}`;
+      const res = await fetchWithTimeout(url, QUOTE_TIMEOUT_MS, { next: { revalidate: 60 } });
+      if (!res.ok) throw new Error(`AlphaVantage HTTP ${res.status}`);
+      const json = (await res.json()) as { "Global Quote"?: Record<string, string> };
+      const q = json["Global Quote"];
+      // Rate-limit / error responses come back as {Note|Information: ...} with no quote.
+      if (!q || !q["05. price"]) throw new Error("AlphaVantage no data / rate limited");
+      return q;
+    },
+    { retries: 1, label: `av.quote:${symbol}` },
+  );
+  if (!data) return null;
+  const price = parseFloat(data["05. price"]);
+  const changePercent = parseFloat(String(data["10. change percent"] ?? "").replace("%", ""));
+  if (!Number.isFinite(price)) return null;
+  return toQuote(symbol, price, changePercent);
+}
+
+// --- Finnhub (/quote) ---
+async function fetchFinnhub(symbol: string, key: string): Promise<Quote | null> {
+  const data = await withRetry(
+    async () => {
+      const url = `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(symbol)}&token=${key}`;
+      const res = await fetchWithTimeout(url, QUOTE_TIMEOUT_MS, { next: { revalidate: 60 } });
       if (!res.ok) throw new Error(`Finnhub HTTP ${res.status}`);
-      const json = (await res.json()) as FinnhubQuote;
+      const json = (await res.json()) as { c?: number; dp?: number };
       // Unknown symbol / no data comes back as { c: 0, dp: null, ... }.
-      if (!json || !Number.isFinite(json.c) || json.c === 0) {
-        throw new Error("Finnhub no data");
-      }
+      if (!json || !Number.isFinite(json.c) || json.c === 0) throw new Error("Finnhub no data");
       return json;
     },
     { retries: 1, label: `finnhub.quote:${symbol}` },
   );
-
   if (!data) return null;
-  return {
-    symbol,
-    name: SAMPLE_QUOTES[symbol]?.name ?? symbol,
-    price: Number(data.c),
-    changePercent: Number.isFinite(data.dp) ? Number(data.dp) : 0,
-  };
+  if (!Number.isFinite(Number(data.c))) return null;
+  return toQuote(symbol, Number(data.c), Number(data.dp));
 }
 
 export async function getQuotes(symbols: string[]): Promise<MarketData> {
   const unique = Array.from(new Set(symbols));
-  const key = process.env.FINNHUB_API_KEY;
-  if (!key || unique.length === 0) return fallback(unique);
+  if (unique.length === 0) return fallback(unique);
+
+  const avKey = process.env.ALPHAVANTAGE_API_KEY;
+  const fhKey = process.env.FINNHUB_API_KEY;
+  const fetchOne = avKey
+    ? (s: string) => fetchAlphaVantage(s, avKey)
+    : fhKey
+      ? (s: string) => fetchFinnhub(s, fhKey)
+      : null;
+  if (!fetchOne) return fallback(unique);
 
   // Fetch each symbol concurrently; tolerate partial failure.
-  const results = await Promise.all(unique.map((s) => fetchOne(s, key)));
+  const results = await Promise.all(unique.map((s) => fetchOne(s)));
   const live = results.filter((q): q is Quote => q !== null);
   return live.length > 0 ? { quotes: live, source: "live" } : fallback(unique);
 }
