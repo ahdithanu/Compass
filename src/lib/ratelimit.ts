@@ -76,6 +76,13 @@ export function clientKey(request: Request, scope: string): string {
   return `${scope}:${ip}`;
 }
 
+/** Read a positive integer limit from an env var, falling back to `fallback`
+ *  when unset/malformed (a NaN limit would otherwise block every request). */
+export function envLimit(name: string, fallback: number): number {
+  const n = Number(process.env[name]);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
 /** Test-only: clear all buckets so cases don't bleed into each other. */
 export function __resetRateLimit(): void {
   store.clear();

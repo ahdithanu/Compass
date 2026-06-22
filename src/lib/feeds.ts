@@ -62,6 +62,29 @@ function parseIPv4(host: string): number | null {
   return null;
 }
 
+// Extract an embedded IPv4 (as a 32-bit int) from an IPv6 literal, covering the
+// forms that wrap a v4 address: IPv4-mapped (::ffff:a.b.c.d / ::ffff:aabb:ccdd),
+// IPv4-compatible (::a.b.c.d / ::aabb:ccdd), and NAT64 (64:ff9b::a.b.c.d). Only
+// these prefixes are mined for hex-embedded v4 so ordinary public IPv6 isn't
+// false-positived. Returns null when there's no embedded v4 to check.
+function extractEmbeddedV4(h: string): number | null {
+  const dotted = h.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  if (dotted) return parseIPv4(dotted[1]);
+  if (h.startsWith("::ffff:") || h.startsWith("64:ff9b:") || /^::[0-9a-f]/.test(h)) {
+    const groups = h.split(":").filter((g) => g.length > 0);
+    if (groups.length >= 2) {
+      const hiS = groups[groups.length - 2];
+      const loS = groups[groups.length - 1];
+      if (/^[0-9a-f]{1,4}$/.test(hiS) && /^[0-9a-f]{1,4}$/.test(loS)) {
+        const hi = parseInt(hiS, 16);
+        const lo = parseInt(loS, 16);
+        return (((hi << 16) >>> 0) + lo) >>> 0;
+      }
+    }
+  }
+  return null;
+}
+
 export function isBlockedHost(hostname: string): boolean {
   const h = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
   if (!h) return true;
@@ -70,25 +93,11 @@ export function isBlockedHost(hostname: string): boolean {
 
   // IPv6
   if (h.includes(":")) {
-    const mapped = h.match(/^::ffff:(.+)$/);
-    if (mapped) {
-      const inner = mapped[1];
-      if (inner.includes(".")) {
-        const v4 = parseIPv4(inner);
-        return v4 === null ? true : isBlockedIPv4(v4);
-      }
-      const seg = inner.split(":");
-      if (seg.length === 2) {
-        const hi = parseInt(seg[0], 16);
-        const lo = parseInt(seg[1], 16);
-        if (Number.isFinite(hi) && Number.isFinite(lo)) {
-          return isBlockedIPv4((((hi << 16) >>> 0) + lo) >>> 0);
-        }
-      }
-    }
     if (/^0*(:0*)*$/.test(h)) return true; // unspecified ::
-    if (/^(0*:)*0*1$/.test(h) || h === "::1") return true; // loopback (any expansion)
-    if (h.startsWith("fe80:") || h.startsWith("fc") || h.startsWith("fd")) return true;
+    if (h === "::1" || /^(0*:)*0*1$/.test(h)) return true; // loopback (any expansion)
+    if (h.startsWith("fe80:") || h.startsWith("fc") || h.startsWith("fd")) return true; // link-local / ULA
+    const embedded = extractEmbeddedV4(h); // mapped / compatible / NAT64 → check the v4
+    if (embedded !== null) return isBlockedIPv4(embedded);
     return false;
   }
 

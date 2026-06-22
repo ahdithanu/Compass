@@ -17,11 +17,14 @@ questionnaires.
 
 ## Application hardening
 - ✅ **SSRF guards** on user-supplied feed URLs: blocks loopback / private /
-  link-local / cloud-metadata hosts **in every IP notation** (dotted, decimal,
-  hex, octal, IPv4-mapped IPv6), **re-validates every redirect hop** (manual
-  redirect following — a feed can't 30x to metadata), and caps feed body size.
+  link-local / cloud-metadata hosts **in every IP notation** — dotted, decimal,
+  hex, octal, IPv4-mapped **and IPv4-compatible / NAT64 (`64:ff9b::`) IPv6** —
+  and **re-validates every redirect hop** (manual redirect following — a feed
+  can't 30x to metadata). Verified by a second-pass audit.
   Residual: DNS-rebinding (public name → private IP at connect time) not pinned.
-- ✅ **XML hardening** — entity processing disabled (no expansion DoS) + size cap.
+- ✅ **XML hardening** — entity processing disabled (no expansion DoS) + body
+  read is **streamed with a hard byte cap** (+ `Content-Length` pre-check) so an
+  oversize/chunked feed can't be buffered into memory.
 - ✅ **No unescaped dynamic RegExp** (ticker matching escapes input — no ReDoS).
 - ✅ **Request body-size caps** (413) and **input validation** on all writes.
 - ✅ **Per-client rate limiting** (429 + Retry-After), keyed off the

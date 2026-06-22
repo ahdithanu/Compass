@@ -6,12 +6,12 @@
 import { NextResponse } from "next/server";
 import { validateFeed } from "@/lib/feeds";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
 const WINDOW_MS = 60_000;
-const feedWriteLimit = () => Number(process.env.API_RATE_LIMIT_FEEDS ?? 30);
+const feedWriteLimit = () => envLimit("API_RATE_LIMIT_FEEDS", 30);
 
 async function requireUser() {
   if (!isSupabaseConfigured()) return { error: "config" as const };

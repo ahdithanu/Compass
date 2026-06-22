@@ -7,14 +7,14 @@ import { NextResponse } from "next/server";
 import { runRecommendationPipeline, PipelineError } from "@/lib/pipeline";
 import { persistRun } from "@/lib/persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
 // Pipeline runs are the most expensive endpoint (LLM + market data), so keep the
 // per-client budget modest. Overridable via env for load testing / tuning.
 const WINDOW_MS = 60_000;
-const limitFor = () => Number(process.env.API_RATE_LIMIT_RECS ?? 20);
+const limitFor = () => envLimit("API_RATE_LIMIT_RECS", 20);
 
 export const POST = withRequest("recommendations", async (request) => {
   const rl = rateLimit(clientKey(request, "recs"), limitFor(), WINDOW_MS);

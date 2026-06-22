@@ -8,12 +8,12 @@ import { persistRun } from "@/lib/persistence";
 import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { rateLimit, clientKey } from "@/lib/ratelimit";
+import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
 const WINDOW_MS = 60_000;
-const limitFor = () => Number(process.env.API_RATE_LIMIT_INSIGHTS ?? 20);
+const limitFor = () => envLimit("API_RATE_LIMIT_INSIGHTS", 20);
 
 export const POST = withRequest("insights", async (request) => {
   const rl = rateLimit(clientKey(request, "insights"), limitFor(), WINDOW_MS);

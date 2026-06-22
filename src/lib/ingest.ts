@@ -138,11 +138,45 @@ async function fetchFeedXml(startUrl: string): Promise<string | null> {
     }
     if (!res.ok) throw new Error(`${parsed.hostname} HTTP ${status}`);
 
-    const text = await res.text();
-    if (text.length > MAX_FEED_BYTES) return null;
-    return text;
+    // Cheap pre-check, then a hard streamed cap so a huge/chunked body can't
+    // be buffered into memory before we'd otherwise notice.
+    const declared = res.headers?.get?.("content-length");
+    if (declared && Number(declared) > MAX_FEED_BYTES) return null;
+    return readBodyCapped(res, MAX_FEED_BYTES);
   }
   return null; // too many redirects
+}
+
+/** Read a response body, aborting once it exceeds `max` bytes. Falls back to a
+ *  buffered read when the body isn't a stream (e.g. mocked responses in tests). */
+async function readBodyCapped(res: Response, max: number): Promise<string | null> {
+  const body = res.body as ReadableStream<Uint8Array> | null | undefined;
+  if (body && typeof body.getReader === "function") {
+    const reader = body.getReader();
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        total += value.byteLength;
+        if (total > max) {
+          await reader.cancel();
+          return null;
+        }
+        chunks.push(value);
+      }
+    }
+    const merged = new Uint8Array(total);
+    let offset = 0;
+    for (const c of chunks) {
+      merged.set(c, offset);
+      offset += c.byteLength;
+    }
+    return new TextDecoder().decode(merged);
+  }
+  const text = await res.text();
+  return Buffer.byteLength(text, "utf8") > max ? null : text;
 }
 
 async function fetchAndParse(

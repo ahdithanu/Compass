@@ -65,8 +65,22 @@ describe("validateFeed", () => {
     expect(validateFeed("x", blocked[6]).ok, blocked[6]).toBe(false);
   });
 
-  it("allows public IPs and hostnames", () => {
+  it("blocks IPv4-embedded IPv6 (compatible + NAT64 forms)", () => {
+    const blocked = [
+      "http://[::169.254.169.254]/feed", // IPv4-compatible IPv6
+      "http://[::a9fe:a9fe]/feed", // same, hex-compressed
+      "http://[64:ff9b::169.254.169.254]/feed", // NAT64 wrapping metadata
+      "http://[64:ff9b::a9fe:a9fe]/feed", // NAT64, hex
+      "http://[::ffff:7f00:1]/feed", // mapped loopback 127.0.0.1
+    ];
+    for (const url of blocked) {
+      expect(validateFeed("x", url).ok, `should block ${url}`).toBe(false);
+    }
+  });
+
+  it("allows public IPs and hostnames (no false positives)", () => {
     expect(validateFeed("x", "http://203.0.113.10/feed").ok).toBe(true);
     expect(validateFeed("x", "https://feeds.example.org/rss").ok).toBe(true);
+    expect(validateFeed("x", "http://[2606:4700::6810:85e5]/feed").ok).toBe(true); // public IPv6 (Cloudflare)
   });
 });
