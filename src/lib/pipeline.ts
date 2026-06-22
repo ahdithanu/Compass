@@ -6,7 +6,7 @@
 
 import { buildAllocation, baseSectors, selectCandidates } from "./allocate";
 import { critique, synthesize, type SynthesisContext } from "./claude";
-import { getQuotes } from "./fmp";
+import { getQuotes } from "./quotes";
 import { logEvent, newTraceId } from "./observability";
 import type {
   CheckResult,

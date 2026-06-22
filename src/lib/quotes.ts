@@ -1,22 +1,24 @@
-// Market-data client (Financial Modeling Prep). Degrades gracefully: if no API
-// key is set or the feed errors, it returns deterministic sample quotes so the
-// rest of the pipeline — and the UI — keep working. The caller is told which
-// source was used so the audit trail and disclaimers stay honest.
+// Market-data client (Finnhub). Degrades gracefully: if no API key is set or the
+// feed errors, it returns deterministic sample quotes so the rest of the
+// pipeline — and the UI — keep working. The caller is told which source was used
+// so the audit trail and disclaimers stay honest.
+//
+// Finnhub's free tier includes real-time US stock/ETF quotes (one symbol per
+// call; ~60 calls/min). We only quote the handful of candidate tickers per run.
 
 import type { Quote } from "./types";
 import { fetchWithTimeout, withRetry } from "./resilience";
 
-// FMP's current "stable" API. The legacy /api/v3 endpoints were retired for keys
-// created after 2025-08-31, so we use /stable/quote (one symbol per call).
-const FMP_BASE = "https://financialmodelingprep.com/stable";
-const FMP_TIMEOUT_MS = 4000;
+const FINNHUB_BASE = "https://finnhub.io/api/v1";
+const QUOTE_TIMEOUT_MS = 4000;
 
 export interface MarketData {
   quotes: Quote[];
   source: "live" | "fallback";
 }
 
-/** Static fallback so the app is fully functional without any API keys. */
+/** Static fallback so the app is fully functional without any API keys. Also
+ *  the source of human-readable names (Finnhub's /quote returns price only). */
 const SAMPLE_QUOTES: Record<string, Quote> = {
   VTI: { symbol: "VTI", name: "Vanguard Total US Stock Market ETF", price: 295.4, changePercent: -0.8 },
   VXUS: { symbol: "VXUS", name: "Vanguard Total International Stock ETF", price: 68.2, changePercent: -0.4 },
@@ -42,52 +44,46 @@ function fallback(symbols: string[]): MarketData {
   return { quotes, source: "fallback" };
 }
 
-// One /stable/quote call for a single symbol. Returns null on any failure
-// (HTTP error, FMP "Error Message" object, empty array, or unusable price).
-interface FmpStableQuote {
-  symbol?: string;
-  name?: string;
-  price?: number;
-  changePercentage?: number; // stable API field
-  changesPercentage?: number; // legacy field name, just in case
+// Finnhub /quote response: c=current, d=change, dp=percent change, pc=prev close.
+interface FinnhubQuote {
+  c?: number;
+  dp?: number;
 }
 
 async function fetchOne(symbol: string, key: string): Promise<Quote | null> {
-  const row = await withRetry(
+  const data = await withRetry(
     async () => {
-      const url = `${FMP_BASE}/quote?symbol=${encodeURIComponent(symbol)}&apikey=${key}`;
-      const res = await fetchWithTimeout(url, FMP_TIMEOUT_MS, {
+      const url = `${FINNHUB_BASE}/quote?symbol=${encodeURIComponent(symbol)}&token=${key}`;
+      const res = await fetchWithTimeout(url, QUOTE_TIMEOUT_MS, {
         next: { revalidate: 60 },
       });
-      if (!res.ok) throw new Error(`FMP HTTP ${res.status}`);
-      const json = (await res.json()) as unknown;
-      // Free-tier / gated endpoints answer 200 with { "Error Message": ... }.
-      if (!Array.isArray(json) || json.length === 0) {
-        throw new Error("FMP empty or error response");
+      if (!res.ok) throw new Error(`Finnhub HTTP ${res.status}`);
+      const json = (await res.json()) as FinnhubQuote;
+      // Unknown symbol / no data comes back as { c: 0, dp: null, ... }.
+      if (!json || !Number.isFinite(json.c) || json.c === 0) {
+        throw new Error("Finnhub no data");
       }
-      return json[0] as FmpStableQuote;
+      return json;
     },
-    { retries: 1, label: `fmp.quote:${symbol}` },
+    { retries: 1, label: `finnhub.quote:${symbol}` },
   );
 
-  if (!row || !Number.isFinite(Number(row.price))) return null;
-  const cp = row.changePercentage ?? row.changesPercentage;
+  if (!data) return null;
   return {
-    symbol: row.symbol ?? symbol,
-    name: row.name ?? symbol,
-    price: Number(row.price),
-    changePercent: Number.isFinite(Number(cp)) ? Number(cp) : 0,
+    symbol,
+    name: SAMPLE_QUOTES[symbol]?.name ?? symbol,
+    price: Number(data.c),
+    changePercent: Number.isFinite(data.dp) ? Number(data.dp) : 0,
   };
 }
 
 export async function getQuotes(symbols: string[]): Promise<MarketData> {
   const unique = Array.from(new Set(symbols));
-  const key = process.env.FMP_API_KEY;
+  const key = process.env.FINNHUB_API_KEY;
   if (!key || unique.length === 0) return fallback(unique);
 
   // Fetch each symbol concurrently; tolerate partial failure.
   const results = await Promise.all(unique.map((s) => fetchOne(s, key)));
   const live = results.filter((q): q is Quote => q !== null);
-  if (live.length === 0) return fallback(unique);
-  return { quotes: live, source: "live" };
+  return live.length > 0 ? { quotes: live, source: "live" } : fallback(unique);
 }

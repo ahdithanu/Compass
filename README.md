@@ -35,7 +35,7 @@ recommendation through specialized stages, with a checker gate after each:
 |---|---|---|
 | 1 | Profile validator (`validate.ts`) | range/enum/contradiction checks |
 | 2 | Allocator (`allocate.ts`) | allocation sums to 100%, no negative weights |
-| 3 | Market data (`fmp.ts`) | timeout + retry; falls back to sample quotes |
+| 3 | Market data (`quotes.ts`, Finnhub) | timeout + retry; falls back to sample quotes |
 | 4 | Analyst / synthesizer (`claude.ts`) | strict JSON-schema output |
 | 5 | **Critic / verifier** (`claude.ts`) | independent, adversarial: no hallucinated tickers, numbers trace to real data, suitability matches risk, disclaimers present |
 
@@ -106,7 +106,7 @@ quote it for support.
 ## Stack
 
 Next.js (App Router, TypeScript) · Tailwind v4 · Supabase (auth + profile
-storage) · Financial Modeling Prep (market data) · Anthropic (reasoning).
+storage) · Finnhub (market quotes) · Anthropic (reasoning).
 
 ## Setup
 
@@ -121,8 +121,10 @@ rule-based rationale. Add keys to light up the full experience:
 
 - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — auth + saved
   profiles. Run `supabase/schema.sql` in the Supabase SQL editor first.
-- `FMP_API_KEY` — live quotes.
+- `FINNHUB_API_KEY` — live market quotes (free tier covers US stocks/ETFs).
 - `ANTHROPIC_API_KEY` — Claude-written reasoning + the adversarial critic.
+- `FMP_API_KEY` — *(optional)* market news; the RSS/newsletter feeds already
+  provide live news without a key.
 
 ## Scripts
 

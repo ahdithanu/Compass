@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { getQuotes } from "@/lib/fmp";
+import { getQuotes } from "@/lib/quotes";
 import { getMarketNews } from "@/lib/news";
 
-// With no FMP_API_KEY (cleared in setup), both clients use deterministic
+// With no API keys (cleared in setup), both clients use deterministic
 // sample data without touching the network.
 
 describe("getQuotes fallback", () => {
