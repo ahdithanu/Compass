@@ -162,7 +162,7 @@ export function checkMarketData(
     passed: true,
     detail:
       source === "fallback"
-        ? "Using fallback sample quotes (no FMP_API_KEY or feed unavailable)."
+        ? "Using fallback sample quotes (no FINNHUB_API_KEY or feed unavailable)."
         : missing.length
           ? `Live data missing for: ${missing.join(", ")}.`
           : "Live quotes resolved for all candidates.",
