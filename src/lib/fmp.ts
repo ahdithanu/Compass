@@ -6,7 +6,9 @@
 import type { Quote } from "./types";
 import { fetchWithTimeout, withRetry } from "./resilience";
 
-const FMP_BASE = "https://financialmodelingprep.com/api/v3";
+// FMP's current "stable" API. The legacy /api/v3 endpoints were retired for keys
+// created after 2025-08-31, so we use /stable/quote (one symbol per call).
+const FMP_BASE = "https://financialmodelingprep.com/stable";
 const FMP_TIMEOUT_MS = 4000;
 
 export interface MarketData {
@@ -40,49 +42,52 @@ function fallback(symbols: string[]): MarketData {
   return { quotes, source: "fallback" };
 }
 
+// One /stable/quote call for a single symbol. Returns null on any failure
+// (HTTP error, FMP "Error Message" object, empty array, or unusable price).
+interface FmpStableQuote {
+  symbol?: string;
+  name?: string;
+  price?: number;
+  changePercentage?: number; // stable API field
+  changesPercentage?: number; // legacy field name, just in case
+}
+
+async function fetchOne(symbol: string, key: string): Promise<Quote | null> {
+  const row = await withRetry(
+    async () => {
+      const url = `${FMP_BASE}/quote?symbol=${encodeURIComponent(symbol)}&apikey=${key}`;
+      const res = await fetchWithTimeout(url, FMP_TIMEOUT_MS, {
+        next: { revalidate: 60 },
+      });
+      if (!res.ok) throw new Error(`FMP HTTP ${res.status}`);
+      const json = (await res.json()) as unknown;
+      // Free-tier / gated endpoints answer 200 with { "Error Message": ... }.
+      if (!Array.isArray(json) || json.length === 0) {
+        throw new Error("FMP empty or error response");
+      }
+      return json[0] as FmpStableQuote;
+    },
+    { retries: 1, label: `fmp.quote:${symbol}` },
+  );
+
+  if (!row || !Number.isFinite(Number(row.price))) return null;
+  const cp = row.changePercentage ?? row.changesPercentage;
+  return {
+    symbol: row.symbol ?? symbol,
+    name: row.name ?? symbol,
+    price: Number(row.price),
+    changePercent: Number.isFinite(Number(cp)) ? Number(cp) : 0,
+  };
+}
+
 export async function getQuotes(symbols: string[]): Promise<MarketData> {
   const unique = Array.from(new Set(symbols));
   const key = process.env.FMP_API_KEY;
   if (!key || unique.length === 0) return fallback(unique);
 
-  // Timeout + one retry; on total failure we fall back to sample quotes.
-  const data = await withRetry(
-    async () => {
-      const url = `${FMP_BASE}/quote/${unique.join(",")}?apikey=${key}`;
-      const res = await fetchWithTimeout(url, FMP_TIMEOUT_MS, {
-        next: { revalidate: 60 },
-      });
-      if (!res.ok) throw new Error(`FMP HTTP ${res.status}`);
-      const json = (await res.json()) as Array<{
-        symbol: string;
-        name: string;
-        price: number;
-        changesPercentage: number;
-      }>;
-      if (!Array.isArray(json) || json.length === 0) {
-        throw new Error("FMP empty response");
-      }
-      return json;
-    },
-    { retries: 1, label: "fmp.getQuotes" },
-  );
-
-  if (!data) return fallback(unique);
-
-  try {
-
-    const quotes: Quote[] = data
-      .filter((d) => Number.isFinite(d.price))
-      .map((d) => ({
-        symbol: d.symbol,
-        name: d.name ?? d.symbol,
-        price: d.price,
-        changePercent: Number.isFinite(d.changesPercentage)
-          ? d.changesPercentage
-          : 0,
-      }));
-    return quotes.length > 0 ? { quotes, source: "live" } : fallback(unique);
-  } catch {
-    return fallback(unique);
-  }
+  // Fetch each symbol concurrently; tolerate partial failure.
+  const results = await Promise.all(unique.map((s) => fetchOne(s, key)));
+  const live = results.filter((q): q is Quote => q !== null);
+  if (live.length === 0) return fallback(unique);
+  return { quotes: live, source: "live" };
 }
