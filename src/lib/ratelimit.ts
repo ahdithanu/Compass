@@ -60,16 +60,18 @@ export function rateLimit(
 }
 
 /**
- * Derive a client identity for rate limiting from the proxy headers Vercel/most
- * hosts set. Falls back to a constant when none are present (e.g. local/tests),
- * which simply means those callers share a bucket. `scope` separates limits per
- * route so one endpoint can't exhaust another's budget.
+ * Derive a client identity for rate limiting. Prefer the platform-set client IP
+ * (`x-vercel-forwarded-for` / `x-real-ip`), which the proxy overwrites and the
+ * client cannot forge. Only fall back to the raw, client-controllable
+ * `x-forwarded-for` as a last resort — a caller can rotate that header to dodge
+ * the limiter, so it must not be the primary key on a trusted deployment.
+ * `scope` separates limits per route so one endpoint can't exhaust another's.
  */
 export function clientKey(request: Request, scope: string): string {
-  const xff = request.headers.get("x-forwarded-for");
   const ip =
-    (xff ? xff.split(",")[0].trim() : "") ||
+    request.headers.get("x-vercel-forwarded-for") ||
     request.headers.get("x-real-ip") ||
+    (request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "") ||
     "local";
   return `${scope}:${ip}`;
 }

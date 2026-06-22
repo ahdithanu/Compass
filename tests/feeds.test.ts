@@ -45,6 +45,26 @@ describe("validateFeed", () => {
     }
   });
 
+  it("blocks SSRF targets hidden in alternate IP encodings", () => {
+    const blocked = [
+      "http://2852039166/feed", // decimal 169.254.169.254
+      "http://0xA9FEA9FE/feed", // hex 169.254.169.254
+      "http://0251.0376.0251.0376/feed", // octal 169.254.169.254
+      "http://0/feed", // 0.0.0.0
+      "http://[::ffff:169.254.169.254]/feed", // IPv4-mapped IPv6
+      "http://[::ffff:a9fe:a9fe]/feed", // IPv4-mapped IPv6 (hex)
+      "http://[0:0:0:0:0:0:0:1]/feed", // expanded IPv6 loopback
+      "http://127.0.0.1.feed", // not an IP — but ensure no crash
+    ];
+    expect(validateFeed("x", blocked[0]).ok, blocked[0]).toBe(false);
+    expect(validateFeed("x", blocked[1]).ok, blocked[1]).toBe(false);
+    expect(validateFeed("x", blocked[2]).ok, blocked[2]).toBe(false);
+    expect(validateFeed("x", blocked[3]).ok, blocked[3]).toBe(false);
+    expect(validateFeed("x", blocked[4]).ok, blocked[4]).toBe(false);
+    expect(validateFeed("x", blocked[5]).ok, blocked[5]).toBe(false);
+    expect(validateFeed("x", blocked[6]).ok, blocked[6]).toBe(false);
+  });
+
   it("allows public IPs and hostnames", () => {
     expect(validateFeed("x", "http://203.0.113.10/feed").ok).toBe(true);
     expect(validateFeed("x", "https://feeds.example.org/rss").ok).toBe(true);

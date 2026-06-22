@@ -16,11 +16,18 @@ questionnaires.
   retention policy or self-serve data export/erasure (GDPR/CCPA) yet.
 
 ## Application hardening
-- ✅ **SSRF guards** on user-supplied feed URLs (blocks loopback / private /
-  link-local / cloud-metadata hosts).
+- ✅ **SSRF guards** on user-supplied feed URLs: blocks loopback / private /
+  link-local / cloud-metadata hosts **in every IP notation** (dotted, decimal,
+  hex, octal, IPv4-mapped IPv6), **re-validates every redirect hop** (manual
+  redirect following — a feed can't 30x to metadata), and caps feed body size.
+  Residual: DNS-rebinding (public name → private IP at connect time) not pinned.
+- ✅ **XML hardening** — entity processing disabled (no expansion DoS) + size cap.
+- ✅ **No unescaped dynamic RegExp** (ticker matching escapes input — no ReDoS).
 - ✅ **Request body-size caps** (413) and **input validation** on all writes.
-- ✅ **Per-client rate limiting** (429 + Retry-After) — ⬜ but in-memory /
-  per-instance; needs a shared store (Upstash/Redis) or WAF for real scale.
+- ✅ **Per-client rate limiting** (429 + Retry-After), keyed off the
+  platform-set client IP (`x-vercel-forwarded-for`) so a spoofed
+  `x-forwarded-for` can't rotate buckets — ⬜ but still in-memory / per-instance;
+  needs a shared store (Upstash/Redis) or WAF for multi-instance scale.
 - ✅ **Security headers** — HSTS, X-Frame-Options, X-Content-Type-Options,
   Referrer-Policy, Permissions-Policy.
 - 🟡 **Content-Security-Policy** — shipped in **Report-Only** mode; enforce after

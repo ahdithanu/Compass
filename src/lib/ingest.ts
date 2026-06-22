@@ -8,11 +8,14 @@ import { XMLParser } from "fast-xml-parser";
 import type { NewsItem } from "./types";
 import { fetchWithTimeout, withRetry } from "./resilience";
 import { configuredFeeds, type FeedSource } from "./sources";
+import { isBlockedHost } from "./feeds";
 
 const FEED_TIMEOUT_MS = 5000;
 const MAX_ITEMS_PER_FEED = 6;
 const MAX_TOTAL_ITEMS = 10;
 const RECENCY_DAYS = 14;
+const MAX_REDIRECTS = 3;
+const MAX_FEED_BYTES = 5_000_000; // cap parsed feed size (DoS guard)
 
 export interface IngestResult {
   items: NewsItem[];
@@ -25,6 +28,7 @@ const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
   trimValues: true,
+  processEntities: false, // RSS/Atom don't need custom entities; avoids expansion DoS
 });
 
 const SAMPLE_NEWSLETTERS: NewsItem[] = [
@@ -100,20 +104,55 @@ export async function ingestNewsletters(
   return { items: cleaned, source: "live", feedsOk, feedsTotal: feeds.length };
 }
 
+// Fetch a feed body, following redirects MANUALLY and re-validating the host on
+// every hop. This is the SSRF guard that matters: validateFeed only checks the
+// host at add-time, but a feed can 30x-redirect to 169.254.169.254/metadata —
+// so we re-check each Location against the blocklist before following it.
+async function fetchFeedXml(startUrl: string): Promise<string | null> {
+  let url = startUrl;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    let parsed: URL;
+    try {
+      parsed = new URL(url);
+    } catch {
+      return null;
+    }
+    if (
+      (parsed.protocol !== "http:" && parsed.protocol !== "https:") ||
+      isBlockedHost(parsed.hostname)
+    ) {
+      return null; // refuse internal / metadata / non-http hosts on every hop
+    }
+
+    const res = await fetchWithTimeout(url, FEED_TIMEOUT_MS, {
+      headers: { "user-agent": "CompassBot/1.0 (+rss)" },
+      redirect: "manual",
+    });
+
+    const status = res.status ?? 200;
+    if (status >= 300 && status < 400) {
+      const loc = res.headers?.get?.("location");
+      if (!loc) return null;
+      url = new URL(loc, url).toString();
+      continue;
+    }
+    if (!res.ok) throw new Error(`${parsed.hostname} HTTP ${status}`);
+
+    const text = await res.text();
+    if (text.length > MAX_FEED_BYTES) return null;
+    return text;
+  }
+  return null; // too many redirects
+}
+
 async function fetchAndParse(
   feed: FeedSource,
   watch: Set<string>,
 ): Promise<NewsItem[]> {
-  const xml = await withRetry(
-    async () => {
-      const res = await fetchWithTimeout(feed.url, FEED_TIMEOUT_MS, {
-        headers: { "user-agent": "CompassBot/1.0 (+rss)" },
-      });
-      if (!res.ok) throw new Error(`${feed.name} HTTP ${res.status}`);
-      return res.text();
-    },
-    { retries: 1, label: `ingest:${feed.name}` },
-  );
+  const xml = await withRetry(() => fetchFeedXml(feed.url), {
+    retries: 1,
+    label: `ingest:${feed.name}`,
+  });
   if (!xml) return [];
   try {
     return parseFeed(xml, feed, watch);
@@ -179,9 +218,14 @@ function extractTickers(haystack: string, watch: Set<string>): string[] {
   const found = new Set<string>();
   for (const c of haystack.match(/\$[A-Z]{1,5}\b/g) ?? []) found.add(c.slice(1));
   for (const sym of watch) {
-    if (new RegExp(`\\b${sym}\\b`).test(haystack)) found.add(sym);
+    // Escape the symbol — never build a RegExp from an unsanitized string.
+    if (new RegExp(`\\b${escapeRegExp(sym)}\\b`).test(haystack)) found.add(sym);
   }
   return Array.from(found);
+}
+
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function dedupe(items: NewsItem[]): NewsItem[] {
