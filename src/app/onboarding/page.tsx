@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
-import type { Goal, JourneyStage, RiskTolerance } from "@/lib/types";
+import { buildAllocation } from "@/lib/allocate";
+import type { Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
 
 const GOALS: { value: Goal; label: string }[] = [
   { value: "retirement", label: "Retirement" },
@@ -13,10 +14,10 @@ const GOALS: { value: Goal; label: string }[] = [
   { value: "preservation", label: "Preserve capital" },
   { value: "short_term", label: "A short-term goal" },
 ];
-const RISKS: { value: RiskTolerance; label: string }[] = [
-  { value: "conservative", label: "Conservative" },
-  { value: "moderate", label: "Moderate" },
-  { value: "aggressive", label: "Aggressive" },
+const RISKS: { value: RiskTolerance; label: string; hint: string }[] = [
+  { value: "conservative", label: "Conservative", hint: "Smoother ride, lower highs" },
+  { value: "moderate", label: "Moderate", hint: "A balanced middle" },
+  { value: "aggressive", label: "Aggressive", hint: "More stocks, more swings" },
 ];
 const STAGES: { value: JourneyStage; label: string }[] = [
   { value: "just_starting", label: "Just starting out" },
@@ -36,6 +37,73 @@ export default function OnboardingPage() {
   const [interestsText, setInterests] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefill from the saved profile so "Update my profile" shows current values,
+  // not defaults. Prefer the authoritative DB row; fall back to the local stash.
+  useEffect(() => {
+    const apply = (p: Partial<Profile>) => {
+      if (typeof p.age === "number") setAge(p.age);
+      if (p.goal) setGoal(p.goal);
+      if (p.riskTolerance) setRisk(p.riskTolerance);
+      if (typeof p.horizonYears === "number") setHorizon(p.horizonYears);
+      if (p.journeyStage) setStage(p.journeyStage);
+      if (typeof p.monthlyContribution === "number") setMonthly(p.monthlyContribution);
+      if (Array.isArray(p.interests)) setInterests(p.interests.join(", "));
+    };
+
+    const stored =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("compass:profile")
+        : null;
+    if (stored) {
+      try {
+        apply(JSON.parse(stored));
+      } catch {
+        /* ignore a corrupt stash */
+      }
+    }
+
+    if (!isSupabaseConfigured()) return;
+    (async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select(
+          "age, goal, risk_tolerance, horizon_years, journey_stage, monthly_contribution, interests",
+        )
+        .eq("id", user.id)
+        .maybeSingle();
+      if (!data) return;
+      apply({
+        age: data.age,
+        goal: data.goal as Goal,
+        riskTolerance: data.risk_tolerance as RiskTolerance,
+        horizonYears: data.horizon_years,
+        journeyStage: data.journey_stage as JourneyStage,
+        monthlyContribution: data.monthly_contribution ?? undefined,
+        interests: data.interests ?? [],
+      });
+    })();
+  }, []);
+
+  // Live preview of how the inputs map to an asset mix — the same deterministic
+  // allocator the pipeline uses, so what you see here is what you'll get.
+  const previewAlloc = useMemo(
+    () =>
+      buildAllocation({
+        age: Number(age) || 0,
+        goal,
+        riskTolerance,
+        horizonYears: Number(horizonYears) || 0,
+        journeyStage,
+        interests: [],
+      }),
+    [age, goal, riskTolerance, horizonYears, journeyStage],
+  );
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,8 +165,8 @@ export default function OnboardingPage() {
 
       <h1 className="mt-8 text-3xl font-bold">Tell Compass about you</h1>
       <p className="mt-2" style={{ color: "var(--muted)" }}>
-        This shapes everything. You can change any of it later and your plan
-        re-tunes instantly.
+        This shapes everything. Watch your target mix update as you choose — you
+        can change any of it later and your plan re-tunes instantly.
       </p>
 
       <form onSubmit={submit} className="card mt-8 space-y-6 p-6">
@@ -142,35 +210,49 @@ export default function OnboardingPage() {
           </select>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <label className="label">Risk tolerance</label>
-            <select
-              className="select mt-1"
-              value={riskTolerance}
-              onChange={(e) => setRisk(e.target.value as RiskTolerance)}
-            >
-              {RISKS.map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
+        <div>
+          <label className="label">Risk tolerance</label>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {RISKS.map((r) => {
+              const active = r.value === riskTolerance;
+              return (
+                <button
+                  key={r.value}
+                  type="button"
+                  onClick={() => setRisk(r.value)}
+                  className="lift rounded-xl px-3 py-3 text-left transition"
+                  style={{
+                    background: active ? "var(--accent)" : "var(--panel-2)",
+                    color: active ? "#fff" : "var(--text)",
+                    boxShadow: active ? "none" : "inset 0 0 0 1px var(--border)",
+                  }}
+                >
+                  <span className="block text-sm font-semibold">{r.label}</span>
+                  <span
+                    className="mt-0.5 block text-xs"
+                    style={{ color: active ? "rgba(255,255,255,0.85)" : "var(--muted)" }}
+                  >
+                    {r.hint}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div>
-            <label className="label">Where are you in your journey?</label>
-            <select
-              className="select mt-1"
-              value={journeyStage}
-              onChange={(e) => setStage(e.target.value as JourneyStage)}
-            >
-              {STAGES.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        </div>
+
+        <div>
+          <label className="label">Where are you in your journey?</label>
+          <select
+            className="select mt-1"
+            value={journeyStage}
+            onChange={(e) => setStage(e.target.value as JourneyStage)}
+          >
+            {STAGES.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
@@ -197,6 +279,9 @@ export default function OnboardingPage() {
           />
         </div>
 
+        {/* Live allocation preview — instant feedback that choices matter. */}
+        <AllocationPreview alloc={previewAlloc} />
+
         {error && (
           <p className="text-sm" style={{ color: "var(--danger)" }}>
             {error}
@@ -208,5 +293,43 @@ export default function OnboardingPage() {
         </button>
       </form>
     </main>
+  );
+}
+
+function AllocationPreview({
+  alloc,
+}: {
+  alloc: { stocks: number; bonds: number; cash: number; alternatives: number };
+}) {
+  const segs = [
+    { key: "Stocks", v: alloc.stocks, c: "var(--accent-dim)" },
+    { key: "Bonds", v: alloc.bonds, c: "var(--chart-bonds)" },
+    { key: "Cash", v: alloc.cash, c: "var(--chart-cash)" },
+    { key: "Alts", v: alloc.alternatives, c: "var(--warn)" },
+  ];
+  return (
+    <div className="rounded-xl p-4" style={{ background: "var(--panel-2)" }}>
+      <p className="label">Your target mix</p>
+      <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full">
+        {segs.map((s) => (
+          <div
+            key={s.key}
+            style={{ width: `${s.v}%`, background: s.c, transition: "width 200ms ease" }}
+          />
+        ))}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        {segs.map((s) => (
+          <span key={s.key} className="inline-flex items-center gap-1.5">
+            <span
+              className="inline-block h-2.5 w-2.5 rounded-full"
+              style={{ background: s.c }}
+            />
+            <span style={{ color: "var(--muted)" }}>{s.key}</span>
+            <span className="font-semibold tabular-nums">{s.v}%</span>
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
