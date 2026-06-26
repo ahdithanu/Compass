@@ -15,6 +15,15 @@ interface RunSummary {
   created_at: string;
 }
 
+interface RunDetail {
+  id: string;
+  kind: "recommendation" | "insights";
+  reasoning_source: string;
+  data_source: string;
+  created_at: string;
+  payload: Recommendation | InsightDigest;
+}
+
 export default function DashboardPage() {
   const [rec, setRec] = useState<Recommendation | null>(null);
   const [digest, setDigest] = useState<InsightDigest | null>(null);
@@ -103,8 +112,10 @@ export default function DashboardPage() {
   );
 }
 
+/** Collapsible run history. Each row opens the full stored run in a modal. */
 function HistoryPanel({ runs }: { runs: RunSummary[] }) {
   const [open, setOpen] = useState(false);
+  const [openRunId, setOpenRunId] = useState<string | null>(null);
   return (
     <section className="card p-6">
       <button
@@ -119,27 +130,115 @@ function HistoryPanel({ runs }: { runs: RunSummary[] }) {
       {open && (
         <ul className="mt-4 space-y-2 text-sm">
           {runs.map((r) => (
-            <li
-              key={r.id}
-              className="flex items-center justify-between rounded-lg px-3 py-2"
-              style={{ background: "var(--panel-2)" }}
-            >
-              <span>
-                <span className="font-medium">
-                  {r.kind === "recommendation" ? "Recommendation" : "Insights"}
+            <li key={r.id}>
+              <button
+                className="lift flex w-full items-center justify-between rounded-lg px-3 py-2 text-left"
+                style={{ background: "var(--panel-2)" }}
+                onClick={() => setOpenRunId(r.id)}
+              >
+                <span>
+                  <span className="font-medium">
+                    {r.kind === "recommendation" ? "Recommendation" : "Insights"}
+                  </span>
+                  <span style={{ color: "var(--muted)" }}>
+                    {" "}· {new Date(r.created_at).toLocaleString()}
+                  </span>
                 </span>
                 <span style={{ color: "var(--muted)" }}>
-                  {" "}· {new Date(r.created_at).toLocaleString()}
+                  {r.checks_passed}/{r.checks_total} checks · {r.reasoning_source} ·{" "}
+                  <span style={{ color: "var(--accent)" }}>open →</span>
                 </span>
-              </span>
-              <span style={{ color: "var(--muted)" }}>
-                {r.checks_passed}/{r.checks_total} checks · {r.reasoning_source}
-              </span>
+              </button>
             </li>
           ))}
         </ul>
       )}
+      {openRunId && (
+        <RunDetailModal runId={openRunId} onClose={() => setOpenRunId(null)} />
+      )}
     </section>
+  );
+}
+
+/** Fetch and render the full payload of one past run, read-only, in an overlay. */
+function RunDetailModal({
+  runId,
+  onClose,
+}: {
+  runId: string;
+  onClose: () => void;
+}) {
+  const [run, setRun] = useState<RunDetail | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const r = await apiGet<{ run: RunDetail }>(
+        `/api/history?id=${encodeURIComponent(runId)}`,
+      );
+      if (!active) return;
+      if (r.ok && r.data.run) setRun(r.data.run);
+      else if (r.ok) setError("Run not found.");
+      else setError(withRef(r.error, r.requestId));
+    })();
+    return () => {
+      active = false;
+    };
+  }, [runId]);
+
+  // Close on Escape for keyboard users.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-8"
+      style={{ background: "rgba(0,0,0,0.45)" }}
+      onClick={onClose}
+    >
+      <div
+        className="card w-full max-w-3xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <span className="label">
+            {run
+              ? `${run.kind === "recommendation" ? "Recommendation" : "Insights"} · ${new Date(
+                  run.created_at,
+                ).toLocaleString()}`
+              : "Loading run…"}
+          </span>
+          <button className="btn-ghost text-sm" onClick={onClose}>
+            Close
+          </button>
+        </div>
+
+        {error && (
+          <p className="text-sm" style={{ color: "var(--danger)" }}>
+            {error}
+          </p>
+        )}
+
+        {!run && !error && (
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Loading…
+          </p>
+        )}
+
+        {run && run.kind === "recommendation" && (
+          <RecommendationSections rec={run.payload as Recommendation} />
+        )}
+        {run && run.kind === "insights" && (
+          <InsightsView digest={run.payload as InsightDigest} />
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -214,6 +313,20 @@ function InsightsView({ digest }: { digest: InsightDigest }) {
   );
 }
 
+/** The reusable body of a recommendation — used live and for past runs. */
+function RecommendationSections({ rec }: { rec: Recommendation }) {
+  return (
+    <div className="space-y-6">
+      <TheMoveSection rec={rec} />
+      <AllocationSection rec={rec} />
+      <PicksSection rec={rec} />
+      <SectorsSection rec={rec} />
+      <ChecksPanel rec={rec} />
+      <DisclaimersFooter rec={rec} />
+    </div>
+  );
+}
+
 function RecommendationView({
   rec,
   digest,
@@ -225,89 +338,14 @@ function RecommendationView({
 }) {
   return (
     <div className="space-y-6">
-      {/* The move */}
-      <section className="card p-6">
-        <p className="label" style={{ color: "var(--accent)" }}>
-          What&apos;s the move
-        </p>
-        <h2 className="mt-2 text-3xl font-extrabold">{rec.theMove.headline}</h2>
-        <p className="mt-3" style={{ color: "var(--muted)" }}>
-          {rec.theMove.reasoning}
-        </p>
-        <p className="mt-4 text-sm">{rec.summary}</p>
-      </section>
+      <TheMoveSection rec={rec} />
 
       {/* Insights digest (best-effort; renders when ready) */}
       {digest && <InsightsView digest={digest} />}
 
-      {/* Allocation */}
-      <section className="card p-6">
-        <p className="label mb-3">Target allocation</p>
-        <AllocationBar rec={rec} />
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <Stat label="Stocks" value={`${rec.allocation.stocks}%`} />
-          <Stat label="Bonds" value={`${rec.allocation.bonds}%`} />
-          <Stat label="Cash" value={`${rec.allocation.cash}%`} />
-          <Stat label="Alternatives" value={`${rec.allocation.alternatives}%`} />
-        </div>
-      </section>
-
-      {/* Picks */}
-      <section className="card p-6">
-        <p className="label mb-4">Names to focus on</p>
-        <div className="space-y-3">
-          {rec.picks.map((p) => (
-            <div
-              key={p.ticker}
-              className="rounded-xl p-4"
-              style={{ background: "var(--panel-2)" }}
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <div>
-                  <span className="font-bold">{p.ticker}</span>{" "}
-                  <span className="text-sm" style={{ color: "var(--muted)" }}>
-                    {p.name}
-                  </span>
-                </div>
-                {p.price != null && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold tabular-nums">
-                      ${p.price.toFixed(2)}
-                    </span>
-                    {p.changePercent != null && (
-                      <span
-                        className={`change ${p.changePercent >= 0 ? "change-up" : "change-down"}`}
-                      >
-                        {p.changePercent >= 0 ? "▲" : "▼"}
-                        {Math.abs(p.changePercent).toFixed(2)}%
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-              <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
-                {p.rationale}
-              </p>
-              <span className={`mt-2 ${bucketPill(p.bucket)}`}>{p.bucket}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Sectors */}
-      <section className="card p-6">
-        <p className="label mb-4">Sectors to watch</p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {rec.sectorsToWatch.map((s) => (
-            <div key={s.sector} className="rounded-xl p-4" style={{ background: "var(--panel-2)" }}>
-              <h3 className="font-semibold">{s.sector}</h3>
-              <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
-                {s.why}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <AllocationSection rec={rec} />
+      <PicksSection rec={rec} />
+      <SectorsSection rec={rec} />
 
       {/* Checker audit panel — surfaces the multi-stage verification */}
       <ChecksPanel rec={rec} />
@@ -315,13 +353,111 @@ function RecommendationView({
       {/* Run history (signed-in users only) */}
       {history.length > 0 && <HistoryPanel runs={history} />}
 
-      {/* Disclaimers */}
-      <footer className="space-y-1 px-2 pb-8 text-xs" style={{ color: "var(--muted)" }}>
-        {rec.disclaimers.map((d) => (
-          <p key={d}>{d}</p>
-        ))}
-      </footer>
+      <DisclaimersFooter rec={rec} />
     </div>
+  );
+}
+
+function TheMoveSection({ rec }: { rec: Recommendation }) {
+  return (
+    <section className="card p-6">
+      <p className="label" style={{ color: "var(--accent)" }}>
+        What&apos;s the move
+      </p>
+      <h2 className="mt-2 text-3xl font-extrabold">{rec.theMove.headline}</h2>
+      <p className="mt-3" style={{ color: "var(--muted)" }}>
+        {rec.theMove.reasoning}
+      </p>
+      <p className="mt-4 text-sm">{rec.summary}</p>
+    </section>
+  );
+}
+
+function AllocationSection({ rec }: { rec: Recommendation }) {
+  return (
+    <section className="card p-6">
+      <p className="label mb-3">Target allocation</p>
+      <AllocationBar rec={rec} />
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <Stat label="Stocks" value={`${rec.allocation.stocks}%`} />
+        <Stat label="Bonds" value={`${rec.allocation.bonds}%`} />
+        <Stat label="Cash" value={`${rec.allocation.cash}%`} />
+        <Stat label="Alternatives" value={`${rec.allocation.alternatives}%`} />
+      </div>
+    </section>
+  );
+}
+
+function PicksSection({ rec }: { rec: Recommendation }) {
+  return (
+    <section className="card p-6">
+      <p className="label mb-4">Names to focus on</p>
+      <div className="space-y-3">
+        {rec.picks.map((p) => (
+          <div
+            key={p.ticker}
+            className="rounded-xl p-4"
+            style={{ background: "var(--panel-2)" }}
+          >
+            <div className="flex items-baseline justify-between gap-3">
+              <div>
+                <span className="font-bold">{p.ticker}</span>{" "}
+                <span className="text-sm" style={{ color: "var(--muted)" }}>
+                  {p.name}
+                </span>
+              </div>
+              {p.price != null && (
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-semibold tabular-nums">
+                    ${p.price.toFixed(2)}
+                  </span>
+                  {p.changePercent != null && (
+                    <span
+                      className={`change ${p.changePercent >= 0 ? "change-up" : "change-down"}`}
+                    >
+                      {p.changePercent >= 0 ? "▲" : "▼"}
+                      {Math.abs(p.changePercent).toFixed(2)}%
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+            <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
+              {p.rationale}
+            </p>
+            <span className={`mt-2 ${bucketPill(p.bucket)}`}>{p.bucket}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function SectorsSection({ rec }: { rec: Recommendation }) {
+  return (
+    <section className="card p-6">
+      <p className="label mb-4">Sectors to watch</p>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {rec.sectorsToWatch.map((s) => (
+          <div key={s.sector} className="rounded-xl p-4" style={{ background: "var(--panel-2)" }}>
+            <h3 className="font-semibold">{s.sector}</h3>
+            <p className="mt-1 text-sm" style={{ color: "var(--muted)" }}>
+              {s.why}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DisclaimersFooter({ rec }: { rec: Recommendation }) {
+  return (
+    <footer className="space-y-1 px-2 pb-2 text-xs" style={{ color: "var(--muted)" }}>
+      {rec.disclaimers.map((d) => (
+        <p key={d}>{d}</p>
+      ))}
+    </footer>
   );
 }
 

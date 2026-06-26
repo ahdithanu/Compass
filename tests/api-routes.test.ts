@@ -52,6 +52,7 @@ function fakeSupabase(opts: { user?: unknown; results?: TableResults }) {
         builder[m] = chain;
       }
       builder.single = chain;
+      builder.maybeSingle = chain;
       // Make the builder awaitable at any point in the chain.
       builder.then = (res: (v: unknown) => unknown, rej: (e: unknown) => unknown) =>
         Promise.resolve(result).then(res, rej);
@@ -302,6 +303,22 @@ describe("/api/history", () => {
     const res = await GET(new Request("http://t/api/history"));
     expect(res.status).toBe(200);
     expect((await res.json()).runs).toEqual(runs);
+  });
+
+  it("returns one run's full payload when ?id= is given", async () => {
+    const { GET } = await import("@/app/api/history/route");
+    const run = { id: "r1", kind: "recommendation", created_at: "t", payload: { theMove: { headline: "x" } } };
+    H.client = fakeSupabase({ user: { id: "u1" }, results: { runs: { data: run } } });
+    const res = await GET(new Request("http://t/api/history?id=r1"));
+    expect(res.status).toBe(200);
+    expect((await res.json()).run).toEqual(run);
+  });
+
+  it("returns 404 when the requested run id doesn't exist", async () => {
+    const { GET } = await import("@/app/api/history/route");
+    H.client = fakeSupabase({ user: { id: "u1" }, results: { runs: { data: null } } });
+    const res = await GET(new Request("http://t/api/history?id=missing"));
+    expect(res.status).toBe(404);
   });
 });
 
