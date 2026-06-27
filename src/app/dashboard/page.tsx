@@ -33,6 +33,7 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [demo, setDemo] = useState(false);
 
   useEffect(() => {
     const stored =
@@ -43,7 +44,7 @@ export default function DashboardPage() {
     const payload = profile ? { profile } : {};
 
     (async () => {
-      const r = await apiPost<{ recommendation: Recommendation }>(
+      const r = await apiPost<{ recommendation: Recommendation; demo?: boolean }>(
         "/api/recommendations",
         payload,
       );
@@ -52,6 +53,7 @@ export default function DashboardPage() {
         setIssues(r.issues ?? []);
       } else {
         setRec(r.data.recommendation);
+        setDemo(Boolean(r.data.demo));
       }
       setLoading(false);
     })();
@@ -111,6 +113,24 @@ export default function DashboardPage() {
           )}
           <Link href="/onboarding" className="btn mt-5 inline-block">
             Back to onboarding
+          </Link>
+        </div>
+      )}
+
+      {demo && rec && (
+        <div
+          className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+          style={{ background: "var(--panel-2)", boxShadow: "inset 0 0 0 1px var(--border)" }}
+        >
+          <p className="text-sm">
+            <span className="font-semibold">Sample plan.</span>{" "}
+            <span style={{ color: "var(--muted)" }}>
+              You&apos;re viewing a demo built from a default profile. Set yours to
+              personalize everything.
+            </span>
+          </p>
+          <Link href="/onboarding" className="btn text-sm">
+            Set my profile
           </Link>
         </div>
       )}

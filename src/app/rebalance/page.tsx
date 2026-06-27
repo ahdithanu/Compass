@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildAllocation } from "@/lib/allocate";
 import { computeRebalance, BUCKETS, type Bucket } from "@/lib/rebalance";
+import { DEFAULT_PROFILE } from "@/lib/profile";
 import type { Allocation, Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
 
 const BUCKET_META: Record<Bucket, { label: string; color: string }> = {
@@ -12,16 +13,6 @@ const BUCKET_META: Record<Bucket, { label: string; color: string }> = {
   bonds: { label: "Bonds", color: "var(--chart-bonds)" },
   cash: { label: "Cash", color: "var(--chart-cash)" },
   alternatives: { label: "Alternatives", color: "var(--warn)" },
-};
-
-// A sensible default target when we don't yet know the user's profile.
-const DEFAULT_PROFILE: Profile = {
-  age: 35,
-  goal: "growth",
-  riskTolerance: "moderate",
-  horizonYears: 20,
-  journeyStage: "building",
-  interests: [],
 };
 
 const fmtUsd = (n: number) =>

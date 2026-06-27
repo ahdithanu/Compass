@@ -7,6 +7,7 @@ import { PipelineError } from "@/lib/pipeline";
 import { persistRun } from "@/lib/persistence";
 import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
+import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
@@ -40,29 +41,31 @@ export const POST = withRequest("insights", async (request) => {
     } = await supabase.auth.getUser();
 
     if (!rawProfile) {
-      if (!user) {
-        return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
+      if (user) {
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+        if (!data) {
+          return NextResponse.json(
+            { error: "No saved profile. Complete onboarding first." },
+            { status: 404 },
+          );
+        }
+        rawProfile = {
+          age: data.age,
+          goal: data.goal,
+          riskTolerance: data.risk_tolerance,
+          horizonYears: data.horizon_years,
+          journeyStage: data.journey_stage,
+          monthlyContribution: data.monthly_contribution ?? undefined,
+          interests: data.interests ?? [],
+        };
+      } else {
+        // Anonymous: demo mode with the sample profile.
+        rawProfile = DEFAULT_PROFILE;
       }
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-      if (!data) {
-        return NextResponse.json(
-          { error: "No saved profile. Complete onboarding first." },
-          { status: 404 },
-        );
-      }
-      rawProfile = {
-        age: data.age,
-        goal: data.goal,
-        riskTolerance: data.risk_tolerance,
-        horizonYears: data.horizon_years,
-        journeyStage: data.journey_stage,
-        monthlyContribution: data.monthly_contribution ?? undefined,
-        interests: data.interests ?? [],
-      };
     }
 
     if (user) {
@@ -75,8 +78,9 @@ export const POST = withRequest("insights", async (request) => {
     }
   }
 
+  // Supabase not configured + nothing posted → still demo with the sample profile.
   if (!rawProfile) {
-    return NextResponse.json({ error: "No profile provided." }, { status: 400 });
+    rawProfile = DEFAULT_PROFILE;
   }
 
   try {

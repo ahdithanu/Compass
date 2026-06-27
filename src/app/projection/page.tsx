@@ -5,16 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildAllocation } from "@/lib/allocate";
 import { expectedReturn, scenarios, requiredMonthlyContribution } from "@/lib/project";
+import { DEFAULT_PROFILE } from "@/lib/profile";
 import type { Allocation, Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
-
-const DEFAULT_PROFILE: Profile = {
-  age: 35,
-  goal: "growth",
-  riskTolerance: "moderate",
-  horizonYears: 20,
-  journeyStage: "building",
-  interests: [],
-};
 
 const fmtUsd = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });

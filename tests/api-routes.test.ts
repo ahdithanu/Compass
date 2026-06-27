@@ -174,10 +174,12 @@ describe("/api/recommendations", () => {
     );
   };
 
-  it("returns 400 when no profile is posted and none is saved", async () => {
+  it("runs a demo with the sample profile when Supabase isn't configured", async () => {
     H.configured = false;
+    H.runRec.mockResolvedValue({ traceId: "demo1" });
     const res = await post();
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
+    expect((await res.json()).demo).toBe(true);
   });
 
   it("runs the pipeline for a posted profile and persists the run", async () => {
@@ -220,10 +222,14 @@ describe("/api/recommendations", () => {
     );
   });
 
-  it("returns 401 when no profile is posted and the user is anonymous", async () => {
+  it("runs a demo with the sample profile for an anonymous user", async () => {
+    H.runRec.mockResolvedValue({ traceId: "demo2" });
     H.client = fakeSupabase({ user: null });
     const res = await post();
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.demo).toBe(true);
+    expect(body.recommendation).toEqual({ traceId: "demo2" });
   });
 
   it("returns 404 when the signed-in user has no saved profile", async () => {
