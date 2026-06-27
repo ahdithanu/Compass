@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { project, expectedReturn, scenarios, ASSUMED_RETURNS } from "@/lib/project";
+import {
+  project,
+  expectedReturn,
+  scenarios,
+  requiredMonthlyContribution,
+  ASSUMED_RETURNS,
+} from "@/lib/project";
 import type { Allocation } from "@/lib/types";
 
 describe("expectedReturn", () => {
@@ -46,6 +52,35 @@ describe("project", () => {
     const p = project({ startingBalance: -100, monthlyContribution: -50, years: -3, annualReturn: 0.05 });
     expect(p.finalBalance).toBe(0);
     expect(p.points).toHaveLength(1); // just year 0
+  });
+});
+
+describe("requiredMonthlyContribution", () => {
+  it("returns a monthly that, fed back into project(), reaches the goal", () => {
+    const goal = 500_000;
+    const pmt = requiredMonthlyContribution(goal, 10_000, 30, 0.06);
+    const reached = project({
+      startingBalance: 10_000,
+      monthlyContribution: pmt,
+      years: 30,
+      annualReturn: 0.06,
+    }).finalBalance;
+    expect(reached).toBeGreaterThanOrEqual(goal);
+    // ...and not wildly over (within one month's contribution of the goal).
+    expect(reached).toBeLessThan(goal + pmt * 13);
+  });
+
+  it("returns 0 when the starting balance already compounds past the goal", () => {
+    expect(requiredMonthlyContribution(50_000, 100_000, 20, 0.05)).toBe(0);
+  });
+
+  it("handles a zero return (linear funding)", () => {
+    // Need 12000 over 1 year, no growth -> 1000/mo.
+    expect(requiredMonthlyContribution(12_000, 0, 1, 0)).toBe(1000);
+  });
+
+  it("returns 0 with no horizon", () => {
+    expect(requiredMonthlyContribution(10_000, 0, 0, 0.05)).toBe(0);
   });
 });
 

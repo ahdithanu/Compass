@@ -83,6 +83,35 @@ export function project(input: ProjectionInput): Projection {
   };
 }
 
+/**
+ * Solve for the monthly contribution needed to reach `goal` by the horizon —
+ * the actionable answer to "I'm short, what would it take?". Inverts the same
+ * ordinary-annuity model `project` uses, so feeding the result back into
+ * project() lands on (or just above) the goal. Returns 0 when the starting
+ * balance already compounds past the goal. Rounds up so you don't fall short.
+ */
+export function requiredMonthlyContribution(
+  goal: number,
+  startingBalance: number,
+  years: number,
+  annualReturn: number,
+): number {
+  const start = Math.max(0, startingBalance || 0);
+  const months = Math.max(0, Math.floor(years || 0)) * 12;
+  if (months === 0) return 0; // no horizon to contribute over
+
+  const r = Math.pow(1 + (annualReturn || 0), 1 / 12) - 1;
+  const factor = Math.pow(1 + r, months);
+  const fromStart = start * factor; // what the lump sum alone grows to
+
+  if (fromStart >= goal) return 0; // already there without adding a cent
+
+  // PMT = (goal - start·factor) / annuityFactor
+  const annuityFactor = r === 0 ? months : (factor - 1) / r;
+  const pmt = (goal - fromStart) / annuityFactor;
+  return Math.max(0, Math.ceil(pmt));
+}
+
 /** Three scenarios around the expected return: a ±2pt band, floored at 0. */
 export function scenarios(
   base: Omit<ProjectionInput, "annualReturn">,

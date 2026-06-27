@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildAllocation } from "@/lib/allocate";
-import { expectedReturn, scenarios } from "@/lib/project";
+import { expectedReturn, scenarios, requiredMonthlyContribution } from "@/lib/project";
 import type { Allocation, Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
 
 const DEFAULT_PROFILE: Profile = {
@@ -82,6 +82,11 @@ export default function ProjectionPage() {
   const expected = projs.expected;
   const onTrack = goalAmount !== "" && expected.finalBalance >= Number(goalAmount);
   const gap = goalAmount === "" ? 0 : Number(goalAmount) - expected.finalBalance;
+  // If short, what monthly contribution would actually close the gap?
+  const requiredMonthly =
+    goalAmount !== "" && !onTrack
+      ? requiredMonthlyContribution(Number(goalAmount), startingBalance, years, annual)
+      : 0;
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
@@ -200,6 +205,27 @@ export default function ProjectionPage() {
             <Legend color="var(--accent-dim)" label="Compounding growth" value={fmtUsd(expected.growth)} />
           </div>
         </div>
+
+        {/* Reverse-solver: the actionable nudge when you're short of the goal. */}
+        {requiredMonthly > 0 && (
+          <div
+            className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl p-4"
+            style={{ background: "var(--panel-2)" }}
+          >
+            <p className="text-sm">
+              To reach {fmtUsd(Number(goalAmount))}, contribute{" "}
+              <span className="font-bold" style={{ color: "var(--accent)" }}>
+                {fmtUsd(requiredMonthly)}/mo
+              </span>{" "}
+              <span style={{ color: "var(--muted)" }}>
+                (+{fmtUsd(Math.max(0, requiredMonthly - monthly))} from today&apos;s {fmtUsd(monthly)})
+              </span>
+            </p>
+            <button className="btn text-sm" onClick={() => setMonthly(requiredMonthly)}>
+              Apply
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Year-by-year chart */}
