@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { InsightDigest, Recommendation } from "@/lib/types";
 import { apiGet, apiPost, withRef } from "@/lib/apiClient";
 import { diffRuns, type AllocationDelta } from "@/lib/compare";
+import { evidenceForTicker } from "@/lib/explain";
 
 interface RunSummary {
   id: string;
@@ -634,7 +635,7 @@ function RecommendationView({
       {digest && <InsightsView digest={digest} />}
 
       <AllocationSection rec={rec} />
-      <PicksSection rec={rec} />
+      <PicksSection rec={rec} digest={digest} />
       <SectorsSection rec={rec} />
 
       {/* Checker audit panel — surfaces the multi-stage verification */}
@@ -678,48 +679,121 @@ function AllocationSection({ rec }: { rec: Recommendation }) {
   );
 }
 
-function PicksSection({ rec }: { rec: Recommendation }) {
+function PicksSection({
+  rec,
+  digest,
+}: {
+  rec: Recommendation;
+  digest?: InsightDigest | null;
+}) {
   return (
     <section className="card p-6">
       <p className="label mb-4">Names to focus on</p>
       <div className="space-y-3">
         {rec.picks.map((p) => (
-          <div
-            key={p.ticker}
-            className="rounded-xl p-4"
-            style={{ background: "var(--panel-2)" }}
-          >
-            <div className="flex items-baseline justify-between gap-3">
-              <div>
-                <span className="font-bold">{p.ticker}</span>{" "}
-                <span className="text-sm" style={{ color: "var(--muted)" }}>
-                  {p.name}
-                </span>
-              </div>
-              {p.price != null && (
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-semibold tabular-nums">
-                    ${p.price.toFixed(2)}
-                  </span>
-                  {p.changePercent != null && (
-                    <span
-                      className={`change ${p.changePercent >= 0 ? "change-up" : "change-down"}`}
-                    >
-                      {p.changePercent >= 0 ? "▲" : "▼"}
-                      {Math.abs(p.changePercent).toFixed(2)}%
-                    </span>
-                  )}
-                </div>
-              )}
-            </div>
-            <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
-              {p.rationale}
-            </p>
-            <span className={`mt-2 ${bucketPill(p.bucket)}`}>{p.bucket}</span>
-          </div>
+          <PickCard key={p.ticker} pick={p} digest={digest} />
         ))}
       </div>
     </section>
+  );
+}
+
+function PickCard({
+  pick: p,
+  digest,
+}: {
+  pick: Recommendation["picks"][number];
+  digest?: InsightDigest | null;
+}) {
+  const [showWhy, setShowWhy] = useState(false);
+  const evidence = evidenceForTicker(p.ticker, digest);
+  const hasWhy = evidence.insights.length > 0 || evidence.sources.length > 0;
+
+  return (
+    <div className="rounded-xl p-4" style={{ background: "var(--panel-2)" }}>
+      <div className="flex items-baseline justify-between gap-3">
+        <div>
+          <span className="font-bold">{p.ticker}</span>{" "}
+          <span className="text-sm" style={{ color: "var(--muted)" }}>
+            {p.name}
+          </span>
+        </div>
+        {p.price != null && (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold tabular-nums">
+              ${p.price.toFixed(2)}
+            </span>
+            {p.changePercent != null && (
+              <span
+                className={`change ${p.changePercent >= 0 ? "change-up" : "change-down"}`}
+              >
+                {p.changePercent >= 0 ? "▲" : "▼"}
+                {Math.abs(p.changePercent).toFixed(2)}%
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+      <p className="mt-2 text-sm" style={{ color: "var(--muted)" }}>
+        {p.rationale}
+      </p>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <span className={bucketPill(p.bucket)}>{p.bucket}</span>
+        {hasWhy && (
+          <button
+            className="text-xs font-medium"
+            style={{ color: "var(--accent)" }}
+            onClick={() => setShowWhy((s) => !s)}
+          >
+            {showWhy ? "Hide why" : `Why this pick (${evidence.insights.length + evidence.sources.length})`}
+          </button>
+        )}
+      </div>
+
+      {showWhy && hasWhy && (
+        <div
+          className="mt-3 space-y-2 rounded-lg p-3 text-sm"
+          style={{ background: "var(--bg)", boxShadow: "inset 0 0 0 1px var(--border)" }}
+        >
+          {evidence.insights.map((ins, i) => (
+            <div key={i}>
+              <p className="font-medium">{ins.title}</p>
+              <p className="text-xs" style={{ color: "var(--muted)" }}>
+                {ins.soWhat}
+              </p>
+            </div>
+          ))}
+          {evidence.sources.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {evidence.sources.map((s) =>
+                s.url ? (
+                  <a
+                    key={s.id}
+                    href={s.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs underline"
+                    style={{ color: "var(--muted)" }}
+                    title={s.title}
+                  >
+                    {s.source}
+                  </a>
+                ) : (
+                  <span
+                    key={s.id}
+                    className="text-xs"
+                    style={{ color: "var(--muted)" }}
+                    title={s.title}
+                  >
+                    {s.source}
+                  </span>
+                ),
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
