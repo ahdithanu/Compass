@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { InsightDigest, Recommendation } from "@/lib/types";
 import { apiGet, apiPost, withRef } from "@/lib/apiClient";
+import { diffRuns, type AllocationDelta } from "@/lib/compare";
 
 interface RunSummary {
   id: string;
@@ -112,10 +113,43 @@ export default function DashboardPage() {
   );
 }
 
-/** Collapsible run history. Each row opens the full stored run in a modal. */
+/** Collapsible run history. Rows open the full stored run; in compare mode you
+ *  pick two recommendation runs to diff what changed between them. */
 function HistoryPanel({ runs }: { runs: RunSummary[] }) {
   const [open, setOpen] = useState(false);
   const [openRunId, setOpenRunId] = useState<string | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [comparePair, setComparePair] = useState<[string, string] | null>(null);
+
+  // Only recommendation runs carry an allocation, so only they're comparable.
+  const recRuns = runs.filter((r) => r.kind === "recommendation");
+  const canCompare = recRuns.length >= 2;
+
+  function toggleSelect(id: string) {
+    setSelected((cur) => {
+      if (cur.includes(id)) return cur.filter((x) => x !== id);
+      if (cur.length >= 2) return [cur[1], id]; // keep the most recent two picks
+      return [...cur, id];
+    });
+  }
+
+  function startCompare() {
+    if (selected.length !== 2) return;
+    // Order older -> newer so deltas read as "how the newer plan changed".
+    const byId = new Map(runs.map((r) => [r.id, r]));
+    const [a, b] = selected;
+    const older =
+      new Date(byId.get(a)!.created_at) <= new Date(byId.get(b)!.created_at) ? a : b;
+    const newer = older === a ? b : a;
+    setComparePair([older, newer]);
+  }
+
+  function exitCompare() {
+    setCompareMode(false);
+    setSelected([]);
+  }
+
   return (
     <section className="card p-6">
       <button
@@ -127,31 +161,89 @@ function HistoryPanel({ runs }: { runs: RunSummary[] }) {
           {runs.length} saved {runs.length === 1 ? "run" : "runs"} · {open ? "hide" : "show"}
         </span>
       </button>
+
       {open && (
-        <ul className="mt-4 space-y-2 text-sm">
-          {runs.map((r) => (
-            <li key={r.id}>
-              <button
-                className="lift flex w-full items-center justify-between rounded-lg px-3 py-2 text-left"
-                style={{ background: "var(--panel-2)" }}
-                onClick={() => setOpenRunId(r.id)}
-              >
-                <span>
-                  <span className="font-medium">
-                    {r.kind === "recommendation" ? "Recommendation" : "Insights"}
+        <>
+          {canCompare && (
+            <div className="mt-4 flex items-center justify-between gap-3">
+              {compareMode ? (
+                <>
+                  <span className="text-sm" style={{ color: "var(--muted)" }}>
+                    Pick two recommendation runs · {selected.length}/2 selected
                   </span>
-                  <span style={{ color: "var(--muted)" }}>
-                    {" "}· {new Date(r.created_at).toLocaleString()}
+                  <span className="flex gap-2">
+                    <button
+                      className="btn text-sm disabled:opacity-50"
+                      disabled={selected.length !== 2}
+                      onClick={startCompare}
+                    >
+                      Compare →
+                    </button>
+                    <button className="btn-ghost text-sm" onClick={exitCompare}>
+                      Cancel
+                    </button>
                   </span>
-                </span>
-                <span style={{ color: "var(--muted)" }}>
-                  {r.checks_passed}/{r.checks_total} checks · {r.reasoning_source} ·{" "}
-                  <span style={{ color: "var(--accent)" }}>open →</span>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+                </>
+              ) : (
+                <button
+                  className="btn-ghost text-sm"
+                  onClick={() => setCompareMode(true)}
+                >
+                  Compare two runs
+                </button>
+              )}
+            </div>
+          )}
+
+          <ul className="mt-4 space-y-2 text-sm">
+            {runs.map((r) => {
+              const isRec = r.kind === "recommendation";
+              const picked = selected.includes(r.id);
+              const selectable = compareMode && isRec;
+              return (
+                <li key={r.id}>
+                  <button
+                    className="lift flex w-full items-center justify-between rounded-lg px-3 py-2 text-left disabled:cursor-not-allowed disabled:opacity-40"
+                    style={{
+                      background: picked ? "var(--accent)" : "var(--panel-2)",
+                      color: picked ? "#fff" : "var(--text)",
+                    }}
+                    disabled={compareMode && !isRec}
+                    onClick={() =>
+                      compareMode ? selectable && toggleSelect(r.id) : setOpenRunId(r.id)
+                    }
+                  >
+                    <span>
+                      <span className="font-medium">
+                        {isRec ? "Recommendation" : "Insights"}
+                      </span>
+                      <span style={{ color: picked ? "rgba(255,255,255,0.8)" : "var(--muted)" }}>
+                        {" "}· {new Date(r.created_at).toLocaleString()}
+                      </span>
+                    </span>
+                    <span style={{ color: picked ? "rgba(255,255,255,0.8)" : "var(--muted)" }}>
+                      {r.checks_passed}/{r.checks_total} checks · {r.reasoning_source} ·{" "}
+                      <span style={{ color: picked ? "#fff" : "var(--accent)" }}>
+                        {compareMode ? (picked ? "selected" : "select") : "open →"}
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
+
+      {comparePair && (
+        <ComparisonModal
+          olderId={comparePair[0]}
+          newerId={comparePair[1]}
+          onClose={() => {
+            setComparePair(null);
+            exitCompare();
+          }}
+        />
       )}
       {openRunId && (
         <RunDetailModal runId={openRunId} onClose={() => setOpenRunId(null)} />
@@ -238,6 +330,204 @@ function RunDetailModal({
           <InsightsView digest={run.payload as InsightDigest} />
         )}
       </div>
+    </div>
+  );
+}
+
+/** Fetch two recommendation runs and render what changed between them. */
+function ComparisonModal({
+  olderId,
+  newerId,
+  onClose,
+}: {
+  olderId: string;
+  newerId: string;
+  onClose: () => void;
+}) {
+  const [pair, setPair] = useState<{
+    older: Recommendation;
+    newer: Recommendation;
+    olderAt: string;
+    newerAt: string;
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const [a, b] = await Promise.all([
+        apiGet<{ run: RunDetail }>(`/api/history?id=${encodeURIComponent(olderId)}`),
+        apiGet<{ run: RunDetail }>(`/api/history?id=${encodeURIComponent(newerId)}`),
+      ]);
+      if (!active) return;
+      if (a.ok && b.ok && a.data.run && b.data.run) {
+        setPair({
+          older: a.data.run.payload as Recommendation,
+          newer: b.data.run.payload as Recommendation,
+          olderAt: a.data.run.created_at,
+          newerAt: b.data.run.created_at,
+        });
+      } else {
+        setError("Couldn't load both runs to compare.");
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [olderId, newerId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const cmp = pair ? diffRuns(pair.older, pair.newer) : null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-8"
+      style={{ background: "rgba(0,0,0,0.45)" }}
+      onClick={onClose}
+    >
+      <div className="card w-full max-w-2xl p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between">
+          <span className="label">What changed</span>
+          <button className="btn-ghost text-sm" onClick={onClose}>
+            Close
+          </button>
+        </div>
+
+        {error && (
+          <p className="text-sm" style={{ color: "var(--danger)" }}>
+            {error}
+          </p>
+        )}
+        {!pair && !error && (
+          <p className="text-sm" style={{ color: "var(--muted)" }}>
+            Loading…
+          </p>
+        )}
+
+        {pair && cmp && (
+          <>
+            <p className="text-sm" style={{ color: "var(--muted)" }}>
+              {new Date(pair.olderAt).toLocaleDateString()} →{" "}
+              {new Date(pair.newerAt).toLocaleDateString()}
+            </p>
+
+            {cmp.unchanged && (
+              <p className="mt-4 text-sm">
+                No changes — same target mix and the same names both times.
+              </p>
+            )}
+
+            <div className="mt-5">
+              <p className="label mb-3">Allocation shift</p>
+              <div className="space-y-2">
+                {cmp.allocation.map((d) => (
+                  <AllocationDeltaRow key={d.key} d={d} />
+                ))}
+              </div>
+            </div>
+
+            {(cmp.added.length > 0 || cmp.removed.length > 0) && (
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <PickChangeList
+                  title="Added"
+                  items={cmp.added}
+                  color="var(--accent)"
+                  prefix="+"
+                />
+                <PickChangeList
+                  title="Removed"
+                  items={cmp.removed}
+                  color="var(--danger)"
+                  prefix="−"
+                  strike
+                />
+              </div>
+            )}
+
+            {cmp.held.length > 0 && (
+              <p className="mt-5 text-xs" style={{ color: "var(--muted)" }}>
+                Held throughout: {cmp.held.map((p) => p.ticker).join(", ")}
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AllocationDeltaRow({ d }: { d: AllocationDelta }) {
+  const label = d.key.charAt(0).toUpperCase() + d.key.slice(1);
+  const color =
+    d.delta > 0 ? "var(--accent)" : d.delta < 0 ? "var(--danger)" : "var(--muted)";
+  const sign = d.delta > 0 ? "+" : d.delta < 0 ? "−" : "";
+  return (
+    <div className="flex items-center justify-between text-sm">
+      <span className="font-medium">{label}</span>
+      <span className="flex items-center gap-3">
+        <span className="tabular-nums" style={{ color: "var(--muted)" }}>
+          {d.from}% → {d.to}%
+        </span>
+        <span
+          className="w-14 text-right font-semibold tabular-nums"
+          style={{ color }}
+        >
+          {d.delta === 0 ? "—" : `${sign}${Math.abs(d.delta)} pts`}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+function PickChangeList({
+  title,
+  items,
+  color,
+  prefix,
+  strike,
+}: {
+  title: string;
+  items: { ticker: string; name: string }[];
+  color: string;
+  prefix: string;
+  strike?: boolean;
+}) {
+  return (
+    <div>
+      <p className="label mb-2">
+        {title} ({items.length})
+      </p>
+      {items.length === 0 ? (
+        <p className="text-sm" style={{ color: "var(--muted)" }}>
+          None
+        </p>
+      ) : (
+        <ul className="space-y-1.5 text-sm">
+          {items.map((p) => (
+            <li key={p.ticker} className="flex items-baseline gap-2">
+              <span className="font-semibold" style={{ color }}>
+                {prefix}
+              </span>
+              <span>
+                <span
+                  className="font-medium"
+                  style={strike ? { textDecoration: "line-through" } : undefined}
+                >
+                  {p.ticker}
+                </span>{" "}
+                <span style={{ color: "var(--muted)" }}>{p.name}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
