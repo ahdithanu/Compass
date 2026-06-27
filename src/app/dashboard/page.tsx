@@ -79,7 +79,10 @@ export default function DashboardPage() {
         <Link href="/" className="text-lg font-bold tracking-tight">
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Link href="/projection" className="btn-ghost text-sm">
+            Projection
+          </Link>
           <Link href="/rebalance" className="btn-ghost text-sm">
             Rebalance
           </Link>
