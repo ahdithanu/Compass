@@ -80,6 +80,9 @@ export default function DashboardPage() {
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
         <div className="flex gap-2">
+          <Link href="/rebalance" className="btn-ghost text-sm">
+            Rebalance
+          </Link>
           <Link href="/sources" className="btn-ghost text-sm">
             Sources
           </Link>
