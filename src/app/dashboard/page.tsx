@@ -77,24 +77,24 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
-      <header className="mb-8 flex items-center justify-between">
+      <header className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/" className="text-lg font-bold tracking-tight">
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
-        <div className="flex flex-wrap gap-2">
-          <Link href="/projection" className="btn-ghost text-sm">
+        <nav className="flex flex-wrap gap-2 sm:justify-end">
+          <Link href="/projection" className="btn-ghost whitespace-nowrap text-sm">
             Projection
           </Link>
-          <Link href="/rebalance" className="btn-ghost text-sm">
+          <Link href="/rebalance" className="btn-ghost whitespace-nowrap text-sm">
             Rebalance
           </Link>
-          <Link href="/sources" className="btn-ghost text-sm">
+          <Link href="/sources" className="btn-ghost whitespace-nowrap text-sm">
             Sources
           </Link>
-          <Link href="/onboarding" className="btn-ghost text-sm">
+          <Link href="/onboarding" className="btn-ghost whitespace-nowrap text-sm">
             Update my profile
           </Link>
-        </div>
+        </nav>
       </header>
 
       {loading && <p style={{ color: "var(--muted)" }}>Building your plan…</p>}
