@@ -66,9 +66,11 @@ questionnaires.
 - ✅ **Request-id correlation** (`x-request-id`) + structured logs.
 - ✅ **Per-run checker audit trail** persisted (multi-stage verification).
 - ⬜ **Centralized logging / SIEM**, security alerting, anomaly detection.
-- 🟡 **Error monitoring** — every uncaught route error is reported to Sentry via
-  the central `withRequest` funnel (dependency-free, DSN-gated). Set `SENTRY_DSN`
-  to activate; covers server errors (client-side SDK still todo).
+- ✅ **Error monitoring** — full-stack, dependency-free, DSN-gated. Server: every
+  uncaught route error reported via the central `withRequest` funnel (set
+  `SENTRY_DSN`). Client: window `error`/`unhandledrejection` + a React error
+  boundary (`app/error.tsx`) report via `sendBeacon` (set
+  `NEXT_PUBLIC_SENTRY_DSN`), capped per session.
 
 ## Compliance & governance
 - ✅ Educational-only framing + disclaimers (reduces regulatory exposure).

@@ -15,5 +15,6 @@ delete process.env.ALPHAVANTAGE_API_KEY;
 delete process.env.ANTHROPIC_API_KEY;
 delete process.env.NEWSLETTER_FEEDS;
 delete process.env.SENTRY_DSN;
+delete process.env.NEXT_PUBLIC_SENTRY_DSN;
 delete process.env.UPSTASH_REDIS_REST_URL;
 delete process.env.UPSTASH_REDIS_REST_TOKEN;

@@ -28,7 +28,8 @@ const securityHeaders = [
       // challenges.cloudflare.com: Cloudflare Turnstile CAPTCHA (script + iframe).
       "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
       "frame-src 'self' https://challenges.cloudflare.com",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com",
+      // *.sentry.io: client-side error reporting (browser -> Sentry ingest).
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com https://*.ingest.sentry.io https://*.sentry.io",
       "form-action 'self'",
     ].join("; "),
   },

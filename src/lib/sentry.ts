@@ -29,15 +29,50 @@ export function isSentryConfigured(): boolean {
   return parseDsn(process.env.SENTRY_DSN) !== null;
 }
 
-function eventId(): string {
+export function eventId(): string {
   const uuid = globalThis.crypto?.randomUUID?.();
   return uuid ? uuid.replace(/-/g, "") : `${Date.now().toString(16)}`.padEnd(32, "0");
+}
+
+/** The Sentry ingest endpoint for a parsed DSN. */
+export function sentryStoreUrl(dsn: ParsedDsn): string {
+  return `https://${dsn.host}/api/${dsn.projectId}/store/`;
+}
+
+/** The `X-Sentry-Auth` header value for a parsed DSN. */
+export function sentryAuthHeader(dsn: ParsedDsn): string {
+  return `Sentry sentry_version=7, sentry_key=${dsn.publicKey}, sentry_client=compass/1.0`;
 }
 
 export interface CaptureContext {
   requestId?: string;
   scope?: string;
   extra?: Record<string, unknown>;
+}
+
+/** Build a Sentry event payload from an error. Isomorphic (server + browser);
+ *  `environment`/`release` resolve to undefined on the client unless provided. */
+export function buildSentryEvent(
+  error: unknown,
+  opts: { platform: "node" | "javascript" } & CaptureContext,
+): Record<string, unknown> {
+  const err = error instanceof Error ? error : new Error(String(error));
+  return {
+    event_id: eventId(),
+    timestamp: new Date().toISOString(),
+    platform: opts.platform,
+    level: "error",
+    logger: opts.scope ?? (opts.platform === "javascript" ? "client" : "api"),
+    environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "production",
+    release:
+      process.env.VERCEL_GIT_COMMIT_SHA ||
+      process.env.NEXT_PUBLIC_RELEASE ||
+      undefined,
+    server_name: process.env.VERCEL_REGION || undefined,
+    tags: { scope: opts.scope, request_id: opts.requestId },
+    extra: { ...opts.extra, stack: err.stack },
+    exception: { values: [{ type: err.name, value: err.message }] },
+  };
 }
 
 /**
@@ -52,31 +87,15 @@ export async function captureException(
   const dsn = parseDsn(process.env.SENTRY_DSN);
   if (!dsn) return;
 
-  const err = error instanceof Error ? error : new Error(String(error));
-  const event = {
-    event_id: eventId(),
-    timestamp: new Date().toISOString(),
-    platform: "node",
-    level: "error",
-    logger: context.scope ?? "api",
-    environment:
-      process.env.VERCEL_ENV || process.env.NODE_ENV || "production",
-    release: process.env.VERCEL_GIT_COMMIT_SHA || undefined,
-    server_name: process.env.VERCEL_REGION || undefined,
-    tags: { scope: context.scope, request_id: context.requestId },
-    extra: { ...context.extra, stack: err.stack },
-    exception: {
-      values: [{ type: err.name, value: err.message }],
-    },
-  };
-
-  const endpoint = `https://${dsn.host}/api/${dsn.projectId}/store/`;
-  const auth = `Sentry sentry_version=7, sentry_key=${dsn.publicKey}, sentry_client=compass/1.0`;
+  const event = buildSentryEvent(error, { platform: "node", ...context });
 
   try {
-    await fetchWithTimeout(endpoint, 1500, {
+    await fetchWithTimeout(sentryStoreUrl(dsn), 1500, {
       method: "POST",
-      headers: { "content-type": "application/json", "x-sentry-auth": auth },
+      headers: {
+        "content-type": "application/json",
+        "x-sentry-auth": sentryAuthHeader(dsn),
+      },
       body: JSON.stringify(event),
     });
   } catch {

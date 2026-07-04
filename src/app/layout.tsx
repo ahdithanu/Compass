@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import AuthSync from "@/components/AuthSync";
+import ClientErrorMonitor from "@/components/ClientErrorMonitor";
 
 // Robinhood-style typography: one bold geometric grotesque used everywhere,
 // leaning on heavy weights + tight tracking for big confident headlines.
@@ -46,6 +47,7 @@ export default function RootLayout({
       </head>
       <body>
         <AuthSync />
+        <ClientErrorMonitor />
         {children}
       </body>
     </html>
