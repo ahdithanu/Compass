@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { apiGet, apiPost, apiDelete, withRef } from "@/lib/apiClient";
+import AccountMenu from "@/components/AccountMenu";
 
 interface Feed {
   id: string;
@@ -69,9 +70,12 @@ export default function SourcesPage() {
         <Link href="/dashboard" className="text-lg font-bold tracking-tight">
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
-        <Link href="/dashboard" className="btn-ghost text-sm">
-          Back to dashboard
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard" className="btn-ghost text-sm">
+            Back to dashboard
+          </Link>
+          <AccountMenu />
+        </div>
       </header>
 
       <h1 className="text-3xl font-bold">Your sources</h1>

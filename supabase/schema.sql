@@ -18,15 +18,15 @@ alter table public.profiles enable row level security;
 -- A user can only see and modify their own profile.
 drop policy if exists "own profile - select" on public.profiles;
 create policy "own profile - select" on public.profiles
-  for select using (auth.uid() = id);
+  for select using ((select auth.uid()) =id);
 
 drop policy if exists "own profile - upsert" on public.profiles;
 create policy "own profile - upsert" on public.profiles
-  for insert with check (auth.uid() = id);
+  for insert with check ((select auth.uid()) =id);
 
 drop policy if exists "own profile - update" on public.profiles;
 create policy "own profile - update" on public.profiles
-  for update using (auth.uid() = id) with check (auth.uid() = id);
+  for update using ((select auth.uid()) =id) with check ((select auth.uid()) =id);
 
 -- Persisted history of every recommendation/insights run.
 create table if not exists public.runs (
@@ -45,9 +45,9 @@ create index if not exists runs_user_created_idx on public.runs(user_id, created
 
 alter table public.runs enable row level security;
 drop policy if exists "own runs - select" on public.runs;
-create policy "own runs - select" on public.runs for select using (auth.uid() = user_id);
+create policy "own runs - select" on public.runs for select using ((select auth.uid()) =user_id);
 drop policy if exists "own runs - insert" on public.runs;
-create policy "own runs - insert" on public.runs for insert with check (auth.uid() = user_id);
+create policy "own runs - insert" on public.runs for insert with check ((select auth.uid()) =user_id);
 
 -- Normalized checker audit log: one row per gate result, per run.
 create table if not exists public.run_checks (
@@ -64,9 +64,9 @@ create index if not exists run_checks_run_idx on public.run_checks(run_id);
 
 alter table public.run_checks enable row level security;
 drop policy if exists "own run_checks - select" on public.run_checks;
-create policy "own run_checks - select" on public.run_checks for select using (auth.uid() = user_id);
+create policy "own run_checks - select" on public.run_checks for select using ((select auth.uid()) =user_id);
 drop policy if exists "own run_checks - insert" on public.run_checks;
-create policy "own run_checks - insert" on public.run_checks for insert with check (auth.uid() = user_id);
+create policy "own run_checks - insert" on public.run_checks for insert with check ((select auth.uid()) =user_id);
 
 -- Per-user newsletter / RSS feeds for the insights engine.
 create table if not exists public.user_feeds (
@@ -82,8 +82,8 @@ create index if not exists user_feeds_user_idx on public.user_feeds(user_id, cre
 
 alter table public.user_feeds enable row level security;
 drop policy if exists "own feeds - select" on public.user_feeds;
-create policy "own feeds - select" on public.user_feeds for select using (auth.uid() = user_id);
+create policy "own feeds - select" on public.user_feeds for select using ((select auth.uid()) =user_id);
 drop policy if exists "own feeds - insert" on public.user_feeds;
-create policy "own feeds - insert" on public.user_feeds for insert with check (auth.uid() = user_id);
+create policy "own feeds - insert" on public.user_feeds for insert with check ((select auth.uid()) =user_id);
 drop policy if exists "own feeds - delete" on public.user_feeds;
-create policy "own feeds - delete" on public.user_feeds for delete using (auth.uid() = user_id);
+create policy "own feeds - delete" on public.user_feeds for delete using ((select auth.uid()) =user_id);

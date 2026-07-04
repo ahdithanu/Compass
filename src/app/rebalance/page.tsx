@@ -6,6 +6,7 @@ import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildAllocation } from "@/lib/allocate";
 import { computeRebalance, BUCKETS, type Bucket } from "@/lib/rebalance";
 import { DEFAULT_PROFILE } from "@/lib/profile";
+import AccountMenu from "@/components/AccountMenu";
 import type { Allocation, Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
 
 const BUCKET_META: Record<Bucket, { label: string; color: string }> = {
@@ -88,9 +89,12 @@ export default function RebalancePage() {
         <Link href="/dashboard" className="text-lg font-bold tracking-tight">
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
-        <Link href="/dashboard" className="btn-ghost text-sm">
-          Back to dashboard
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/dashboard" className="btn-ghost text-sm">
+            Back to dashboard
+          </Link>
+          <AccountMenu />
+        </div>
       </header>
 
       <h1 className="text-3xl font-bold">Rebalance calculator</h1>

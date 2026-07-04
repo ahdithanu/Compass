@@ -31,8 +31,12 @@ questionnaires.
 - ✅ **Request body-size caps** (413) and **input validation** on all writes.
 - ✅ **Per-client rate limiting** (429 + Retry-After), keyed off the
   platform-set client IP (`x-vercel-forwarded-for`) so a spoofed
-  `x-forwarded-for` can't rotate buckets — ⬜ but still in-memory / per-instance;
-  needs a shared store (Upstash/Redis) or WAF for multi-instance scale.
+  `x-forwarded-for` can't rotate buckets. **Scale-ready:** uses a shared
+  Upstash Redis store (atomic INCR/PEXPIRE window) when
+  `UPSTASH_REDIS_REST_URL/TOKEN` are set, so the limit holds across every
+  serverless instance; degrades to the in-memory limiter (never fail-open) when
+  the store is unset or errors. Set the two env vars (Upstash has a free tier)
+  to activate the distributed window.
 - ✅ **Security headers** — HSTS, X-Frame-Options, X-Content-Type-Options,
   Referrer-Policy, Permissions-Policy.
 - 🟡 **Content-Security-Policy** — shipped in **Report-Only** mode; enforce after

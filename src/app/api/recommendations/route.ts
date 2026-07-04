@@ -8,7 +8,7 @@ import { runRecommendationPipeline, PipelineError } from "@/lib/pipeline";
 import { persistRun } from "@/lib/persistence";
 import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -18,7 +18,7 @@ const WINDOW_MS = 60_000;
 const limitFor = () => envLimit("API_RATE_LIMIT_RECS", 20);
 
 export const POST = withRequest("recommendations", async (request) => {
-  const rl = rateLimit(clientKey(request, "recs"), limitFor(), WINDOW_MS);
+  const rl = await checkRateLimit(clientKey(request, "recs"), limitFor(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
   let rawProfile: unknown = null;

@@ -6,7 +6,7 @@
 import { NextResponse } from "next/server";
 import { validateFeed } from "@/lib/feeds";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { rateLimit, clientKey, envLimit } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -42,7 +42,7 @@ export const GET = withRequest("feeds:list", async () => {
 });
 
 export const POST = withRequest("feeds:add", async (request) => {
-  const rl = rateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
+  const rl = await checkRateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
   const ctx = await requireUser();
@@ -98,7 +98,7 @@ export const POST = withRequest("feeds:add", async (request) => {
 });
 
 export const DELETE = withRequest("feeds:remove", async (request) => {
-  const rl = rateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
+  const rl = await checkRateLimit(clientKey(request, "feeds"), feedWriteLimit(), WINDOW_MS);
   if (!rl.ok) return rateLimitedResponse(rl);
 
   const ctx = await requireUser();

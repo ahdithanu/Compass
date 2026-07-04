@@ -1,5 +1,11 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { rateLimit, clientKey, __resetRateLimit } from "@/lib/ratelimit";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import {
+  rateLimit,
+  checkRateLimit,
+  isDistributedRateLimit,
+  clientKey,
+  __resetRateLimit,
+} from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, MAX_BODY_BYTES } from "@/lib/http";
 
 beforeEach(() => __resetRateLimit());
@@ -35,6 +41,50 @@ describe("rateLimit", () => {
     rateLimit("c", 1, 800, 0);
     const blocked = rateLimit("c", 1, 800, 700); // 100ms left -> ceil to 1s, min 1
     expect(blocked.retryAfterSec).toBe(1);
+  });
+});
+
+describe("checkRateLimit (distributed)", () => {
+  const ENV = { ...process.env };
+  afterEach(() => {
+    process.env = { ...ENV };
+    vi.unstubAllGlobals();
+  });
+
+  it("uses the in-memory limiter when no shared store is configured", async () => {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    expect(isDistributedRateLimit()).toBe(false);
+    expect((await checkRateLimit("k", 1, 1000)).ok).toBe(true);
+    expect((await checkRateLimit("k", 1, 1000)).ok).toBe(false); // 2nd hit over the limit
+  });
+
+  it("uses the shared store and derives Retry-After from the TTL when over the limit", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://x.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "tok";
+    // INCR -> 3 (over a limit of 2), PEXPIRE -> 0, PTTL -> 2500ms left.
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [{ result: 3 }, { result: 0 }, { result: 2500 }],
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const rl = await checkRateLimit("recs:1.2.3.4", 2, 60_000);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(rl.ok).toBe(false);
+    expect(rl.remaining).toBe(0);
+    expect(rl.retryAfterSec).toBe(3); // ceil(2500/1000)
+  });
+
+  it("degrades to the in-memory limiter when the shared store errors", async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://x.upstash.io";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "tok";
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network")));
+
+    // Store is down -> falls back to local counting (not fail-open).
+    expect((await checkRateLimit("f", 1, 1000)).ok).toBe(true);
+    expect((await checkRateLimit("f", 1, 1000)).ok).toBe(false);
   });
 });
 
