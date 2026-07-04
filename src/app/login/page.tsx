@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import Captcha, { isCaptchaEnabled } from "@/components/Captcha";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,20 +14,27 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [msg, setMsg] = useState<{ text: string; kind: "error" | "info" } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaReset, setCaptchaReset] = useState(0);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setMsg(null);
     const supabase = createClient();
+    // captchaToken is only required when Supabase-side CAPTCHA is enabled; when
+    // it isn't, passing undefined is a no-op.
+    const options = captchaToken ? { captchaToken } : undefined;
     const fn =
       mode === "signin"
-        ? supabase.auth.signInWithPassword({ email, password })
-        : supabase.auth.signUp({ email, password });
+        ? supabase.auth.signInWithPassword({ email, password, options })
+        : supabase.auth.signUp({ email, password, options });
     const { error } = await fn;
     setBusy(false);
     if (error) {
       setMsg({ text: error.message, kind: "error" });
+      // Turnstile tokens are single-use — force a fresh challenge before retry.
+      if (isCaptchaEnabled()) setCaptchaReset((n) => n + 1);
       return;
     }
     if (mode === "signup") {
@@ -86,6 +94,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <Captcha onToken={setCaptchaToken} resetSignal={captchaReset} />
           {msg && (
             <p
               className="text-sm"
@@ -94,7 +103,10 @@ export default function LoginPage() {
               {msg.text}
             </p>
           )}
-          <button className="btn w-full" disabled={busy}>
+          <button
+            className="btn w-full"
+            disabled={busy || (isCaptchaEnabled() && !captchaToken)}
+          >
             {busy ? "…" : mode === "signin" ? "Sign in" : "Sign up"}
           </button>
           <button

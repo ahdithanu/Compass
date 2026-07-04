@@ -6,6 +6,7 @@
 
 import { NextResponse } from "next/server";
 import { logEvent } from "./observability";
+import { captureException } from "./sentry";
 
 export type ApiHandler = (
   request: Request,
@@ -54,6 +55,9 @@ export function withRequest(scope: string, handler: ApiHandler) {
         ms: Date.now() - start,
         detail: err instanceof Error ? err.message : String(err),
       });
+      // Report to Sentry (no-ops unless SENTRY_DSN is set). Awaited so the event
+      // survives the serverless function returning; bounded by its own timeout.
+      await captureException(err, { requestId, scope });
       const res = NextResponse.json(
         { error: "Internal server error.", requestId },
         { status: 500 },

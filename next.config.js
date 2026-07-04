@@ -25,8 +25,10 @@ const securityHeaders = [
       "img-src 'self' data: blob:",
       "font-src 'self'",
       "style-src 'self' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-inline'",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+      // challenges.cloudflare.com: Cloudflare Turnstile CAPTCHA (script + iframe).
+      "script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com",
+      "frame-src 'self' https://challenges.cloudflare.com",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://challenges.cloudflare.com",
       "form-action 'self'",
     ].join("; "),
   },

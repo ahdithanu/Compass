@@ -66,7 +66,9 @@ questionnaires.
 - ✅ **Request-id correlation** (`x-request-id`) + structured logs.
 - ✅ **Per-run checker audit trail** persisted (multi-stage verification).
 - ⬜ **Centralized logging / SIEM**, security alerting, anomaly detection.
-- ⬜ **Error monitoring** (e.g. Sentry).
+- 🟡 **Error monitoring** — every uncaught route error is reported to Sentry via
+  the central `withRequest` funnel (dependency-free, DSN-gated). Set `SENTRY_DSN`
+  to activate; covers server errors (client-side SDK still todo).
 
 ## Compliance & governance
 - ✅ Educational-only framing + disclaimers (reduces regulatory exposure).
