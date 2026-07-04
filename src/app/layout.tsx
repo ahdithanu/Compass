@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
+import AuthSync from "@/components/AuthSync";
 
 // Robinhood-style typography: one bold geometric grotesque used everywhere,
 // leaning on heavy weights + tight tracking for big confident headlines.
@@ -43,7 +44,10 @@ export default function RootLayout({
           <style>{`.reveal{opacity:1 !important;transform:none !important}`}</style>
         </noscript>
       </head>
-      <body>{children}</body>
+      <body>
+        <AuthSync />
+        {children}
+      </body>
     </html>
   );
 }

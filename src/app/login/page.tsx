@@ -33,6 +33,13 @@ export default function LoginPage() {
       setMsg({ text: "Check your email to confirm, then sign in.", kind: "info" });
       return;
     }
+    // Drop any cached profile from a previous user on this browser so the
+    // freshly signed-in user loads *their* saved profile, not the last one's.
+    try {
+      sessionStorage.removeItem("compass:profile");
+    } catch {
+      /* ignore */
+    }
     router.push("/dashboard");
   }
 

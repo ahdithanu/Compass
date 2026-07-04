@@ -6,6 +6,7 @@ import type { InsightDigest, Recommendation } from "@/lib/types";
 import { apiGet, apiPost, withRef } from "@/lib/apiClient";
 import { diffRuns, type AllocationDelta } from "@/lib/compare";
 import { evidenceForTicker } from "@/lib/explain";
+import AccountMenu from "@/components/AccountMenu";
 
 interface RunSummary {
   id: string;
@@ -94,6 +95,7 @@ export default function DashboardPage() {
           <Link href="/onboarding" className="btn-ghost whitespace-nowrap text-sm">
             Update my profile
           </Link>
+          <AccountMenu />
         </nav>
       </header>
 

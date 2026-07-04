@@ -16,6 +16,20 @@ const ATOM = `<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom"><ti
 <link rel="alternate" href="https://ex.com/atom1"/>
 <summary>Demand resilient.</summary><updated>2026-06-15T12:00:00Z</updated></entry></feed>`;
 
+// A feed dated relative to *now* — the ingest pipeline drops items older than
+// its recency window, so live-path assertions must not use fixed calendar dates
+// (they'd age out and flip the test to the fallback branch).
+function freshRss() {
+  const recent = new Date(Date.now() - 86_400_000).toUTCString(); // 1 day ago
+  return `<?xml version="1.0"?><rss version="2.0"><channel><title>Feed</title>
+<item><title><![CDATA[Markets slip as $AAPL leads tech lower]]></title>
+<link>https://ex.com/a</link><description><![CDATA[<p>Stocks fell. VTI down.</p>]]></description>
+<pubDate>${recent}</pubDate></item>
+<item><title>Bonds catch a bid</title><link>https://ex.com/b</link>
+<description>BND rose modestly.</description><pubDate>${recent}</pubDate></item>
+</channel></rss>`;
+}
+
 describe("parseFeed", () => {
   it("parses RSS 2.0, strips HTML, and normalizes dates", () => {
     const items = parseFeed(RSS, feed, new Set(["VTI", "BND"]));
@@ -62,7 +76,7 @@ describe("ingestNewsletters", () => {
   it("ingests and re-ids items when feeds return content", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: true, text: async () => RSS }),
+      vi.fn().mockResolvedValue({ ok: true, text: async () => freshRss() }),
     );
     const res = await ingestNewsletters(["VTI", "BND"]);
     expect(res.source).toBe("live");
