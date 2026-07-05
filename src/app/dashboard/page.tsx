@@ -83,6 +83,9 @@ export default function DashboardPage() {
           Compass<span style={{ color: "var(--accent)" }}>.</span>
         </Link>
         <nav className="flex flex-wrap gap-2 sm:justify-end">
+          <Link href="/backtest" className="btn-ghost whitespace-nowrap text-sm">
+            Backtest
+          </Link>
           <Link href="/projection" className="btn-ghost whitespace-nowrap text-sm">
             Projection
           </Link>

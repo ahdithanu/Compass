@@ -329,6 +329,31 @@ describe("/api/history", () => {
 });
 
 // ---------------------------------------------------------------------------
+// /api/backtest  (no auth/DB — runs the engine on simulated history)
+// ---------------------------------------------------------------------------
+describe("/api/backtest", () => {
+  const post = async (body: unknown) => {
+    const { POST } = await import("@/app/api/backtest/route");
+    return POST(new Request("http://t/api/backtest", { method: "POST", body: JSON.stringify(body) }));
+  };
+
+  it("runs a simulated backtest for a posted mix", async () => {
+    const res = await post({ weights: { stocks: 60, bonds: 40 }, amount: 1000, years: 1 });
+    expect(res.status).toBe(200);
+    const j = await res.json();
+    expect(j.source).toBe("simulated");
+    expect(j.portfolio.startValue).toBe(1000);
+    expect(j.benchmark.startValue).toBe(1000);
+    expect(j.positions.length).toBe(2);
+  });
+
+  it("rejects an all-zero allocation with 400", async () => {
+    const res = await post({ weights: {}, amount: 1000 });
+    expect(res.status).toBe(400);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Hardening: rate limiting + body-size caps on the POST routes
 // ---------------------------------------------------------------------------
 describe("POST route hardening", () => {
