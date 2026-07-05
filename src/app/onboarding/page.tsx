@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { buildAllocation } from "@/lib/allocate";
+import { validateProfile } from "@/lib/validate";
 import type { Goal, JourneyStage, Profile, RiskTolerance } from "@/lib/types";
 
 const GOALS: { value: Goal; label: string }[] = [
@@ -125,6 +126,16 @@ export default function OnboardingPage() {
         monthlyContribution === "" ? undefined : Number(monthlyContribution),
       interests,
     };
+
+    // Validate here — the same gate the pipeline uses — so a bad value (e.g. a
+    // non-numeric age) is caught with a clear message instead of surfacing as an
+    // opaque "Profile failed validation" on the dashboard two steps later.
+    const v = validateProfile(profile);
+    if (!v.ok) {
+      setBusy(false);
+      setError(v.issues.join(" "));
+      return;
+    }
 
     // Persist to Supabase if the user is signed in; always stash locally so the
     // dashboard can render immediately (and demo mode works without auth).

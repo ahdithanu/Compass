@@ -6,6 +6,7 @@ import type { InsightDigest, Recommendation } from "@/lib/types";
 import { apiGet, apiPost, withRef } from "@/lib/apiClient";
 import { diffRuns, type AllocationDelta } from "@/lib/compare";
 import { evidenceForTicker } from "@/lib/explain";
+import { validateProfile } from "@/lib/validate";
 import AccountMenu from "@/components/AccountMenu";
 
 interface RunSummary {
@@ -41,7 +42,22 @@ export default function DashboardPage() {
       typeof window !== "undefined"
         ? sessionStorage.getItem("compass:profile")
         : null;
-    const profile = stored ? JSON.parse(stored) : null;
+    // Only pass along a stored profile that still validates. A corrupt or stale
+    // stash is discarded so the dashboard falls back to demo mode instead of
+    // erroring with "Profile failed validation".
+    let profile: unknown = null;
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (validateProfile(parsed).ok) {
+          profile = parsed;
+        } else {
+          sessionStorage.removeItem("compass:profile");
+        }
+      } catch {
+        sessionStorage.removeItem("compass:profile");
+      }
+    }
     const payload = profile ? { profile } : {};
 
     (async () => {
