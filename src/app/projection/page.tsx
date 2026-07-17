@@ -115,8 +115,10 @@ export default function ProjectionPage() {
       {/* Inputs */}
       <section className="card mt-8 space-y-5 p-6">
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Starting balance">
+          <Field htmlFor="p-start" label="Starting balance">
             <input
+              id="p-start"
+              name="p-start"
               className="input mt-1"
               type="number"
               min={0}
@@ -124,8 +126,10 @@ export default function ProjectionPage() {
               onChange={(e) => setStarting(Number(e.target.value))}
             />
           </Field>
-          <Field label="Monthly contribution">
+          <Field htmlFor="p-monthly" label="Monthly contribution">
             <input
+              id="p-monthly"
+              name="p-monthly"
               className="input mt-1"
               type="number"
               min={0}
@@ -133,8 +137,10 @@ export default function ProjectionPage() {
               onChange={(e) => setMonthly(Number(e.target.value))}
             />
           </Field>
-          <Field label="Years">
+          <Field htmlFor="p-years" label="Years">
             <input
+              id="p-years"
+              name="p-years"
               className="input mt-1"
               type="number"
               min={1}
@@ -143,8 +149,10 @@ export default function ProjectionPage() {
               onChange={(e) => setYears(Number(e.target.value))}
             />
           </Field>
-          <Field label="Goal amount (optional)">
+          <Field htmlFor="p-goal" label="Goal amount (optional)">
             <input
+              id="p-goal"
+              name="p-goal"
               className="input mt-1"
               type="number"
               min={0}
@@ -252,9 +260,20 @@ function GrowthChart({
   max: number;
 }) {
   const safeMax = max > 0 ? max : 1;
+  const last = points.at(-1);
+  const usd = (n: number) =>
+    n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
   return (
     <div>
-      <div className="flex h-40 items-end gap-1">
+      <div
+        className="flex h-40 items-end gap-1"
+        role="img"
+        aria-label={
+          last
+            ? `Projected balance growing to ${usd(last.balance)} over ${last.year} years.`
+            : "Projected growth chart."
+        }
+      >
         {points.map((p) => {
           const h = Math.max(2, (p.balance / safeMax) * 100);
           const investedH = (p.invested / Math.max(p.balance, 1)) * 100;
@@ -287,10 +306,20 @@ function GrowthChart({
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  htmlFor,
+  label,
+  children,
+}: {
+  htmlFor: string;
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <label className="label">{label}</label>
+      <label className="label" htmlFor={htmlFor}>
+        {label}
+      </label>
       {children}
     </div>
   );

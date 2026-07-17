@@ -118,10 +118,14 @@ export default function DashboardPage() {
         </nav>
       </header>
 
-      {loading && <p style={{ color: "var(--muted)" }}>Building your plan…</p>}
+      {loading && (
+        <p role="status" style={{ color: "var(--muted)" }}>
+          Building your plan…
+        </p>
+      )}
 
       {error && (
-        <div className="card p-6">
+        <div className="card p-6" role="alert">
           <h2 className="font-semibold" style={{ color: "var(--danger)" }}>
             {error}
           </h2>

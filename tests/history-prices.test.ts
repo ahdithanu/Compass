@@ -59,4 +59,27 @@ describe("getMonthlySeries — live path", () => {
     const { source } = await getMonthlySeries(["VTI"], 6, NOW);
     expect(source).toBe("simulated");
   });
+
+  it("stays live with a CASH sleeve, aligning it to the live dates", async () => {
+    // Regression for H-1: CASH is synthetic and must not sink an otherwise-live
+    // run, and its series must share the live dates so the backtest intersects.
+    process.env.ALPHAVANTAGE_API_KEY = "k";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          "Monthly Adjusted Time Series": {
+            "2026-06-30": { "5. adjusted close": "220.0" },
+            "2026-05-31": { "5. adjusted close": "210.0" },
+          },
+        }),
+      }),
+    );
+    const { series, source } = await getMonthlySeries(["VTI", "CASH"], 12, NOW);
+    expect(source).toBe("live"); // CASH did NOT force a fallback
+    const vti = series.find((s) => s.ticker === "VTI")!;
+    const cash = series.find((s) => s.ticker === "CASH")!;
+    expect(cash.points.map((p) => p.date)).toEqual(vti.points.map((p) => p.date));
+  });
 });

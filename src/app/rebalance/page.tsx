@@ -120,15 +120,18 @@ export default function RebalancePage() {
         <div className="grid gap-4 sm:grid-cols-2">
           {BUCKETS.map((b) => (
             <div key={b}>
-              <label className="label flex items-center gap-1.5">
+              <label className="label flex items-center gap-1.5" htmlFor={`hold-${b}`}>
                 <span
                   className="inline-block h-2.5 w-2.5 rounded-full"
                   style={{ background: BUCKET_META[b].color }}
+                  aria-hidden="true"
                 />
                 {BUCKET_META[b].label}
                 <span style={{ color: "var(--muted)" }}> · target {target[b]}%</span>
               </label>
               <input
+                id={`hold-${b}`}
+                name={`hold-${b}`}
                 className="input mt-1"
                 type="number"
                 min={0}

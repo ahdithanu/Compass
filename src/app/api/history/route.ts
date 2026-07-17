@@ -7,9 +7,14 @@
 
 import { NextResponse } from "next/server";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { checkRateLimit, clientKey, envLimit } from "@/lib/ratelimit";
+import { rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
 export const GET = withRequest("history", async (request) => {
+  const rl = await checkRateLimit(clientKey(request, "history"), envLimit("API_RATE_LIMIT_HISTORY", 60), 60_000);
+  if (!rl.ok) return rateLimitedResponse(rl);
+
   if (!isSupabaseConfigured()) return NextResponse.json({ runs: [] });
 
   const supabase = await createClient();

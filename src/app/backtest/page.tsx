@@ -128,8 +128,10 @@ export default function BacktestPage() {
       <section className="card mt-8 space-y-5 p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="label">Starting amount</label>
+            <label className="label" htmlFor="bt-amount">Starting amount</label>
             <input
+              id="bt-amount"
+              name="bt-amount"
               className="input mt-1"
               type="number"
               min={1}
@@ -138,8 +140,10 @@ export default function BacktestPage() {
             />
           </div>
           <div>
-            <label className="label">Look back</label>
+            <label className="label" htmlFor="bt-years">Look back</label>
             <select
+              id="bt-years"
+              name="bt-years"
               className="select mt-1"
               value={years}
               onChange={(e) => setYears(Number(e.target.value))}
@@ -153,12 +157,12 @@ export default function BacktestPage() {
         </div>
 
         <div>
-          <label className="label">Your mix — tweak it to test a hunch</label>
-          <div className="mt-2 space-y-2">
+          <span className="label" id="mix-label">Your mix — tweak it to test a hunch</span>
+          <div className="mt-2 space-y-2" role="group" aria-labelledby="mix-label">
             {BUCKETS.map((b) => (
               <div key={b} className="flex items-center gap-3">
                 <span className="flex w-28 items-center gap-1.5 text-sm">
-                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: META[b].color }} />
+                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: META[b].color }} aria-hidden="true" />
                   {META[b].label}
                 </span>
                 <input
@@ -167,9 +171,11 @@ export default function BacktestPage() {
                   min={0}
                   max={100}
                   value={weights[b]}
+                  aria-label={`${META[b].label} weight`}
+                  aria-valuetext={`${weights[b]} percent`}
                   onChange={(e) => setWeights((w) => ({ ...w, [b]: Number(e.target.value) }))}
                 />
-                <span className="w-10 text-right text-sm font-semibold tabular-nums">
+                <span className="w-10 text-right text-sm font-semibold tabular-nums" aria-hidden="true">
                   {weights[b]}%
                 </span>
               </div>
@@ -181,7 +187,7 @@ export default function BacktestPage() {
         </div>
 
         {error && (
-          <p className="text-sm" style={{ color: "var(--danger)" }}>
+          <p className="text-sm" role="alert" style={{ color: "var(--danger)" }}>
             {error}
           </p>
         )}
@@ -283,8 +289,20 @@ function GrowthLines({
       })
       .join(" ");
 
+  const endP = portfolio.at(-1)?.value;
+  const endB = benchmark.at(-1)?.value;
   return (
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-40 w-full">
+    <svg
+      viewBox="0 0 100 40"
+      preserveAspectRatio="none"
+      className="h-40 w-full"
+      role="img"
+      aria-label={
+        endP != null && endB != null
+          ? `Your mix ended at ${Math.round(endP)}, the benchmark at ${Math.round(endB)}.`
+          : "Portfolio value versus benchmark over time."
+      }
+    >
       <path
         d={path(benchmark)}
         fill="none"

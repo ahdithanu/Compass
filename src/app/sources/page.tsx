@@ -104,9 +104,13 @@ export default function SourcesPage() {
         <>
           <form onSubmit={addFeed} className="card mt-8 space-y-4 p-6">
             <div>
-              <label className="label">Feed URL</label>
+              <label className="label" htmlFor="feed-url">Feed URL</label>
               <input
+                id="feed-url"
+                name="feed-url"
                 className="input mt-1"
+                type="url"
+                inputMode="url"
                 placeholder="https://example.com/feed.xml"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -114,8 +118,10 @@ export default function SourcesPage() {
               />
             </div>
             <div>
-              <label className="label">Name (optional)</label>
+              <label className="label" htmlFor="feed-name">Name (optional)</label>
               <input
+                id="feed-name"
+                name="feed-name"
                 className="input mt-1"
                 placeholder="Defaults to the site name"
                 value={name}
@@ -123,7 +129,7 @@ export default function SourcesPage() {
               />
             </div>
             {error && (
-              <p className="text-sm" style={{ color: "var(--danger)" }}>
+              <p className="text-sm" role="alert" style={{ color: "var(--danger)" }}>
                 {error}
               </p>
             )}

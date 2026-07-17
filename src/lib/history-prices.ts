@@ -27,28 +27,43 @@ const PROFILE: Record<string, { drift: number; vol: number }> = {
 };
 const DEFAULT_PROFILE = { drift: 0.08, vol: 0.2 };
 
+// Pseudo-tickers with no market listing (e.g. a cash sleeve). These are always
+// modeled synthetically — never fetched — so their absence from a price API
+// can't sink an otherwise-live run. When live data is used, their series is
+// generated on the *live* dates so the backtest's date intersection lines up.
+const SYNTHETIC = new Set(["CASH"]);
+
 export async function getMonthlySeries(
   symbols: string[],
   months: number,
   now: number = Date.now(),
 ): Promise<HistoryResult> {
   const uniq = [...new Set(symbols.map((s) => s.toUpperCase()))];
+  const real = uniq.filter((s) => !SYNTHETIC.has(s));
+  const synthetic = uniq.filter((s) => SYNTHETIC.has(s));
   const key = process.env.ALPHAVANTAGE_API_KEY;
 
-  if (key) {
+  if (key && real.length > 0) {
     try {
-      const series = await Promise.all(
-        uniq.map((s) => fetchAlphaVantageMonthly(s, months, key)),
+      const fetched = await Promise.all(
+        real.map((s) => fetchAlphaVantageMonthly(s, months, key)),
       );
-      const ok = series.filter((s): s is PriceSeries => s !== null);
-      // Use live data only if every symbol resolved; otherwise fall back so the
-      // backtest isn't silently run on a partial basket.
-      if (ok.length === uniq.length) return { series: ok, source: "live" };
+      const ok = fetched.filter((s): s is PriceSeries => s !== null);
+      // Require every *real* symbol to resolve (mixing live + simulated real
+      // prices would be misleading). Synthetic sleeves are then generated on the
+      // live dates so they intersect the real series in the backtest.
+      if (ok.length === real.length) {
+        const templateDates = ok[0]?.points.map((p) => p.date) ?? [];
+        const synth = synthetic.map((s) => simulateOnDates(s, templateDates));
+        return { series: [...ok, ...synth], source: "live" };
+      }
     } catch {
       // fall through to simulated
     }
   }
 
+  // Fully simulated: every series uses the same month-start date generation, so
+  // they align with each other for the intersection.
   return {
     series: uniq.map((s) => simulateSeries(s, months, now)),
     source: "simulated",
@@ -102,6 +117,22 @@ function simulateSeries(ticker: string, months: number, now: number): PriceSerie
     price = Math.max(1, price * (1 + r));
     points.push({ date: isoMonth(d), close: Math.round(price * 100) / 100 });
   }
+  return { ticker, points };
+}
+
+/** A synthetic series on caller-supplied dates (used to align a cash sleeve to
+ *  the live price dates). Same seeded walk, but the x-axis comes from outside. */
+function simulateOnDates(ticker: string, dates: string[]): PriceSeries {
+  const { drift, vol } = PROFILE[ticker] ?? DEFAULT_PROFILE;
+  const rng = mulberry32(hashSeed(ticker));
+  const mDrift = drift / 12;
+  const mVol = vol / Math.sqrt(12);
+  let price = 100;
+  const points = dates.map((date) => {
+    const r = mDrift + mVol * gauss(rng);
+    price = Math.max(1, price * (1 + r));
+    return { date, close: Math.round(price * 100) / 100 };
+  });
   return { ticker, points };
 }
 

@@ -183,8 +183,10 @@ export default function OnboardingPage() {
       <form onSubmit={submit} className="card mt-8 space-y-6 p-6">
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className="label">Age</label>
+            <label className="label" htmlFor="age">Age</label>
             <input
+              id="age"
+              name="age"
               className="input mt-1"
               type="number"
               min={18}
@@ -194,8 +196,10 @@ export default function OnboardingPage() {
             />
           </div>
           <div>
-            <label className="label">Horizon (years)</label>
+            <label className="label" htmlFor="horizon">Horizon (years)</label>
             <input
+              id="horizon"
+              name="horizon"
               className="input mt-1"
               type="number"
               min={0}
@@ -207,8 +211,10 @@ export default function OnboardingPage() {
         </div>
 
         <div>
-          <label className="label">Primary goal</label>
+          <label className="label" htmlFor="goal">Primary goal</label>
           <select
+            id="goal"
+            name="goal"
             className="select mt-1"
             value={goal}
             onChange={(e) => setGoal(e.target.value as Goal)}
@@ -222,23 +228,28 @@ export default function OnboardingPage() {
         </div>
 
         <div>
-          <label className="label">Risk tolerance</label>
-          <div className="mt-2 grid grid-cols-3 gap-2">
+          <span className="label" id="risk-label">Risk tolerance</span>
+          <div className="mt-2 grid grid-cols-3 gap-2" role="radiogroup" aria-labelledby="risk-label">
             {RISKS.map((r) => {
               const active = r.value === riskTolerance;
               return (
                 <button
                   key={r.value}
                   type="button"
+                  role="radio"
+                  aria-checked={active}
                   onClick={() => setRisk(r.value)}
                   className="lift rounded-xl px-3 py-3 text-left transition"
                   style={{
                     background: active ? "var(--accent)" : "var(--panel-2)",
                     color: active ? "#fff" : "var(--text)",
-                    boxShadow: active ? "none" : "inset 0 0 0 1px var(--border)",
+                    boxShadow: active ? "inset 0 0 0 2px var(--accent)" : "inset 0 0 0 1px var(--border)",
                   }}
                 >
-                  <span className="block text-sm font-semibold">{r.label}</span>
+                  <span className="flex items-center gap-1 text-sm font-semibold">
+                    {active && <span aria-hidden="true">✓</span>}
+                    {r.label}
+                  </span>
                   <span
                     className="mt-0.5 block text-xs"
                     style={{ color: active ? "rgba(255,255,255,0.85)" : "var(--muted)" }}
@@ -252,8 +263,10 @@ export default function OnboardingPage() {
         </div>
 
         <div>
-          <label className="label">Where are you in your journey?</label>
+          <label className="label" htmlFor="journey">Where are you in your journey?</label>
           <select
+            id="journey"
+            name="journey"
             className="select mt-1"
             value={journeyStage}
             onChange={(e) => setStage(e.target.value as JourneyStage)}
@@ -267,8 +280,10 @@ export default function OnboardingPage() {
         </div>
 
         <div>
-          <label className="label">Monthly contribution (optional)</label>
+          <label className="label" htmlFor="monthly">Monthly contribution (optional)</label>
           <input
+            id="monthly"
+            name="monthly"
             className="input mt-1"
             type="number"
             min={0}
@@ -281,8 +296,10 @@ export default function OnboardingPage() {
         </div>
 
         <div>
-          <label className="label">Interests / themes (comma-separated)</label>
+          <label className="label" htmlFor="interests">Interests / themes (comma-separated)</label>
           <input
+            id="interests"
+            name="interests"
             className="input mt-1"
             placeholder="AI, clean energy, dividends"
             value={interestsText}
@@ -294,7 +311,7 @@ export default function OnboardingPage() {
         <AllocationPreview alloc={previewAlloc} />
 
         {error && (
-          <p className="text-sm" style={{ color: "var(--danger)" }}>
+          <p className="text-sm" role="alert" style={{ color: "var(--danger)" }}>
             {error}
           </p>
         )}

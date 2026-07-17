@@ -74,20 +74,26 @@ export default function LoginPage() {
             {mode === "signin" ? "Sign in" : "Create account"}
           </h1>
           <div>
-            <label className="label">Email</label>
+            <label className="label" htmlFor="email">Email</label>
             <input
+              id="email"
+              name="email"
               className="input mt-1"
               type="email"
+              autoComplete="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div>
-            <label className="label">Password</label>
+            <label className="label" htmlFor="password">Password</label>
             <input
+              id="password"
+              name="password"
               className="input mt-1"
               type="password"
+              autoComplete={mode === "signin" ? "current-password" : "new-password"}
               required
               minLength={6}
               value={password}
@@ -98,6 +104,7 @@ export default function LoginPage() {
           {msg && (
             <p
               className="text-sm"
+              role={msg.kind === "error" ? "alert" : "status"}
               style={{ color: msg.kind === "error" ? "var(--danger)" : "var(--positive)" }}
             >
               {msg.text}
