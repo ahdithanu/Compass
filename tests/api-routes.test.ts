@@ -187,7 +187,7 @@ describe("/api/recommendations", () => {
     const res = await post({ profile: { age: 30 } });
     expect(res.status).toBe(200);
     expect((await res.json()).recommendation).toEqual({ traceId: "t1" });
-    expect(H.runRec).toHaveBeenCalledWith({ age: 30 });
+    expect(H.runRec).toHaveBeenCalledWith({ age: 30 }, { allowLlm: false });
     expect(H.persist).toHaveBeenCalledWith("recommendation", { traceId: "t1" });
   });
 
@@ -219,6 +219,7 @@ describe("/api/recommendations", () => {
     expect(res.status).toBe(200);
     expect(H.runRec).toHaveBeenCalledWith(
       expect.objectContaining({ age: 40, riskTolerance: "high", horizonYears: 20, monthlyContribution: 500 }),
+      { allowLlm: true }, // signed-in → Claude reasoning allowed
     );
   });
 
@@ -230,6 +231,8 @@ describe("/api/recommendations", () => {
     const body = await res.json();
     expect(body.demo).toBe(true);
     expect(body.recommendation).toEqual({ traceId: "demo2" });
+    // Denial-of-wallet guard: anonymous runs must not invoke the LLM.
+    expect(H.runRec).toHaveBeenCalledWith(expect.anything(), { allowLlm: false });
   });
 
   it("returns 404 when the signed-in user has no saved profile", async () => {
@@ -274,7 +277,7 @@ describe("/api/insights", () => {
     await post();
     expect(H.runIns).toHaveBeenCalledWith(
       expect.any(Object),
-      { feeds: [{ name: "Ben", url: "https://x.com/r", category: "macro" }] },
+      { feeds: [{ name: "Ben", url: "https://x.com/r", category: "macro" }], allowLlm: true },
     );
   });
 

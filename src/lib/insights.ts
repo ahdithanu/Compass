@@ -19,6 +19,8 @@ import { checkInsights, validateProfile } from "./validate";
 export interface InsightsOptions {
   /** Per-user feed list; when present, overrides the default/env feeds. */
   feeds?: FeedSource[];
+  /** Gate the LLM off for anonymous/demo runs (denial-of-wallet guard). */
+  allowLlm?: boolean;
 }
 
 const DISCLAIMERS = [
@@ -101,6 +103,7 @@ export async function runInsightsPipeline(
   }
 
   const ctx: InsightContext = { profile, watchlist, news };
+  const allowLlm = opts.allowLlm ?? true;
 
   // Stages 3 + 4: synthesis with critic gate, revise once, then fallback.
   let draft: InsightDraft | null = null;
@@ -114,7 +117,7 @@ export async function runInsightsPipeline(
             .filter((c) => c.stage === "insight_critic" && !c.passed && c.detail)
             .map((c) => c.detail as string);
 
-    const candidate = await synthesizeInsights(ctx, priorIssues);
+    const candidate = allowLlm ? await synthesizeInsights(ctx, priorIssues) : null;
     if (!candidate) {
       record({
         stage: "synthesis",

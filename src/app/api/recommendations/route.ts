@@ -34,42 +34,36 @@ export const POST = withRequest("recommendations", async (request) => {
     // malformed/empty body — fall through to the saved profile
   }
 
-  // No posted profile: load the signed-in user's saved profile, or fall back to
-  // a sample profile so the dashboard is explorable in demo mode (matching the
-  // projection/rebalance pages). Only an authenticated user *without* a saved
-  // profile is bounced to onboarding.
+  // Resolve auth once — it drives both the profile fallback AND whether the
+  // paid LLM path is allowed. Anonymous requests get the deterministic
+  // rule-based plan (no Claude spend); Claude-written reasoning is a signed-in
+  // feature. This closes the denial-of-wallet vector on this endpoint.
+  const supabase = isSupabaseConfigured() ? await createClient() : null;
+  const user = supabase ? (await supabase.auth.getUser()).data.user : null;
+
   let demo = false;
   if (!rawProfile) {
-    if (isSupabaseConfigured()) {
-      const supabase = await createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-        if (!data) {
-          return NextResponse.json(
-            { error: "No saved profile. Complete onboarding first." },
-            { status: 404 },
-          );
-        }
-        rawProfile = {
-          age: data.age,
-          goal: data.goal,
-          riskTolerance: data.risk_tolerance,
-          horizonYears: data.horizon_years,
-          journeyStage: data.journey_stage,
-          monthlyContribution: data.monthly_contribution ?? undefined,
-          interests: data.interests ?? [],
-        };
-      } else {
-        rawProfile = DEFAULT_PROFILE;
-        demo = true;
+    if (user && supabase) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      if (!data) {
+        return NextResponse.json(
+          { error: "No saved profile. Complete onboarding first." },
+          { status: 404 },
+        );
       }
+      rawProfile = {
+        age: data.age,
+        goal: data.goal,
+        riskTolerance: data.risk_tolerance,
+        horizonYears: data.horizon_years,
+        journeyStage: data.journey_stage,
+        monthlyContribution: data.monthly_contribution ?? undefined,
+        interests: data.interests ?? [],
+      };
     } else {
       rawProfile = DEFAULT_PROFILE;
       demo = true;
@@ -77,7 +71,9 @@ export const POST = withRequest("recommendations", async (request) => {
   }
 
   try {
-    const recommendation = await runRecommendationPipeline(rawProfile);
+    const recommendation = await runRecommendationPipeline(rawProfile, {
+      allowLlm: Boolean(user),
+    });
     await persistRun("recommendation", recommendation); // best-effort; no-ops for anon
     return NextResponse.json({ recommendation, demo });
   } catch (err) {

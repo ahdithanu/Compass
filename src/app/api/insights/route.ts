@@ -34,11 +34,15 @@ export const POST = withRequest("insights", async (request) => {
   }
 
   // Load the signed-in user's profile (if not posted) and their custom feeds.
+  // Auth also gates the LLM: anonymous/demo runs stay rule-based (no Claude
+  // spend), Claude-written insights are a signed-in feature.
+  let allowLlm = false;
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    allowLlm = Boolean(user);
 
     if (!rawProfile) {
       if (user) {
@@ -84,7 +88,7 @@ export const POST = withRequest("insights", async (request) => {
   }
 
   try {
-    const digest = await runInsightsPipeline(rawProfile, { feeds });
+    const digest = await runInsightsPipeline(rawProfile, { feeds, allowLlm });
     await persistRun("insights", digest); // best-effort
     return NextResponse.json({ digest });
   } catch (err) {

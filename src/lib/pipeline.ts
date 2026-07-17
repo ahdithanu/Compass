@@ -41,7 +41,12 @@ export class PipelineError extends Error {
 
 export async function runRecommendationPipeline(
   rawProfile: unknown,
+  opts: { allowLlm?: boolean } = {},
 ): Promise<Recommendation> {
+  // Anonymous/demo runs pass allowLlm=false so the expensive Claude calls can't
+  // be triggered without an account (denial-of-wallet guard). They still get the
+  // full deterministic plan with rule-based rationale.
+  const allowLlm = opts.allowLlm ?? true;
   const traceId = newTraceId();
   const checks: CheckResult[] = [];
   // Record a check AND emit a structured trace line in one place.
@@ -109,7 +114,7 @@ export async function runRecommendationPipeline(
   for (let attempt = 0; attempt < 2; attempt++) {
     const priorIssues =
       attempt === 0 ? undefined : collectFailedDetails(checks, "critic");
-    const candidate = await synthesize(ctx, priorIssues);
+    const candidate = allowLlm ? await synthesize(ctx, priorIssues) : null;
 
     if (!candidate) {
       // No API key (or transient failure) -> deterministic fallback.
