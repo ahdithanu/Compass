@@ -1,4 +1,4 @@
-# Compass — personalized investing co-pilot
+# Compass the personalized investing co-pilot
 
 A dashboard that, based on a user's goals, age, risk appetite, and where they
 are in their journey, tells them **what to track, what markets to watch, which
