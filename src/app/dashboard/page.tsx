@@ -8,6 +8,7 @@ import { diffRuns, type AllocationDelta } from "@/lib/compare";
 import { evidenceForTicker } from "@/lib/explain";
 import { validateProfile } from "@/lib/validate";
 import AccountMenu from "@/components/AccountMenu";
+import Dialog from "@/components/Dialog";
 
 interface RunSummary {
   id: string;
@@ -331,58 +332,40 @@ function RunDetailModal({
     };
   }, [runId]);
 
-  // Close on Escape for keyboard users.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-8"
-      style={{ background: "rgba(0,0,0,0.45)" }}
-      onClick={onClose}
-    >
-      <div
-        className="card w-full max-w-3xl p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <span className="label">
-            {run
-              ? `${run.kind === "recommendation" ? "Recommendation" : "Insights"} · ${new Date(
-                  run.created_at,
-                ).toLocaleString()}`
-              : "Loading run…"}
-          </span>
-          <button className="btn-ghost text-sm" onClick={onClose}>
-            Close
-          </button>
-        </div>
-
-        {error && (
-          <p className="text-sm" style={{ color: "var(--danger)" }}>
-            {error}
-          </p>
-        )}
-
-        {!run && !error && (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Loading…
-          </p>
-        )}
-
-        {run && run.kind === "recommendation" && (
-          <RecommendationSections rec={run.payload as Recommendation} />
-        )}
-        {run && run.kind === "insights" && (
-          <InsightsView digest={run.payload as InsightDigest} />
-        )}
+    <Dialog label="Past run detail" onClose={onClose}>
+      <div className="mb-4 flex items-center justify-between">
+        <span className="label">
+          {run
+            ? `${run.kind === "recommendation" ? "Recommendation" : "Insights"} · ${new Date(
+                run.created_at,
+              ).toLocaleString()}`
+            : "Loading run…"}
+        </span>
+        <button className="btn-ghost text-sm" onClick={onClose}>
+          Close
+        </button>
       </div>
-    </div>
+
+      {error && (
+        <p className="text-sm" role="alert" style={{ color: "var(--danger)" }}>
+          {error}
+        </p>
+      )}
+
+      {!run && !error && (
+        <p className="text-sm" role="status" style={{ color: "var(--muted)" }}>
+          Loading…
+        </p>
+      )}
+
+      {run && run.kind === "recommendation" && (
+        <RecommendationSections rec={run.payload as Recommendation} />
+      )}
+      {run && run.kind === "insights" && (
+        <InsightsView digest={run.payload as InsightDigest} />
+      )}
+    </Dialog>
   );
 }
 
@@ -428,43 +411,30 @@ function ComparisonModal({
     };
   }, [olderId, newerId]);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   const cmp = pair ? diffRuns(pair.older, pair.newer) : null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 sm:p-8"
-      style={{ background: "rgba(0,0,0,0.45)" }}
-      onClick={onClose}
-    >
-      <div className="card w-full max-w-2xl p-6" onClick={(e) => e.stopPropagation()}>
-        <div className="mb-4 flex items-center justify-between">
-          <span className="label">What changed</span>
-          <button className="btn-ghost text-sm" onClick={onClose}>
-            Close
-          </button>
-        </div>
+    <Dialog label="Comparison of two runs" onClose={onClose} panelClassName="max-w-2xl">
+      <div className="mb-4 flex items-center justify-between">
+        <span className="label">What changed</span>
+        <button className="btn-ghost text-sm" onClick={onClose}>
+          Close
+        </button>
+      </div>
 
-        {error && (
-          <p className="text-sm" style={{ color: "var(--danger)" }}>
-            {error}
-          </p>
-        )}
-        {!pair && !error && (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
-            Loading…
-          </p>
-        )}
+      {error && (
+        <p className="text-sm" role="alert" style={{ color: "var(--danger)" }}>
+          {error}
+        </p>
+      )}
+      {!pair && !error && (
+        <p className="text-sm" role="status" style={{ color: "var(--muted)" }}>
+          Loading…
+        </p>
+      )}
 
-        {pair && cmp && (
-          <>
+      {pair && cmp && (
+        <>
             <p className="text-sm" style={{ color: "var(--muted)" }}>
               {new Date(pair.olderAt).toLocaleDateString()} →{" "}
               {new Date(pair.newerAt).toLocaleDateString()}
@@ -503,15 +473,14 @@ function ComparisonModal({
               </div>
             )}
 
-            {cmp.held.length > 0 && (
-              <p className="mt-5 text-xs" style={{ color: "var(--muted)" }}>
-                Held throughout: {cmp.held.map((p) => p.ticker).join(", ")}
-              </p>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+          {cmp.held.length > 0 && (
+            <p className="mt-5 text-xs" style={{ color: "var(--muted)" }}>
+              Held throughout: {cmp.held.map((p) => p.ticker).join(", ")}
+            </p>
+          )}
+        </>
+      )}
+    </Dialog>
   );
 }
 
