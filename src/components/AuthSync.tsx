@@ -9,6 +9,7 @@
 
 import { useEffect, useRef } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
+import { clearAllPlanCache } from "@/lib/runCache";
 
 const PROFILE_KEY = "compass:profile";
 
@@ -29,6 +30,8 @@ export default function AuthSync() {
         } catch {
           /* storage unavailable — nothing to clear */
         }
+        // Drop cached plans too, so a demo/other-user plan can't linger.
+        clearAllPlanCache();
       }
       lastUserId.current = uid;
     });

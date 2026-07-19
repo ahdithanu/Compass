@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { InsightDigest, Recommendation } from "@/lib/types";
 import { apiGet, apiPost, withRef } from "@/lib/apiClient";
 import { diffRuns, type AllocationDelta } from "@/lib/compare";
 import { evidenceForTicker } from "@/lib/explain";
 import { validateProfile } from "@/lib/validate";
+import { cacheKey, readCache, writeCache } from "@/lib/runCache";
 import AccountMenu from "@/components/AccountMenu";
 import Dialog from "@/components/Dialog";
 
@@ -36,7 +37,71 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
   const [issues, setIssues] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [regenerating, setRegenerating] = useState(false);
   const [demo, setDemo] = useState(false);
+  const payloadRef = useRef<{ profile?: unknown }>({});
+
+  const loadHistory = useCallback(async () => {
+    const r = await apiGet<{ runs: RunSummary[] }>("/api/history");
+    if (r.ok && Array.isArray(r.data.runs)) setHistory(r.data.runs);
+  }, []);
+
+  // Generate (or reuse) the plan. `force` bypasses the session cache and re-runs
+  // the pipelines; otherwise a cached plan is reused so navigating back to the
+  // dashboard doesn't re-run the (paid) LLM or persist a duplicate run.
+  const runPlan = useCallback(
+    async (payload: { profile?: unknown }, force: boolean) => {
+      const recKey = cacheKey("rec", payload);
+      const insKey = cacheKey("ins", payload);
+
+      const cachedRec = force
+        ? null
+        : readCache<{ recommendation: Recommendation; demo?: boolean }>(recKey);
+      if (cachedRec) {
+        setRec(cachedRec.recommendation);
+        setDemo(Boolean(cachedRec.demo));
+        setError(null);
+        setIssues([]);
+        setLoading(false);
+      } else {
+        const r = await apiPost<{ recommendation: Recommendation; demo?: boolean }>(
+          "/api/recommendations",
+          payload,
+        );
+        if (!r.ok) {
+          setError(withRef(r.error, r.requestId));
+          setIssues(r.issues ?? []);
+        } else {
+          setRec(r.data.recommendation);
+          setDemo(Boolean(r.data.demo));
+          setError(null);
+          setIssues([]);
+          writeCache(recKey, r.data);
+        }
+        setLoading(false);
+      }
+
+      // Insights load independently — a failure here shouldn't block the plan.
+      const cachedIns = force ? null : readCache<{ digest: InsightDigest }>(insKey);
+      if (cachedIns) {
+        setDigest(cachedIns.digest);
+      } else {
+        const r = await apiPost<{ digest: InsightDigest }>("/api/insights", payload);
+        if (r.ok) {
+          setDigest(r.data.digest);
+          writeCache(insKey, r.data);
+        }
+      }
+    },
+    [],
+  );
+
+  const regenerate = useCallback(async () => {
+    setRegenerating(true);
+    await runPlan(payloadRef.current, true);
+    await loadHistory();
+    setRegenerating(false);
+  }, [runPlan, loadHistory]);
 
   useEffect(() => {
     const stored =
@@ -60,38 +125,16 @@ export default function DashboardPage() {
       }
     }
     const payload = profile ? { profile } : {};
+    payloadRef.current = payload;
 
-    (async () => {
-      const r = await apiPost<{ recommendation: Recommendation; demo?: boolean }>(
-        "/api/recommendations",
-        payload,
-      );
-      if (!r.ok) {
-        setError(withRef(r.error, r.requestId));
-        setIssues(r.issues ?? []);
-      } else {
-        setRec(r.data.recommendation);
-        setDemo(Boolean(r.data.demo));
-      }
-      setLoading(false);
-    })();
-
-    // Insights load independently — a failure here shouldn't block the plan.
-    (async () => {
-      const r = await apiPost<{ digest: InsightDigest }>("/api/insights", payload);
-      if (r.ok) setDigest(r.data.digest);
-    })();
+    runPlan(payload, false);
 
     // History is best-effort and only populated for signed-in users. Refetch
-    // shortly after so the run we just generated shows up.
-    const loadHistory = async () => {
-      const r = await apiGet<{ runs: RunSummary[] }>("/api/history");
-      if (r.ok && Array.isArray(r.data.runs)) setHistory(r.data.runs);
-    };
+    // shortly after so a freshly generated run shows up.
     loadHistory();
     const t = setTimeout(loadHistory, 2500);
     return () => clearTimeout(t);
-  }, []);
+  }, [runPlan, loadHistory]);
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
@@ -115,6 +158,16 @@ export default function DashboardPage() {
           <Link href="/onboarding" className="btn-ghost whitespace-nowrap text-sm">
             Update my profile
           </Link>
+          {rec && (
+            <button
+              className="btn-ghost whitespace-nowrap text-sm disabled:opacity-50"
+              onClick={regenerate}
+              disabled={regenerating}
+              aria-busy={regenerating}
+            >
+              {regenerating ? "Regenerating…" : "Regenerate"}
+            </button>
+          )}
           <AccountMenu />
         </nav>
       </header>
