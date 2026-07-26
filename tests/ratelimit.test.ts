@@ -4,6 +4,7 @@ import {
   checkRateLimit,
   isDistributedRateLimit,
   clientKey,
+  llmBudgetAvailable,
   __resetRateLimit,
 } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, MAX_BODY_BYTES } from "@/lib/http";
@@ -85,6 +86,21 @@ describe("checkRateLimit (distributed)", () => {
     // Store is down -> falls back to local counting (not fail-open).
     expect((await checkRateLimit("f", 1, 1000)).ok).toBe(true);
     expect((await checkRateLimit("f", 1, 1000)).ok).toBe(false);
+  });
+});
+
+describe("llmBudgetAvailable (global throughput cap)", () => {
+  const ENV = { ...process.env };
+  afterEach(() => {
+    process.env = { ...ENV };
+  });
+
+  it("allows up to the global per-minute cap, then denies (all callers share one bucket)", async () => {
+    delete process.env.UPSTASH_REDIS_REST_URL; // in-memory path
+    process.env.LLM_MAX_CALLS_PER_MIN = "2";
+    expect(await llmBudgetAvailable()).toBe(true); // 1
+    expect(await llmBudgetAvailable()).toBe(true); // 2 (at the cap)
+    expect(await llmBudgetAvailable()).toBe(false); // 3 -> over -> degrade to rule-based
   });
 });
 

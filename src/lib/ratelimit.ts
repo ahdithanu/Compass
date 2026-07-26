@@ -161,6 +161,21 @@ export function envLimit(name: string, fallback: number): number {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
+/**
+ * Global LLM throughput cap — a hard backstop on paid Claude calls across ALL
+ * users combined. Per-IP limits bound one caller; this bounds aggregate spend
+ * (many signed-in users, or one attacker rotating IPs). Consumes one slot from a
+ * single shared window keyed on a constant; when the window is exhausted, callers
+ * degrade to the rule-based path instead of making a paid call — spend is capped
+ * without breaking the UX. Sized by LLM_MAX_CALLS_PER_MIN (default 60). Uses the
+ * shared Upstash store when configured so the cap holds across instances.
+ */
+export async function llmBudgetAvailable(): Promise<boolean> {
+  const perMin = envLimit("LLM_MAX_CALLS_PER_MIN", 60);
+  const r = await checkRateLimit("global:llm", perMin, 60_000);
+  return r.ok;
+}
+
 /** Test-only: clear all buckets so cases don't bleed into each other. */
 export function __resetRateLimit(): void {
   store.clear();

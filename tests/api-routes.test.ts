@@ -240,6 +240,22 @@ describe("/api/recommendations", () => {
     const res = await post();
     expect(res.status).toBe(404);
   });
+
+  it("degrades a signed-in user to rule-based once the global LLM cap is spent", async () => {
+    process.env.LLM_MAX_CALLS_PER_MIN = "1";
+    H.runRec.mockResolvedValue({ traceId: "t" });
+    H.client = fakeSupabase({
+      user: { id: "u1" },
+      results: {
+        profiles: { data: { age: 30, goal: "growth", risk_tolerance: "moderate", horizon_years: 10, journey_stage: "building", interests: [] } },
+      },
+    });
+    await post(); // first call spends the single global slot -> allowLlm true
+    await post(); // global budget exhausted -> allowLlm false for everyone
+    delete process.env.LLM_MAX_CALLS_PER_MIN;
+    expect(H.runRec).toHaveBeenNthCalledWith(1, expect.any(Object), { allowLlm: true });
+    expect(H.runRec).toHaveBeenNthCalledWith(2, expect.any(Object), { allowLlm: false });
+  });
 });
 
 // ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@ import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
 import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { checkRateLimit, clientKey, envLimit } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit, llmBudgetAvailable } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -42,7 +42,8 @@ export const POST = withRequest("insights", async (request) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    allowLlm = Boolean(user);
+    // Signed-in AND within the global LLM throughput budget (else rule-based).
+    allowLlm = user ? await llmBudgetAvailable() : false;
 
     if (!rawProfile) {
       if (user) {
