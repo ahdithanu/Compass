@@ -95,7 +95,10 @@ async function fetchFinnhub(symbol: string, key: string): Promise<Quote | null> 
   return toQuote(symbol, Number(data.c), Number(data.dp));
 }
 
-export async function getQuotes(symbols: string[]): Promise<MarketData> {
+export async function getQuotes(
+  symbols: string[],
+  opts: { allowLive?: boolean } = {},
+): Promise<MarketData> {
   const unique = Array.from(new Set(symbols));
   if (unique.length === 0) return fallback(unique);
 
@@ -106,7 +109,9 @@ export async function getQuotes(symbols: string[]): Promise<MarketData> {
     : fhKey
       ? (s: string) => fetchFinnhub(s, fhKey)
       : null;
-  if (!fetchOne) return fallback(unique);
+  // allowLive === false: the global market-data budget is exhausted — serve
+  // sample quotes instead of calling the metered provider.
+  if (!fetchOne || opts.allowLive === false) return fallback(unique);
 
   // Fetch each symbol concurrently; tolerate partial failure.
   const results = await Promise.all(unique.map((s) => fetchOne(s)));

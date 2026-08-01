@@ -6,7 +6,7 @@
 import { NextResponse } from "next/server";
 import { backtest, type Position } from "@/lib/backtest";
 import { getMonthlySeries } from "@/lib/history-prices";
-import { checkRateLimit, clientKey, envLimit } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit, marketDataBudgetAvailable } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -68,7 +68,12 @@ export const POST = withRequest("backtest", async (request) => {
     .map((k) => ({ ticker: BUCKET_TICKER[k], weight: weights[k] }));
 
   const symbols = [...new Set([...positions.map((p) => p.ticker), BENCHMARK])];
-  const { series, source } = await getMonthlySeries(symbols, months);
+  // Global market-data cap (this route is unauthenticated) — exhausted -> the
+  // simulated market instead of hitting Alpha Vantage.
+  const allowLiveData = await marketDataBudgetAvailable();
+  const { series, source } = await getMonthlySeries(symbols, months, undefined, {
+    allowLive: allowLiveData,
+  });
   const byTicker = Object.fromEntries(series.map((s) => [s.ticker, s]));
 
   const portfolio = backtest(positions, byTicker, amount);

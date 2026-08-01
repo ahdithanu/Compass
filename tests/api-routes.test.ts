@@ -190,7 +190,7 @@ describe("/api/recommendations", () => {
     const res = await post({ profile: { age: 30 } });
     expect(res.status).toBe(200);
     expect((await res.json()).recommendation).toEqual({ traceId: "t1" });
-    expect(H.runRec).toHaveBeenCalledWith({ age: 30 }, { allowLlm: false });
+    expect(H.runRec).toHaveBeenCalledWith({ age: 30 }, { allowLlm: false, allowLiveData: true });
     expect(H.persist).toHaveBeenCalledWith("recommendation", { traceId: "t1" });
   });
 
@@ -223,7 +223,7 @@ describe("/api/recommendations", () => {
     expect(res.status).toBe(200);
     expect(H.runRec).toHaveBeenCalledWith(
       expect.objectContaining({ age: 40, riskTolerance: "high", horizonYears: 20, monthlyContribution: 500 }),
-      { allowLlm: true }, // signed-in → Claude reasoning allowed
+      { allowLlm: true, allowLiveData: true }, // signed-in → Claude reasoning allowed
     );
   });
 
@@ -236,7 +236,7 @@ describe("/api/recommendations", () => {
     expect(body.demo).toBe(true);
     expect(body.recommendation).toEqual({ traceId: "demo2" });
     // Denial-of-wallet guard: anonymous runs must not invoke the LLM.
-    expect(H.runRec).toHaveBeenCalledWith(expect.anything(), { allowLlm: false });
+    expect(H.runRec).toHaveBeenCalledWith(expect.anything(), { allowLlm: false, allowLiveData: true });
   });
 
   it("returns 404 when the signed-in user has no saved profile", async () => {
@@ -258,8 +258,8 @@ describe("/api/recommendations", () => {
     await post(); // first call spends the single global slot -> allowLlm true
     await post(); // global budget exhausted -> allowLlm false for everyone
     delete process.env.LLM_MAX_CALLS_PER_MIN;
-    expect(H.runRec).toHaveBeenNthCalledWith(1, expect.any(Object), { allowLlm: true });
-    expect(H.runRec).toHaveBeenNthCalledWith(2, expect.any(Object), { allowLlm: false });
+    expect(H.runRec).toHaveBeenNthCalledWith(1, expect.any(Object), { allowLlm: true, allowLiveData: true });
+    expect(H.runRec).toHaveBeenNthCalledWith(2, expect.any(Object), { allowLlm: false, allowLiveData: true });
   });
 });
 
@@ -299,7 +299,7 @@ describe("/api/insights", () => {
     await post();
     expect(H.runIns).toHaveBeenCalledWith(
       expect.any(Object),
-      { feeds: [{ name: "Ben", url: "https://x.com/r", category: "macro" }], allowLlm: true },
+      { feeds: [{ name: "Ben", url: "https://x.com/r", category: "macro" }], allowLlm: true, allowLiveData: true },
     );
   });
 

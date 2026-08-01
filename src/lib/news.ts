@@ -98,9 +98,11 @@ function normalize(raw: FmpNews[], idPrefix: string): NewsItem[] {
 export async function getMarketNews(
   tickers: string[],
   limit = 12,
+  opts: { allowLive?: boolean } = {},
 ): Promise<NewsResult> {
   const key = process.env.FMP_API_KEY;
-  if (!key) return fallback(tickers);
+  // allowLive === false: global market-data budget spent — serve sample news.
+  if (!key || opts.allowLive === false) return fallback(tickers);
 
   const result = await withRetry(
     async () => {

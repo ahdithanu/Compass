@@ -10,7 +10,7 @@ import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
 import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { checkRateLimit, clientKey, envLimit, llmBudgetAvailable } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit, llmBudgetAvailable, marketDataBudgetAvailable } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -95,7 +95,10 @@ export const POST = withRequest("insights", async (request) => {
   }
 
   try {
-    const digest = await runInsightsPipeline(rawProfile, { feeds, allowLlm });
+    // Global market-data cap applies to every request (news is fetched before
+    // any LLM stage); exhausted -> sample news.
+    const allowLiveData = await marketDataBudgetAvailable();
+    const digest = await runInsightsPipeline(rawProfile, { feeds, allowLlm, allowLiveData });
     await persistRun("insights", digest); // best-effort
     return NextResponse.json({ digest, throttled });
   } catch (err) {

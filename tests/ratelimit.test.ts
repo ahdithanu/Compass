@@ -5,6 +5,7 @@ import {
   isDistributedRateLimit,
   clientKey,
   llmBudgetAvailable,
+  marketDataBudgetAvailable,
   __resetRateLimit,
 } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, MAX_BODY_BYTES } from "@/lib/http";
@@ -101,6 +102,16 @@ describe("llmBudgetAvailable (global throughput cap)", () => {
     expect(await llmBudgetAvailable()).toBe(true); // 1
     expect(await llmBudgetAvailable()).toBe(true); // 2 (at the cap)
     expect(await llmBudgetAvailable()).toBe(false); // 3 -> over -> degrade to rule-based
+  });
+
+  it("caps market-data throughput independently of the LLM budget", async () => {
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    process.env.MARKET_DATA_MAX_CALLS_PER_MIN = "1";
+    expect(await marketDataBudgetAvailable()).toBe(true); // 1
+    expect(await marketDataBudgetAvailable()).toBe(false); // 2 -> over -> sample data
+    // Separate bucket from the LLM cap.
+    process.env.LLM_MAX_CALLS_PER_MIN = "5";
+    expect(await llmBudgetAvailable()).toBe(true);
   });
 });
 

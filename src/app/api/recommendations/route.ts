@@ -9,7 +9,7 @@ import { isClaudeConfigured } from "@/lib/claude";
 import { persistRun } from "@/lib/persistence";
 import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
-import { checkRateLimit, clientKey, envLimit, llmBudgetAvailable } from "@/lib/ratelimit";
+import { checkRateLimit, clientKey, envLimit, llmBudgetAvailable, marketDataBudgetAvailable } from "@/lib/ratelimit";
 import { readJsonCapped, BodyTooLargeError, bodyTooLargeResponse, rateLimitedResponse } from "@/lib/http";
 import { withRequest } from "@/lib/api";
 
@@ -81,7 +81,13 @@ export const POST = withRequest("recommendations", async (request) => {
     const claudeEligible = Boolean(user) && isClaudeConfigured();
     const allowLlm = claudeEligible ? await llmBudgetAvailable() : false;
     const throttled = claudeEligible && !allowLlm;
-    const recommendation = await runRecommendationPipeline(rawProfile, { allowLlm });
+    // Global market-data cap applies to every request (incl. anonymous) — quotes
+    // are fetched before any LLM stage. Exhausted -> sample quotes.
+    const allowLiveData = await marketDataBudgetAvailable();
+    const recommendation = await runRecommendationPipeline(rawProfile, {
+      allowLlm,
+      allowLiveData,
+    });
     await persistRun("recommendation", recommendation); // best-effort; no-ops for anon
     return NextResponse.json({ recommendation, demo, throttled });
   } catch (err) {

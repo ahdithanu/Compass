@@ -41,12 +41,15 @@ export class PipelineError extends Error {
 
 export async function runRecommendationPipeline(
   rawProfile: unknown,
-  opts: { allowLlm?: boolean } = {},
+  opts: { allowLlm?: boolean; allowLiveData?: boolean } = {},
 ): Promise<Recommendation> {
   // Anonymous/demo runs pass allowLlm=false so the expensive Claude calls can't
   // be triggered without an account (denial-of-wallet guard). They still get the
   // full deterministic plan with rule-based rationale.
   const allowLlm = opts.allowLlm ?? true;
+  // allowLiveData=false when the global market-data budget is exhausted -> the
+  // quote fetch degrades to sample data instead of hitting the metered provider.
+  const allowLiveData = opts.allowLiveData ?? true;
   const traceId = newTraceId();
   const checks: CheckResult[] = [];
   // Record a check AND emit a structured trace line in one place.
@@ -89,7 +92,10 @@ export async function runRecommendationPipeline(
   // --- Stage 3: candidates + market data + gate ---
   const candidates = selectCandidates(profile, allocation);
   const sectors = baseSectors(profile);
-  const { quotes, source } = await getQuotes(candidates.map((c) => c.ticker));
+  const { quotes, source } = await getQuotes(
+    candidates.map((c) => c.ticker),
+    { allowLive: allowLiveData },
+  );
   record(
     checkMarketData(
       quotes.map((q) => q.symbol),

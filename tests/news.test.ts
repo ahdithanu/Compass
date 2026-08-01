@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { getQuotes } from "@/lib/quotes";
 import { getMarketNews } from "@/lib/news";
 
@@ -28,5 +28,31 @@ describe("getMarketNews fallback", () => {
     expect(source).toBe("fallback");
     expect(items.length).toBeGreaterThan(0);
     expect(items.every((i) => typeof i.id === "string")).toBe(true);
+  });
+});
+
+describe("market-data budget gate (allowLive: false)", () => {
+  const ENV = { ...process.env };
+  afterEach(() => {
+    process.env = { ...ENV };
+    vi.unstubAllGlobals();
+  });
+
+  it("getQuotes serves sample data without calling the provider when allowLive is false", async () => {
+    process.env.FINNHUB_API_KEY = "k"; // key present, but budget spent
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { source } = await getQuotes(["VTI"], { allowLive: false });
+    expect(source).toBe("fallback");
+    expect(fetchMock).not.toHaveBeenCalled(); // metered provider never hit
+  });
+
+  it("getMarketNews serves sample data without calling FMP when allowLive is false", async () => {
+    process.env.FMP_API_KEY = "k";
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { source } = await getMarketNews(["VTI"], 12, { allowLive: false });
+    expect(source).toBe("fallback");
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

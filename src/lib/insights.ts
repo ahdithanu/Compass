@@ -21,6 +21,8 @@ export interface InsightsOptions {
   feeds?: FeedSource[];
   /** Gate the LLM off for anonymous/demo runs (denial-of-wallet guard). */
   allowLlm?: boolean;
+  /** False when the global market-data budget is exhausted -> sample news. */
+  allowLiveData?: boolean;
 }
 
 const DISCLAIMERS = [
@@ -60,7 +62,7 @@ export async function runInsightsPipeline(
     (c) => c.ticker,
   );
   const [marketRes, newsletterRes] = await Promise.all([
-    getMarketNews(watchlist),
+    getMarketNews(watchlist, 12, { allowLive: opts.allowLiveData ?? true }),
     ingestNewsletters(watchlist, opts.feeds),
   ]);
 

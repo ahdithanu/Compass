@@ -60,6 +60,15 @@ describe("getMonthlySeries — live path", () => {
     expect(source).toBe("simulated");
   });
 
+  it("uses the simulated market without calling Alpha Vantage when allowLive is false", async () => {
+    process.env.ALPHAVANTAGE_API_KEY = "k"; // key present, but budget spent
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { source } = await getMonthlySeries(["VTI"], 6, NOW, { allowLive: false });
+    expect(source).toBe("simulated");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("stays live with a CASH sleeve, aligning it to the live dates", async () => {
     // Regression for H-1: CASH is synthetic and must not sink an otherwise-live
     // run, and its series must share the live dates so the backtest intersects.

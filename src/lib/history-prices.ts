@@ -37,13 +37,16 @@ export async function getMonthlySeries(
   symbols: string[],
   months: number,
   now: number = Date.now(),
+  opts: { allowLive?: boolean } = {},
 ): Promise<HistoryResult> {
   const uniq = [...new Set(symbols.map((s) => s.toUpperCase()))];
   const real = uniq.filter((s) => !SYNTHETIC.has(s));
   const synthetic = uniq.filter((s) => SYNTHETIC.has(s));
   const key = process.env.ALPHAVANTAGE_API_KEY;
 
-  if (key && real.length > 0) {
+  // allowLive === false: global market-data budget spent — use the simulated
+  // market instead of calling Alpha Vantage.
+  if (key && real.length > 0 && opts.allowLive !== false) {
     try {
       const fetched = await Promise.all(
         real.map((s) => fetchAlphaVantageMonthly(s, months, key)),
