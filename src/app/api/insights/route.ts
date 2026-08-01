@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { runInsightsPipeline } from "@/lib/insights";
 import { PipelineError } from "@/lib/pipeline";
+import { isClaudeConfigured } from "@/lib/claude";
 import { persistRun } from "@/lib/persistence";
 import { getUserFeeds } from "@/lib/feeds";
 import type { FeedSource } from "@/lib/sources";
@@ -37,13 +38,18 @@ export const POST = withRequest("insights", async (request) => {
   // Auth also gates the LLM: anonymous/demo runs stay rule-based (no Claude
   // spend), Claude-written insights are a signed-in feature.
   let allowLlm = false;
+  let throttled = false;
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    // Signed-in AND within the global LLM throughput budget (else rule-based).
-    allowLlm = user ? await llmBudgetAvailable() : false;
+    // Signed-in, Claude configured, AND within the global LLM budget (else
+    // rule-based). `throttled` marks a budget-denied degrade so the client
+    // avoids caching it (a plain no-key/anon rule-based digest stays cacheable).
+    const claudeEligible = Boolean(user) && isClaudeConfigured();
+    allowLlm = claudeEligible ? await llmBudgetAvailable() : false;
+    throttled = claudeEligible && !allowLlm;
 
     if (!rawProfile) {
       if (user) {
@@ -91,7 +97,7 @@ export const POST = withRequest("insights", async (request) => {
   try {
     const digest = await runInsightsPipeline(rawProfile, { feeds, allowLlm });
     await persistRun("insights", digest); // best-effort
-    return NextResponse.json({ digest });
+    return NextResponse.json({ digest, throttled });
   } catch (err) {
     if (err instanceof PipelineError) {
       return NextResponse.json(

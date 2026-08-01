@@ -68,6 +68,9 @@ beforeEach(() => {
   H.runIns.mockReset();
   H.persist.mockReset();
   __resetRateLimit(); // isolate cases — buckets are process-global
+  // Claude eligibility gates the LLM budget check; default off, opt in per test.
+  delete process.env.ANTHROPIC_API_KEY;
+  delete process.env.LLM_MAX_CALLS_PER_MIN;
 });
 
 // ---------------------------------------------------------------------------
@@ -206,6 +209,7 @@ describe("/api/recommendations", () => {
   });
 
   it("loads the saved profile when none is posted", async () => {
+    process.env.ANTHROPIC_API_KEY = "k"; // Claude-eligible → LLM allowed
     H.runRec.mockResolvedValue({ traceId: "t2" });
     H.client = fakeSupabase({
       user: { id: "u1" },
@@ -242,6 +246,7 @@ describe("/api/recommendations", () => {
   });
 
   it("degrades a signed-in user to rule-based once the global LLM cap is spent", async () => {
+    process.env.ANTHROPIC_API_KEY = "k"; // Claude-eligible so the budget check runs
     process.env.LLM_MAX_CALLS_PER_MIN = "1";
     H.runRec.mockResolvedValue({ traceId: "t" });
     H.client = fakeSupabase({
@@ -282,6 +287,7 @@ describe("/api/insights", () => {
   });
 
   it("passes the user's custom feeds to the pipeline", async () => {
+    process.env.ANTHROPIC_API_KEY = "k"; // Claude-eligible → LLM allowed
     H.runIns.mockResolvedValue({ traceId: "i2" });
     H.client = fakeSupabase({
       user: { id: "u1" },

@@ -5,6 +5,7 @@
 
 import { NextResponse } from "next/server";
 import { runRecommendationPipeline, PipelineError } from "@/lib/pipeline";
+import { isClaudeConfigured } from "@/lib/claude";
 import { persistRun } from "@/lib/persistence";
 import { DEFAULT_PROFILE } from "@/lib/profile";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
@@ -72,12 +73,17 @@ export const POST = withRequest("recommendations", async (request) => {
 
   try {
     // Signed-in users get Claude reasoning — but only while the global LLM
-    // throughput budget has headroom. When it's exhausted everyone degrades to
-    // the rule-based plan, capping aggregate Anthropic spend without erroring.
-    const allowLlm = user ? await llmBudgetAvailable() : false;
+    // throughput budget has headroom. Skip the budget check entirely when no
+    // Anthropic key is configured (it can't matter, and would needlessly consume
+    // a slot). `throttled` = Claude was possible but the global budget denied it,
+    // so the client can avoid caching a degraded plan (a plain no-key/anon
+    // rule-based plan is stable and stays cacheable).
+    const claudeEligible = Boolean(user) && isClaudeConfigured();
+    const allowLlm = claudeEligible ? await llmBudgetAvailable() : false;
+    const throttled = claudeEligible && !allowLlm;
     const recommendation = await runRecommendationPipeline(rawProfile, { allowLlm });
     await persistRun("recommendation", recommendation); // best-effort; no-ops for anon
-    return NextResponse.json({ recommendation, demo });
+    return NextResponse.json({ recommendation, demo, throttled });
   } catch (err) {
     if (err instanceof PipelineError) {
       return NextResponse.json(

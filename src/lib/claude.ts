@@ -29,6 +29,13 @@ function client(): Anthropic | null {
     : null;
 }
 
+/** True when an Anthropic key is present — i.e. Claude reasoning is even
+ *  possible. Lets callers skip the global LLM budget check (and detect a
+ *  throttle-degrade vs. a plain no-key rule-based run) when it can't apply. */
+export function isClaudeConfigured(): boolean {
+  return Boolean(process.env.ANTHROPIC_API_KEY);
+}
+
 function firstJson<T>(message: Anthropic.Message): T | null {
   const text = message.content.find((b) => b.type === "text");
   if (!text || text.type !== "text") return null;

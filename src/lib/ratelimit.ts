@@ -161,6 +161,20 @@ export function envLimit(name: string, fallback: number): number {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
+// A global cap only holds across instances when a shared store is configured;
+// with the in-memory fallback each serverless instance keeps its own counter, so
+// the effective ceiling is (instances × limit). Warn once so this isn't silent.
+let warnedNoSharedStore = false;
+function warnIfLocalGlobalCap(name: string): void {
+  if (!warnedNoSharedStore && !isDistributedRateLimit()) {
+    warnedNoSharedStore = true;
+    console.warn(
+      `[ratelimit] ${name} is enforced per-instance (no UPSTASH_REDIS_REST_URL). ` +
+        `The global cap only bounds aggregate throughput with a shared store configured.`,
+    );
+  }
+}
+
 /**
  * Global LLM throughput cap — a hard backstop on paid Claude calls across ALL
  * users combined. Per-IP limits bound one caller; this bounds aggregate spend
@@ -171,8 +185,24 @@ export function envLimit(name: string, fallback: number): number {
  * shared Upstash store when configured so the cap holds across instances.
  */
 export async function llmBudgetAvailable(): Promise<boolean> {
+  warnIfLocalGlobalCap("LLM throughput cap");
   const perMin = envLimit("LLM_MAX_CALLS_PER_MIN", 60);
   const r = await checkRateLimit("global:llm", perMin, 60_000);
+  return r.ok;
+}
+
+/**
+ * Global market-data throughput cap — the same backstop for the metered market
+ * providers (Finnhub / FMP / Alpha Vantage), which the LLM cap does NOT cover.
+ * Every recommendation/insights/backtest request fetches quotes/news before any
+ * LLM stage, so without this an anonymous IP-rotating caller can burn those
+ * quotas freely. When exhausted, callers fall back to sample/simulated data —
+ * capped without erroring. Sized by MARKET_DATA_MAX_CALLS_PER_MIN (default 120).
+ */
+export async function marketDataBudgetAvailable(): Promise<boolean> {
+  warnIfLocalGlobalCap("market-data throughput cap");
+  const perMin = envLimit("MARKET_DATA_MAX_CALLS_PER_MIN", 120);
+  const r = await checkRateLimit("global:marketdata", perMin, 60_000);
   return r.ok;
 }
 

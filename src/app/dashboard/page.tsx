@@ -64,7 +64,7 @@ export default function DashboardPage() {
         setIssues([]);
         setLoading(false);
       } else {
-        const r = await apiPost<{ recommendation: Recommendation; demo?: boolean }>(
+        const r = await apiPost<{ recommendation: Recommendation; demo?: boolean; throttled?: boolean }>(
           "/api/recommendations",
           payload,
         );
@@ -76,7 +76,10 @@ export default function DashboardPage() {
           setDemo(Boolean(r.data.demo));
           setError(null);
           setIssues([]);
-          writeCache(recKey, r.data);
+          // Don't cache a plan that was degraded to rule-based purely because the
+          // global LLM budget was momentarily exhausted — the user would be stuck
+          // with the fallback for the whole TTL after the budget frees.
+          if (!r.data.throttled) writeCache(recKey, r.data);
         }
         setLoading(false);
       }
@@ -86,10 +89,10 @@ export default function DashboardPage() {
       if (cachedIns) {
         setDigest(cachedIns.digest);
       } else {
-        const r = await apiPost<{ digest: InsightDigest }>("/api/insights", payload);
+        const r = await apiPost<{ digest: InsightDigest; throttled?: boolean }>("/api/insights", payload);
         if (r.ok) {
           setDigest(r.data.digest);
-          writeCache(insKey, r.data);
+          if (!r.data.throttled) writeCache(insKey, r.data);
         }
       }
     },
