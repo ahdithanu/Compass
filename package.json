@@ -13,6 +13,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "eval": "vitest run --config vitest.evals.config.ts",
     "db:types": "supabase gen types typescript --project-id ieledphcvigsbgdddzsw > src/lib/supabase/database.types.ts"
   },
   "dependencies": {
